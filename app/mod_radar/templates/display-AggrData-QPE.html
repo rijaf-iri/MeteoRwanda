@@ -1,0 +1,182 @@
+{% extends "layout.html" %}
+{% block title %} Meteo Rwanda Aggregated QPE {% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/leaflet-1.6.0/leaflet.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/Plugins-leaflet/L.Control.MousePosition/L.Control.MousePosition.css') }}">
+<script type="text/javascript" src="{{ url_for('static', filename='lib/leaflet-1.6.0/leaflet.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/L.Control.MousePosition/L.Control.MousePosition.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/leaflet-color-markers/js/leaflet-color-markers.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/rstudio-leaflet-2.0.3.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/Leaflet.Spin-1.1.2/spin.js/spin.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/Leaflet.Spin-1.1.2/leaflet.spin.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/leaflet-providers.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/leaflet-windbarb.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('radar.static', filename='css/leaflet-radar-map.css') }}">
+<style>
+    #mapRadarCross {
+    width: 100%;
+    height: 80vh;
+    }
+    #butMapVar{
+    width:100%;
+    margin-top: 5px;
+    }
+    #butMapVar table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 5px 0;
+    }
+    #divcommand{
+    margin: 10px auto 5px auto;
+    width: 100%;
+    border-style: groove;
+    padding: 3px 2px 5px 2px;
+    }
+    .divcenter{
+    margin: 5px auto 15px auto;
+    width: 100%;
+    }
+    #mapOpacity {
+    width: 100%;
+    }
+    #valueOpacity{
+    font-weight: bold;
+    }
+    #azimuth{
+    height: 20px;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row wrapper">
+        <!-- Left Panel -->
+        <div class="col-sm-3 input-sidebar-left">
+            <div class="row">
+                <div class="col-md-12 sidebar box">
+                    <div class="input-container">
+                        <div class="input-container-title">
+                            <span>Precipitation Data</span>
+                            <span class="glyphicon glyphicon-plus input-container-icon"></span>
+                        </div>
+                        <div class="input-container-content">
+                            <div>
+                                <label class="control-label">Select Time Step</label>
+                                <select name="tstep" id="timestepDispTS" class="form-control">
+                                    <option value="hourly">Hourly data</option>
+                                    <option value="daily" selected>Daily data</option>
+                                    <option value="pentad">Pentad data</option>
+                                    <option value="dekadal">Dekadal data</option>
+                                    <option value="monthly">Monthly data</option>
+                                </select>
+                            </div>
+                            <!--  -->
+                            <div>
+                                <label class="control-label">Select Date</label>
+                                <br>
+                                <table class="aws-select-time  map-select-time"></table>
+                            </div>
+                            <!--  -->
+                            <div id="butMapVar">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <a id="radMapPrev">
+                                                <button type="button" class="btn btn-primary btn-block">Previous</button>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a id="radMapDis">
+                                                <button type="button" class="btn btn-primary btn-block">Display</button>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a id="radMapNext">
+                                                <button type="button" class="btn btn-primary btn-block">Next</button>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <!--  -->
+                            <div id="divcommand">
+                                <!--  -->
+                                <div>
+                                    <span>
+                                        <strong>Image Type</strong>
+                                        <select name="rasterImgType" id="rasterImgType">
+                                            <option value="pixels" selected>Pixel</option>
+                                            <option value="smooth">Smooth</option>
+                                        </select>
+                                    </span>
+                                </div>
+                                <!--  -->
+                                <div>
+                                    <table id="mapOpacity">
+                                        <tr>
+                                            <td><label class="control-label">Image opacity</label></td>
+                                            <td width="60%"><input id="slideOpacity" class="custom-range" type="range" min="0" max="1.0" step="0.1" value="0.8"></td>
+                                            <td><span id="valueOpacity" class="text-primary">0.8</span></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <!--  -->
+                                <div>
+                                    <label class="control-label">Background Map</label>
+                                    <select name="basemapL" id="basemapL" class="form-control">
+                                        <option value="openstreetmap">OpenStreetMap Mapnik</option>
+                                        <option value="cartodb-dark">CartoDB DarkMatter</option>
+                                        <option value="mapboxlight" selected>Mapbox Light</option>
+                                        <option value="esriworldimagery">ESRI World Imagery</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--  -->
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+            </div>
+        </div>
+        <!-- Right panel -->
+        <div class="col-sm-9 main box">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="active"><a href="#radardisp" data-toggle="tab"> Precipitation </a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="radardisp">
+                    <!--  -->
+                    <div class="leaflet-map-wrapper">
+                        <div class="leaflet-map-row div-row1">
+                            <div class="leaflet-map-col div-title">Precipitation</div>
+                            <div class="leaflet-map-col div-empty"></div>
+                        </div>
+                        <div class="leaflet-map-row div-row2">
+                            <div id="mapRadarDisp" class="leaflet-map-col div-cont"></div>
+                            <div class="leaflet-map-col div-ckey">
+                                <table class="cont-ckey">
+                                    <tr>
+                                        <td class="table-ckey">
+                                            <!-- <div class="table-cmap"></div> -->
+                                        </td>
+                                        <td class="title-ckey">
+                                            <p></p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+                <p id="errorMSG"></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script type="text/javascript" src="{{ url_for('radar.static', filename='js/display-AggrData-QPE.js') }}"></script>
+{% endblock %}

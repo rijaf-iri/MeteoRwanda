@@ -1,0 +1,24 @@
+{
+    "fields": [
+    {
+        "label": "ECHO_10K_SUR",
+        "field": "Tops10",
+        "unit": "km",
+        "ckey": "echo_tops.colors",
+        "name": "Echo tops, Threshold 10dBZ"
+    },
+    {
+        "label": "ECHO_15K_SUR",
+        "field": "Tops15",
+        "unit": "km",
+        "ckey": "echo_tops.colors",
+        "name": "Echo tops, Threshold 15dBZ"
+    },
+    {
+        "label": "ECHO_20K_SUR",
+        "field": "Tops20",
+        "unit": "km",
+        "ckey": "echo_tops.colors",
+        "name": "Echo tops, Threshold 20dBZ"
+    }]
+}

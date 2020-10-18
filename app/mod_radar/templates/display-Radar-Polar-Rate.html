@@ -1,0 +1,287 @@
+{% extends "layout.html" %}
+{% block title %} Meteo Rwanda Radar Polar Rain Rate {% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/leaflet-1.6.0/leaflet.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/Plugins-leaflet/L.Control.MousePosition/L.Control.MousePosition.css') }}">
+<script type="text/javascript" src="{{ url_for('static', filename='lib/leaflet-1.6.0/leaflet.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/L.Control.MousePosition/L.Control.MousePosition.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/leaflet-color-markers/js/leaflet-color-markers.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/rstudio-leaflet-2.0.3.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/Leaflet.Spin-1.1.2/spin.js/spin.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/Leaflet.Spin-1.1.2/leaflet.spin.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/leaflet-providers.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/Leaflet-easyPrint/bundle.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/leaflet-windbarb.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('radar.static', filename='css/leaflet-radar-map.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('radar.static', filename='css/radar-polar-map.css') }}">
+<style>
+    #divqpeParams{
+    margin: 10px auto 5px auto;
+    width: 100%;
+    padding: 3px 2px 5px 2px;
+    text-align: center;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row wrapper">
+        <!-- Left Panel -->
+        <div class="col-sm-3 input-sidebar-left">
+            <div class="row">
+                <!--  -->
+                <div class="col-md-12 sidebar box">
+                    <div class="input-container">
+                        <div class="input-container-title">
+                            <span>Radar Polar Rain Rate</span>
+                            <span class="glyphicon glyphicon-plus input-container-icon"></span>
+                        </div>
+                        <div class="input-container-content">
+                            <div>
+                                <label class="control-label">Select source</label>
+                                <select name="qpeSource" id="qpeSource" class="form-control">
+                                    <option value="titan" selected> TITAN computed rain rate </option>
+                                    <option value="user"> User customized rain rate methods </option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="control-label">Select Method</label>
+                                <select name="qpeMethod" id="qpeMethod" class="form-control"></select>
+                            </div>
+                            <!--  -->
+                            <div id="divqpeParams">
+                                <button type="button" id="qpeParams" class="btn btn-default"> Set Parameters for the Method </button>
+                            </div>
+                            <div class="modal fade" id="qpeModalPars" role="dialog"></div>
+                            <!--  -->
+                            <div>
+                                <label class="control-label">Select Time (<code style="color:black;">5 minutes interval</code>)</label>
+                                <br>
+                                <table class="aws-select-time map-select-time"></table>
+                            </div>
+                            <!--  -->
+                            <div id="butMapVar">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <a id="radMapPrev">
+                                                <button type="button" class="btn btn-primary btn-block">Previous</button>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a id="radMapDis">
+                                                <button type="button" class="btn btn-primary btn-block">Display</button>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a id="radMapNext">
+                                                <button type="button" class="btn btn-primary btn-block">Next</button>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+                <div class="col-md-12 sidebar box">
+                    <div class="input-container">
+                        <div class="input-container-title">
+                            <span>Layer Control</span>
+                            <span class="glyphicon glyphicon-plus input-container-icon"></span>
+                        </div>
+                        <div class="input-container-content">
+                            <div id="divcommand">
+                                <div class='divcenter'>
+                                    <span>
+                                        <input type="checkbox" id="windbarb"> <strong>Display Wind Barb</strong>(Altitude: 4.5km)
+                                    </span>
+                                </div>
+                                <!--  -->
+                                <div class='divcenter'>
+                                    <span>
+                                        <strong>Elevation Angle</strong>
+                                        <select name="radarsweep" id="radarsweep"> </select>
+                                    </span>
+                                    <span>
+                                        <strong>Image</strong>
+                                        <select name="rasterImgType" id="rasterImgType">
+                                            <option value="pixels" selected>Pixel</option>
+                                            <option value="smooth">Smooth</option>
+                                        </select>
+                                    </span>
+                                </div>
+                                <!--  -->
+                                <div>
+                                    <table id="mapOpacity">
+                                        <tr>
+                                            <td><label class="control-label">Image opacity</label></td>
+                                            <td width="60%"><input id="slideOpacity" class="custom-range" type="range" min="0" max="1.0" step="0.1" value="0.8"></td>
+                                            <td><span id="valueOpacity" class="text-primary">0.8</span></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <!--  -->
+                                <div style="text-align: left;">
+                                    <span>
+                                        <strong> Mask Values </strong>
+                                        <select id="maskOpr" style="width: 50px;">
+                                            <option value="<=" selected> &lt;= </option>
+                                            <option value=">="> &gt;= </option>
+                                            <option value=">=<"> &gt;=&lt; </option>
+                                        </select>
+                                        <select id="maskThres1" style="width: 55px;"> </select>
+                                        <select id="maskThres2" style="width: 55px;"> </select>
+                                    </span>
+                                </div>
+                                <!--  -->
+                                <div style="text-align: right; margin-top: 5px;">
+                                    <span>
+                                        <button type="button" id="maskValues" class="maskvalues"> Apply Mask </button>
+                                        <button type="button" id="resetMask" class="maskvalues"> Reset </button>
+                                    </span>
+                                </div>
+                                <!--  -->
+                                <div>
+                                    <label class="control-label">Background Map</label>
+                                    <select name="basemapL" id="basemapL" class="form-control">
+                                        <option value="openstreetmap">OpenStreetMap Mapnik</option>
+                                        <option value="cartodb-dark">CartoDB DarkMatter</option>
+                                        <option value="mapboxlight" selected>Mapbox Light</option>
+                                        <option value="esriworldimagery">ESRI World Imagery</option>
+                                    </select>
+                                </div>
+                                <!--  -->
+                                <div>
+                                    <span>
+                                        <input type="checkbox" id="radarposition"> Radar Position
+                                    </span>
+                                </div>
+                            </div>
+                            <!--  -->
+                            <div class="download">
+                                <button type="button" id="downLeafletMap" class="btn btn-primary btn-block"> Download Map </button>
+                            </div>
+                            <!--  -->
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+                <div class="col-md-12 sidebar box">
+                    <div class="input-container">
+                        <div class="input-container-title">
+                            <span> Cross Section </span>
+                            <span class="glyphicon glyphicon-plus input-container-icon"></span>
+                        </div>
+                        <div class="input-container-content">
+                            <div style="text-align: center;margin-top: 10px">
+                                <span>
+                                    <strong>Select Azimuth</strong>
+                                    <input type="number" id="azimuth" step="1" min="0" max="359" value="45">
+                                    <button type="button" id="showXsecLine"> Show </button>
+                                    <button type="button" id="clearXsecLine"> Clear </button>
+                                </span>
+                            </div>
+                            <!--  -->
+                            <div style="text-align: center;margin-top: 5px">
+                                <button type="button" id="xzAxisLim" class="btn btn-default"> Change Axis Limits </button>
+                            </div>
+                            <div class="modal fade" id="xzModalLim" role="dialog"></div>
+                            <!--  -->
+                            <div>
+                                <a id="dispCrossSec">
+                                    <button type="button" class="btn btn-primary btn-block"><i class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="display:none;"></i> Display </button>
+                                </a>
+                            </div>
+                            <!--  -->
+                            <div>
+                                <span>
+                                    <input type="checkbox" id="polaraxis"> Display Polar Axis
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+                {% if session.logged_in %}
+                <!--  -->
+                <div class="col-md-12 sidebar box">
+                    <div class="input-container">
+                        <div class="input-container-title">
+                            <span> Export Data </span>
+                            <span class="glyphicon glyphicon-plus input-container-icon"></span>
+                        </div>
+                        <div class="input-container-content">
+                            <div>
+                                <label class="control-label">Output Format</label>
+                                <select name="exportDataS" id="exportDataS" class="form-control">
+                                    <option value="text" selected> Text/ASCII File </option>
+                                    <option value="netcdf"> NetCDF Format </option>
+                                </select>
+                            </div>
+                            <!--  -->
+                            <div>
+                                <a id="exportDataB">
+                                    <button type="button" class="btn btn-primary btn-block"><i class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="display:none;"></i> Export </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+                {% endif %}
+                <!--  -->
+            </div>
+        </div>
+        <!-- Right panel -->
+        <div class="col-sm-9 main box">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="active"><a href="#radardisp" data-toggle="tab">Rain Rate Display</a></li>
+                <li><a href="#radarcross" data-toggle="tab">Cross Section</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="radardisp">
+                    <!--  -->
+                    <div class="leaflet-map-wrapper">
+                        <div class="leaflet-map-row div-row1">
+                            <div class="leaflet-map-col div-title">Rwanda C250P</div>
+                            <div class="leaflet-map-col div-empty"></div>
+                        </div>
+                        <div class="leaflet-map-row div-row2">
+                            <div id="mapRadarDisp" class="leaflet-map-col div-cont"></div>
+                            <div class="leaflet-map-col div-ckey">
+                                <table class="cont-ckey">
+                                    <tr>
+                                        <td class="table-ckey">
+                                            <!-- <div class="table-cmap"></div> -->
+                                        </td>
+                                        <td class="title-ckey">
+                                            <p></p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="radarcross">
+                    <div id="mapRadarCross">
+                        <img id="radarPolarXsec" src="" />
+                    </div>
+                </div>
+                <!--  -->
+                <p id="errorMSG"></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script type="text/javascript" src="{{ url_for('radar.static', filename='js/display-Polar-Axis.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('radar.static', filename='js/precip-rate-params.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('radar.static', filename='js/set-radar-map.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('radar.static', filename='js/ctrec-wind-barb.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('radar.static', filename='js/display-Radar-Polar-Rate.js') }}"></script>
+{% endblock %}

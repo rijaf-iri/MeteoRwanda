@@ -1,0 +1,52 @@
+{
+    "fields": [
+    {
+        "label": "Precip_RATE_SUR",
+        "field": "RATE_ZH",
+        "unit": "mm/hr",
+        "ckey": "precip_rate.colors",
+        "name": "Precip rate from ZH"
+    },
+    {
+        "label": "Precip_RATE_ZDR_SUR",
+        "field": "RATE_Z_ZDR",
+        "unit": "mm/hr",
+        "ckey": "precip_rate.colors",
+        "name": "Precip rate from Z and ZDR"
+    },
+    {
+        "label": "Precip_RATE_KDP_SUR",
+        "field": "RATE_KDP",
+        "unit": "mm/hr",
+        "ckey": "precip_rate.colors",
+        "name": "Precip rate from KDP"
+    },
+    {
+        "label": "Precip_RATE_KDP_ZDR_SUR",
+        "field": "RATE_KDP_ZDR",
+        "unit": "mm/hr",
+        "ckey": "precip_rate.colors",
+        "name": "Precip rate from KDP and ZDR"
+    },
+    {
+        "label": "Precip_RATE_HYBRID_SUR",
+        "field": "RATE_HYBRID",
+        "unit": "mm/hr",
+        "ckey": "precip_rate.colors",
+        "name": "Precip rate hybrid"
+    },
+    {
+        "label": "Precip_RATE_PID_SUR",
+        "field": "RATE_PID",
+        "unit": "mm/hr",
+        "ckey": "precip_rate.colors",
+        "name": "Precip rate using PID"
+    },
+    {
+        "label": "PID_SUR",
+        "field": "PID",
+        "unit": "ID",
+        "ckey": "pid.colors",
+        "name": "Particle ID"
+    }]
+}

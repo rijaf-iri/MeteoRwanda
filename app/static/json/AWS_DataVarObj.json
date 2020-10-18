@@ -1,0 +1,75 @@
+{
+    "variables": [
+    {
+        "var": "RR",
+        "name": "Precipitation"
+    },
+    {
+        "var": "TT",
+        "name": "Air Temperature"
+    },
+    {
+        "var": "TT2",
+        "name": "Air Temperature at 2m"
+    },
+    {
+        "var": "TT10",
+        "name": "Air Temperature at 10m"
+    },
+    {
+        "var": "TTg",
+        "name": "Ground Temperature"
+    },
+    {
+        "var": "TTs",
+        "name": "Soil Temperature"
+    },
+    {
+        "var": "TTs10",
+        "name": "Soil Temperature at 10cm"
+    },
+    {
+        "var": "TTs20",
+        "name": "Soil Temperature at 20cm"
+    },
+    {
+        "var": "PRES",
+        "name": "Air Pressure"
+    },
+    {
+        "var": "RH",
+        "name": "Relative Humidity"
+    },
+    {
+        "var": "DD",
+        "name": "Wind Direction"
+    },
+    {
+        "var": "FF",
+        "name": "Wind Speed"
+    },
+    {
+        "var": "FFmax",
+        "name": "Wind Gust"
+    },
+    {
+        "var": "RAD",
+        "name": "Global Solar Radiation"
+    },
+    {
+        "var": "EVP",
+        "name": "Evaporation"
+    },
+    {
+        "var": "SOILM",
+        "name": "Soil Moisture"
+    },
+    {
+        "var": "WLV",
+        "name": "Water Level"
+    },
+    {
+        "var": "POWER",
+        "name": "Power Supply/Battery Voltage"
+    }]
+}

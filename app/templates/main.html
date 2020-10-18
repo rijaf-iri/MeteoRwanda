@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block title %} Meteo Rwanda {% endblock %}
+{% block head %}
+{{ super() }}
+<style type="text/css">
+#homer {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    margin-top: 50px;
+}
+
+#daty-now {
+    text-align: center;
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row wrapper">
+        <!-- Left Panel -->
+        <div id="homer">
+            <img src="{{ url_for('static', filename='images/Homer.png') }}" alt="Homer" />
+        </div>
+        <p id="daty-now"> Today {{ date_now("%Y-%m-%d") }}</p>
+        <!-- Right panel -->
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script>
+</script>
+{% endblock %}

@@ -1,0 +1,305 @@
+{
+    "fields": [
+    {
+        "label": "RATE_Z",
+        "unit": "mm/hr",
+        "ckey": "precip_rate.colors",
+        "name": "Precip rate from Z",
+        "formula": "Z = alpha * RATE^beta",
+        "rate_coef":
+        {
+            "invCoef": true,
+            "alpha0": 0.017,
+            "beta0": 0.714,
+            "alpha1": 300,
+            "beta1": 1.4
+        },
+        "dbz_thres":
+        {
+            "min_dbz": 20,
+            "max_dbz": 60
+        },
+        "pia":
+        {
+            "use_pia": false,
+            "pia_field": "dbz",
+            "kdp":
+            {
+                "gamma": 0.08
+            },
+            "dbz":
+            {
+                "a_max": 0.000167,
+                "a_min": 2.33e-05,
+                "n_a": 10,
+                "b_max": 0.7,
+                "b_min": 0.65,
+                "n_b": 6,
+                "sector_thr": 10,
+                "constraints": "none",
+                "constraint_args_dbz": 60,
+                "constraint_args_pia": 20
+            }
+        },
+        "filter_dbz":
+        {
+            "use_filter": false,
+            "filter_fun": "median_filter",
+            "median_filter_censor":
+            {
+                "median_filter_len": 5,
+                "minsize_seq": 3,
+                "censor_field": "RHOHV",
+                "censor_thres": 0.8
+            },
+            "median_filter":
+            {
+                "median_filter_len": 5,
+                "minsize_seq": 3
+            },
+            "smooth_trim":
+            {
+                "window_len": 5,
+                "window": "hanning"
+            }
+        }
+    },
+    {
+        "label": "RATE_ZPOLY",
+        "unit": "mm/hr",
+        "ckey": "precip_rate.colors",
+        "name": "Precip rate from DBZ (Polynomial)",
+        "formula": "RATE = 10^(-2.3 + 0.17 * DBZ - 5.1e-3 * DBZ^2 + 9.8e-5 * DBZ^3 - 6e-7 * DBZ^4)",
+        "dbz_thres":
+        {
+            "min_dbz": 20,
+            "max_dbz": 60
+        },
+        "pia":
+        {
+            "use_pia": false,
+            "pia_field": "dbz",
+            "kdp":
+            {
+                "gamma": 0.08
+            },
+            "dbz":
+            {
+                "a_max": 0.000167,
+                "a_min": 2.33e-05,
+                "n_a": 10,
+                "b_max": 0.7,
+                "b_min": 0.65,
+                "n_b": 6,
+                "sector_thr": 10,
+                "constraints": "none",
+                "constraint_args_dbz": 60,
+                "constraint_args_pia": 20
+            }
+        },
+        "filter_dbz":
+        {
+            "use_filter": false,
+            "filter_fun": "median_filter",
+            "median_filter_censor":
+            {
+                "median_filter_len": 5,
+                "minsize_seq": 3,
+                "censor_field": "RHOHV",
+                "censor_thres": 0.8
+            },
+            "median_filter":
+            {
+                "median_filter_len": 5,
+                "minsize_seq": 3
+            },
+            "smooth_trim":
+            {
+                "window_len": 5,
+                "window": "hanning"
+            }
+        }
+    },
+    {
+        "label": "RATE_Z_ZDR",
+        "unit": "mm/hr",
+        "ckey": "precip_rate.colors",
+        "name": "Precip rate from Z and ZDR",
+        "formula": "RATE = alpha * (Z^beta1) * (ZDR^beta2)",
+        "rate_coef":
+        {
+            "alpha": 0.00786,
+            "beta_zh": 0.967,
+            "beta_zdr": -4.98
+        },
+        "dbz_thres":
+        {
+            "min_dbz": 20,
+            "max_dbz": 60
+        },
+        "pia":
+        {
+            "use_pia": false,
+            "pia_field": "dbz",
+            "kdp":
+            {
+                "gamma": 0.08
+            },
+            "dbz":
+            {
+                "a_max": 0.000167,
+                "a_min": 2.33e-05,
+                "n_a": 10,
+                "b_max": 0.7,
+                "b_min": 0.65,
+                "n_b": 6,
+                "sector_thr": 10,
+                "constraints": "none",
+                "constraint_args_dbz": 60,
+                "constraint_args_pia": 20
+            }
+        },
+        "filter_dbz":
+        {
+            "use_filter": false,
+            "filter_fun": "median_filter",
+            "median_filter_censor":
+            {
+                "median_filter_len": 5,
+                "minsize_seq": 3,
+                "censor_field": "RHOHV",
+                "censor_thres": 0.8
+            },
+            "median_filter":
+            {
+                "median_filter_len": 5,
+                "minsize_seq": 3
+            },
+            "smooth_trim":
+            {
+                "window_len": 5,
+                "window": "hanning"
+            }
+        },
+        "filter_zdr":
+        {
+            "use_filter": false,
+            "filter_fun": "median_filter",
+            "median_filter_censor":
+            {
+                "median_filter_len": 5,
+                "minsize_seq": 3,
+                "censor_field": "RHOHV",
+                "censor_thres": 0.8
+            },
+            "median_filter":
+            {
+                "median_filter_len": 5,
+                "minsize_seq": 3
+            },
+            "smooth_trim":
+            {
+                "window_len": 5,
+                "window": "hanning"
+            }
+        }
+    },
+    {
+        "label": "RATE_KDP",
+        "unit": "mm/hr",
+        "ckey": "precip_rate.colors",
+        "name": "Precip rate from KDP",
+        "formula": "RATE = sign(KDP) * alpha * (|KDP|^beta)",
+        "rate_coef":
+        {
+            "alpha": 53.3,
+            "beta": 0.669
+        },
+        "filter_kdp":
+        {
+            "use_filter": false,
+            "filter_fun": "median_filter",
+            "median_filter_censor":
+            {
+                "median_filter_len": 5,
+                "minsize_seq": 3,
+                "censor_field": "RHOHV",
+                "censor_thres": 0.8
+            },
+            "median_filter":
+            {
+                "median_filter_len": 5,
+                "minsize_seq": 3
+            },
+            "smooth_trim":
+            {
+                "window_len": 5,
+                "window": "hanning"
+            }
+        }
+    },
+    {
+        "label": "RATE_KDP_ZDR",
+        "unit": "mm/hr",
+        "ckey": "precip_rate.colors",
+        "name": "Precip rate from KDP and ZDR",
+        "formula": "RATE = sign(KDP) * alpha * (|KDP|^beta1) * (ZDR^beta2)",
+        "rate_coef":
+        {
+            "alpha": 192,
+            "beta_kdp": 0.946,
+            "beta_zdr": -3.45
+        },
+        "filter_kdp":
+        {
+            "use_filter": false,
+            "filter_fun": "median_filter",
+            "median_filter_censor":
+            {
+                "median_filter_len": 5,
+                "minsize_seq": 3,
+                "censor_field": "RHOHV",
+                "censor_thres": 0.8
+            },
+            "median_filter":
+            {
+                "median_filter_len": 5,
+                "minsize_seq": 3
+            },
+            "smooth_trim":
+            {
+                "window_len": 5,
+                "window": "hanning"
+            }
+        },
+        "filter_zdr":
+        {
+            "use_filter": false,
+            "filter_fun": "median_filter",
+            "median_filter_censor":
+            {
+                "median_filter_len": 5,
+                "minsize_seq": 3,
+                "censor_field": "RHOHV",
+                "censor_thres": 0.8
+            },
+            "median_filter":
+            {
+                "median_filter_len": 5,
+                "minsize_seq": 3
+            },
+            "smooth_trim":
+            {
+                "window_len": 5,
+                "window": "hanning"
+            }
+        }
+    },
+    {
+        "label": "RATE_HYBRID",
+        "unit": "mm/hr",
+        "ckey": "precip_rate.colors",
+        "name": "Precip rate from NCAR hybrid",
+        "formula": "combination based on  RATE_KDP_ZDR, RATE_KDP, RATE_Z_ZDR and RATE_Z"
+    }]
+}

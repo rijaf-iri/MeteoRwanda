@@ -1,0 +1,45 @@
+    #mapRadarCross {
+        width: 100%;
+        height: 80vh;
+    }
+
+    #butMapVar {
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    #butMapVar table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: separate;
+        border-spacing: 5px 0;
+    }
+
+    #divcommand {
+        margin: 10px auto 5px auto;
+        width: 100%;
+        border-style: groove;
+        padding: 3px 2px 5px 2px;
+    }
+
+    .divcenter {
+        margin: 5px auto 5px auto;
+        width: 100%;
+    }
+
+    .maskvalues {
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+
+    #mapOpacity {
+        width: 100%;
+    }
+
+    #valueOpacity {
+        font-weight: bold;
+    }
+
+    #azimuth {
+        height: 20px;
+    }

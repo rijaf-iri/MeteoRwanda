@@ -1,0 +1,129 @@
+{% extends "layout.html" %}
+{% block title %} Meteo Rwanda QPE Extraction {% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/leaflet-1.6.0/leaflet.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/Plugins-leaflet/L.Control.MousePosition/L.Control.MousePosition.css') }}">
+<script type="text/javascript" src="{{ url_for('static', filename='lib/leaflet-1.6.0/leaflet.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/L.Control.MousePosition/L.Control.MousePosition.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/leaflet-color-markers/js/leaflet-color-markers.js') }}"></script>
+<style>
+    #mapExtractSpatial {
+    width: 100%;
+    height: 80vh;
+    }
+    #idTable {
+    max-height: 80vh;
+    }
+    .upload-user-files{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row wrapper">
+        <!-- Left Panel -->
+        <div class="col-sm-3 input-sidebar-left">
+            <div class="row">
+                <div class="col-md-12 sidebar box">
+                    <div class="input-container">
+                        <div class="input-container-title">
+                            <span>Spatial Extraction Support</span>
+                            <span class="glyphicon glyphicon-plus input-container-icon"></span>
+                        </div>
+                        <div class="input-container-content">
+                            <div>
+                                <label class="control-label">Select Support</label>
+                                <select id="extractsupport" class="form-control">
+                                    <option value="province" selected>Administrative Provinces</option>
+                                    <option value="district">Administrative Districts</option>
+                                    <option value="sector">Administrative Sectors</option>
+                                    <option value="mpoints">Multiple Points</option>
+                                    <option value="umpoints">User Multiple Points</option>
+                                    <option value="ushapefile">User Shapefile</option>
+                                </select>
+                            </div>
+                            <!--  -->
+                            <div id="extractOpts"></div>
+                            <!--  -->
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+                <div class="col-md-12 sidebar box">
+                    <div class="input-container">
+                        <div class="input-container-title">
+                            <span>Time Series</span>
+                            <span class="glyphicon glyphicon-plus input-container-icon"></span>
+                        </div>
+                        <div class="input-container-content">
+                            <div>
+                                <label class="control-label">Select Time Step</label>
+                                <select id="timestepDispTS" class="form-control">
+                                    <option value="minute">5 Minutes data</option>
+                                    <option value="hourly">Hourly data</option>
+                                    <option value="daily" selected>Daily data</option>
+                                    <option value="pentad">Pentad data</option>
+                                    <option value="dekadal">Dekadal data</option>
+                                    <option value="monthly">Monthly data</option>
+                                </select>
+                            </div>
+                            <!--  -->
+                            <div>
+                                <label class="control-label">Start Date</label>
+                                <br>
+                                <table class="aws-select-time  ts-start-time"></table>
+                            </div>
+                            <!--  -->
+                            <div>
+                                <label class="control-label">End Date</label>
+                                <br>
+                                <table class="aws-select-time ts-end-time"></table>
+                            </div>
+                            <!--  -->
+                            <div>
+                                <a id="extractExec">
+                                    <button type="button" class="btn btn-primary btn-block"><i class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="display:none;"></i> Start Extraction</button>
+                                </a>
+                            </div>
+                            <!--  -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Right panel -->
+        <div class="col-sm-9 main box">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="active"><a href="#extractmap" data-toggle="tab">Extraction Map</a></li>
+                <li><a href="#extracttable" data-toggle="tab">Extraction Table</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="extractmap">
+                    <div id="mapExtractSpatial"></div>
+                </div>
+                <div class="tab-pane" id="extracttable">
+                    <div id="idTable" class="table-responsive">
+                        <table id="jsonTable" class="table table-bordered table-hover table-striped">
+                            <thead>
+                                <tr></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script type="text/javascript" src="{{ url_for('static', filename='geojson/province.geojson') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='geojson/district.geojson') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='geojson/sector.geojson') }}"></script>
+<script type="text/javascript" src="{{ url_for('radar.static', filename='js/spatial-Extraction.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('radar.static', filename='js/display-mapExtract-QPE.js') }}"></script>
+{% endblock %}

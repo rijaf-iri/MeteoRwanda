@@ -1,0 +1,59 @@
+{
+    "fields": [
+    {
+        "label": "DBZ_CAPPI",
+        "field": "DBZ_F",
+        "unit": "dBZ",
+        "ckey": "dbz.colors",
+        "name": "Equivalent Reflectivity Factor"
+    },
+    {
+        "label": "DBZ",
+        "field": "DBZ",
+        "unit": "dBZ",
+        "ckey": "dbz.colors",
+        "name": "Equivalent Reflectivity Factor"
+    },
+    {
+        "label": "VEL_CAPPI",
+        "field": "VEL_F",
+        "unit": "m/s",
+        "ckey": "vel.colors",
+        "name": "Mean Doppler Velocity"
+    },
+    {
+        "label": "VEL",
+        "field": "VEL",
+        "unit": "m/s",
+        "ckey": "vel.colors",
+        "name": "Mean Doppler Velocity"
+    },
+    {
+        "label": "NCP_CAPPI",
+        "field": "NCP",
+        "unit": "",
+        "ckey": "fraction.colors",
+        "name": "Normalized Coherent Power"
+    },
+    {
+        "label": "DBZHC_F",
+        "field": "DBZHC_F",
+        "unit": "dBZ",
+        "ckey": "dbz.colors",
+        "name": "Equivalent Reflectivity Factor, Horizontal Channel"
+    },
+    {
+        "label": "DBZVC_F",
+        "field": "DBZVC_F",
+        "unit": "dBZ",
+        "ckey": "dbz.colors",
+        "name": "Equivalent Reflectivity Factor, Vertical Channel"
+    },
+    {
+        "label": "CLUT",
+        "field": "CLUT",
+        "unit": "dB",
+        "ckey": "clut.colors",
+        "name": "Clutter"
+    }]
+}

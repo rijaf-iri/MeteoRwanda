@@ -1,0 +1,142 @@
+<header>
+    <nav class="navbar navbar-custom" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{{ url_for('homepage') }}">
+                    <img src="{{ url_for('static', filename='images/logos.png') }}">
+                </a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">AWS Data <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url_for('aws.dispAWSCoords_page') }}"> AWS Map and Metadata </a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ url_for('aws.dispAWSStatus_page') }}"> AWS Data Status </a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ url_for('aws.dispAWSMinData_page') }}">AWS Minutes Data</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ url_for('aws.dispAWSAggrData_page') }}">AWS Aggregated Data</a></li>
+                        <li class="divider"></li>
+                        <!-- wind1 -->
+                        <li class="dropdown-submenu">
+                            <a href="#"> AWS Wind Data </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url_for('aws.dispWindBarb_page') }}"> Display Wind Barb </a></li>
+                                <li class="divider"></li>
+                                <li><a href="{{ url_for('aws.dispWindRose_page') }}">Display Wind Rose</a></li>
+                                <li class="divider"></li>
+                                <li><a href="{{ url_for('aws.dispWindContours_page') }}">Visualizing Diurnal Wind Climatologies</a></li>
+                            </ul>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="{{ url_for('aws.dispAWSAccumulRR_page') }}">Rainfall Accumulation</a></li>
+                    </ul>
+                </li>
+                <!-- radar -->
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> Radar Data <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{{ url_for('radar.dispRadarPolar_page') }}"> Radar Polar Visualization </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="{{ url_for('radar.radarPolarRate_page') }}"> Radar Polar Rain Rate Visualization </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="{{ url_for('radar.dispRadarCart_page') }}"> Radar Cartesian Visualization </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="{{ url_for('radar.radarCAPPIQPE_page') }}"> CAPPI QPE Visualization </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="{{ url_for('radar.dispAggrQPE_page') }}"> Aggregated QPE Visualization </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="{{ url_for('radar.dispAccumulQPE_page') }}"> Rainfall Accumulation </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="{{ url_for('radar.extractQPE_page') }}"> QPE Data Extraction </a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Validation -->
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> Validation <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#"> QPE Comparison and Validation </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#"> Conventional Stations and AWS Comparison </a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Tools -->
+                {% if session.logged_in and session.userlevel > 1 %}
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> Configurations <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        {% if session.userlevel == 3 %}
+                        <li>
+                            <a href="{{ url_for('auth.createUser_page') }}"> Users Management </a>
+                        </li>
+                        <li class="divider"></li>
+                        {% endif %}
+                        <li>
+                            <a href="#"> AWS Configurations </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#"> Radar Configurations (Operational) </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#"> Radar Configurations (Analysis) </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#"> Site Configurations </a>
+                        </li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if session.logged_in %}
+                <li>
+                    <a href="{{ url_for('auth.logoutUser') }}">
+                        <span>{{ session.username }}</span>&nbsp;
+                        <span class="glyphicon glyphicon-log-out"></span> Logout</a>
+                </li>
+                {% else %}
+                <li>
+                    <a role="presentation" data-toggle="modal" data-target="#loginModal" href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+                    {% include 'login.html' %}
+                    {% if error_login %}
+                    <script> $('#loginModal').modal('show'); </script>
+                    {% endif %}
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <!--  -->
+    <div class="div-flash-alert">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{category}} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+</header>

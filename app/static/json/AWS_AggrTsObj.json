@@ -1,0 +1,23 @@
+{
+    "variables": [
+    {
+        "var": "RR",
+        "name": "Total Precipitation",
+        "unit": "mm"
+    },
+    {
+        "var": "TT",
+        "name": "Air Temperature",
+        "unit": "&deg;C"
+    },
+    {
+        "var": "RH",
+        "name": "Relative Humidity",
+        "unit": "%"
+    },
+    {
+        "var": "RAD",
+        "name": "Global Radiation",
+        "unit": "W/m2"
+    }]
+}

@@ -1,0 +1,206 @@
+{
+    "fields": [
+    {
+        "label": "DBZ_SUR",
+        "field": "DBZ_F",
+        "unit": "dBZ",
+        "ckey": "dbz_color",
+        "name": "Equivalent Reflectivity Factor"
+    },
+    {
+        "label": "DBZ_RAW_SUR",
+        "field": "DBZ",
+        "unit": "dBZ",
+        "ckey": "dbz_color",
+        "name": "Equivalent Reflectivity Factor"
+    },
+    {
+        "label": "DBZH_SUR",
+        "field": "DBZHC_F",
+        "unit": "dBZ",
+        "ckey": "dbz.colors",
+        "name": "Equivalent Reflectivity Factor, Horizontal Channel"
+    },
+    {
+        "label": "DBZH_RAW_SUR",
+        "field": "DBZHC",
+        "unit": "dBZ",
+        "ckey": "dbz.colors",
+        "name": "Equivalent Reflectivity Factor, Horizontal Channel"
+    },
+    {
+        "label": "DBZV_SUR",
+        "field": "DBZVC_F",
+        "unit": "dBZ",
+        "ckey": "dbz.colors",
+        "name": "Equivalent Reflectivity Factor, Vertical Channel"
+    },
+    {
+        "label": "DBZV_RAW_SUR",
+        "field": "DBZVC",
+        "unit": "dBZ",
+        "ckey": "dbz.colors",
+        "name": "Equivalent Reflectivity Factor, Vertical Channel"
+    },
+    {
+        "label": "ZDR_SUR",
+        "field": "ZDR_F",
+        "unit": "dB",
+        "ckey": "zdr2.colors",
+        "name": "Differential Reflectivity"
+    },
+    {
+        "label": "ZDR_RAW_SUR",
+        "field": "ZDR",
+        "unit": "dB",
+        "ckey": "zdr2.colors",
+        "name": "Differential Reflectivity"
+    },
+    {
+        "label": "VEL_SUR",
+        "field": "VEL_F",
+        "unit": "m/s",
+        "ckey": "cp2_vel.colors",
+        "name": "Mean Doppler Velocity"
+    },
+    {
+        "label": "VEL_RAW_SUR",
+        "field": "VEL",
+        "unit": "m/s",
+        "ckey": "cp2_vel.colors",
+        "name": "Mean Doppler Velocity"
+    },
+    {
+        "label": "WIDTH_SUR",
+        "field": "WIDTH_F",
+        "unit": "m/s",
+        "ckey": "width.colors",
+        "name": "Doppler Spectrum Width"
+    },
+    {
+        "label": "WIDTH_RAW_SUR",
+        "field": "WIDTH",
+        "unit": "m/s",
+        "ckey": "width.colors",
+        "name": "Doppler Spectrum Width"
+    },
+    {
+        "label": "NCP_SUR",
+        "field": "NCP_F",
+        "unit": "",
+        "ckey": "fraction.colors",
+        "name": "Normalized Coherent Power"
+    },
+    {
+        "label": "NCP_RAW_SUR",
+        "field": "NCP",
+        "unit": "",
+        "ckey": "fraction.colors",
+        "name": "Normalized Coherent Power"
+    },
+    {
+        "label": "RHOHV_SUR",
+        "field": "RHOHV_F",
+        "unit": "",
+        "ckey": "rhohv.colors",
+        "name": "Cross Correlation Ratio"
+    },
+    {
+        "label": "RHOHV_RAW_SUR",
+        "field": "RHOHV",
+        "unit": "",
+        "ckey": "rhohv.colors",
+        "name": "Cross Correlation Ratio"
+    },
+    {
+        "label": "PHIDP_SUR",
+        "field": "PHIDP_F",
+        "unit": "deg",
+        "ckey": "phidp.colors",
+        "name": "Differential Phase"
+    },
+    {
+        "label": "PHIDP_RAW_SUR",
+        "field": "PHIDP",
+        "unit": "deg",
+        "ckey": "phidp.colors",
+        "name": "Differential Phase"
+    },
+    {
+        "label": "KDP_SUR",
+        "field": "KDP_F",
+        "unit": "deg/km",
+        "ckey": "kdp.colors",
+        "name": "Specific Differential Phase"
+    },
+    {
+        "label": "KDP_RAW_SUR",
+        "field": "KDP",
+        "unit": "deg/km",
+        "ckey": "kdp.colors",
+        "name": "Specific Differential Phase"
+    },
+    {
+        "label": "SNR_SUR",
+        "field": "SNR_F",
+        "unit": "dB",
+        "ckey": "snr.colors",
+        "name": "Signal to Noise Ratio"
+    },
+    {
+        "label": "SNR_RAW_SUR",
+        "field": "SNR",
+        "unit": "dB",
+        "ckey": "snr.colors",
+        "name": "Signal to Noise Ratio"
+    },
+    {
+        "label": "SNRHC_SUR",
+        "field": "SNRHC_F",
+        "unit": "dB",
+        "ckey": "snr.colors",
+        "name": "Signal to Noise Ratio, Horizontal Channel"
+    },
+    {
+        "label": "SNRHC_RAW_SUR",
+        "field": "SNRHC",
+        "unit": "dB",
+        "ckey": "snr.colors",
+        "name": "Signal to Noise Ratio, Horizontal Channel"
+    },
+    {
+        "label": "SNRVC_SUR",
+        "field": "SNRVC_F",
+        "unit": "dB",
+        "ckey": "snr.colors",
+        "name": "Signal to Noise Ratio, Vertical Channel"
+    },
+    {
+        "label": "SNRVC_RAW_SUR",
+        "field": "SNRVC",
+        "unit": "dB",
+        "ckey": "snr.colors",
+        "name": "Signal to Noise Ratio, Vertical Channel"
+    },
+    {
+        "label": "DBMHC_SUR",
+        "field": "DBMHC",
+        "unit": "dBm",
+        "ckey": "dbm.colors",
+        "name": "Received Power, Horizontal Channel"
+    },
+    {
+        "label": "DBMVC_SUR",
+        "field": "DBMVC",
+        "unit": "dBm",
+        "ckey": "dbm.colors",
+        "name": "Received Power, Vertical Channel"
+    },
+    {
+        "label": "CMD_FLAG_SUR",
+        "field": "CMD_FLAG",
+        "unit": "",
+        "ckey": "cmd_flag.colors",
+        "name": "Clutter Mitigation Decision Flag"
+    }]
+}

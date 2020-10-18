@@ -1,0 +1,83 @@
+{
+    "variables": [
+    {
+        "var": "PRECIP",
+        "name": "Total Precipitation",
+        "unit": "mm"
+    },
+    {
+        "var": "TAVG",
+        "name": "Average Air Temperature",
+        "unit": "&deg;C"
+    },
+    {
+        "var": "TMAX",
+        "name": "Maximum Air Temperature",
+        "unit": "&deg;C"
+    },
+    {
+        "var": "TMIN",
+        "name": "Minimum Air Temperature",
+        "unit": "&deg;C"
+    },
+    {
+        "var": "RHAVG",
+        "name": "Average Relative Humidity",
+        "unit": "%"
+    },
+    {
+        "var": "RHMAX",
+        "name": "Maximum Relative Humidity",
+        "unit": "%"
+    },
+    {
+        "var": "RHMIN",
+        "name": "Minimum Relative Humidity",
+        "unit": "%"
+    },
+    {
+        "var": "PAVG",
+        "name": "Average Air Pressure",
+        "unit": "mb"
+    },
+    {
+        "var": "PMAX",
+        "name": "Maximum Air Pressure",
+        "unit": "mb"
+    },
+    {
+        "var": "PMIN",
+        "name": "Minimum Air Pressure",
+        "unit": "mb"
+    },
+    {
+        "var": "RADAVG",
+        "name": "Average Global Solar Radiation",
+        "unit": "W/m2"
+    },
+    {
+        "var": "RADMAX",
+        "name": "Maximum Global Solar Radiation",
+        "unit": "W/m2"
+    },
+    {
+        "var": "RADMIN",
+        "name": "Minimum Global Solar Radiation",
+        "unit": "W/m2"
+    },
+    {
+        "var": "WFF",
+        "name": "Wind Speed",
+        "unit": "m/s"
+    },
+    {
+        "var": "WGFF",
+        "name": "Wind Gust",
+        "unit": "m/s"
+    },
+    {
+        "var": "WDD",
+        "name": "Wind Direction",
+        "unit": "&deg;"
+    }]
+}

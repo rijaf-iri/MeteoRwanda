@@ -1,0 +1,24 @@
+{
+    "fields": [
+    {
+        "label": "CTREC_U",
+        "field": "U comp",
+        "unit": "m/s",
+        "ckey": "vel.colors",
+        "name": "U component"
+    },
+    {
+        "label": "CTREC_V",
+        "field": "V comp",
+        "unit": "m/s",
+        "ckey": "vel.colors",
+        "name": "V component"
+    },
+    {
+        "label": "DBZ_SUR",
+        "field": "DBZ",
+        "unit": "dBZ",
+        "ckey": "dbz.colors",
+        "name": "Equivalent Reflectivity Factor"
+    }]
+}

@@ -1,0 +1,53 @@
+{
+    "variables": [
+    {
+        "var": "PRECIP",
+        "name": "Total Precipitation",
+        "unit": "mm"
+    },
+    {
+        "var": "TAVG",
+        "name": "Average Air Temperature",
+        "unit": "&deg;C"
+    },
+    {
+        "var": "TMAX",
+        "name": "Maximum Air Temperature",
+        "unit": "&deg;C"
+    },
+    {
+        "var": "TMIN",
+        "name": "Minimum Air Temperature",
+        "unit": "&deg;C"
+    },
+    {
+        "var": "RHAVG",
+        "name": "Average Relative Humidity",
+        "unit": "%"
+    },
+    {
+        "var": "RHMAX",
+        "name": "Maximum Relative Humidity",
+        "unit": "%"
+    },
+    {
+        "var": "RHMIN",
+        "name": "Minimum Relative Humidity",
+        "unit": "%"
+    },
+    {
+        "var": "RADAVG",
+        "name": "Average Global Radiation",
+        "unit": "W/m2"
+    },
+    {
+        "var": "RADMAX",
+        "name": "Maximum Global Radiation",
+        "unit": "W/m2"
+    },
+    {
+        "var": "RADMIN",
+        "name": "Minimum Global Radiation",
+        "unit": "W/m2"
+    }]
+}

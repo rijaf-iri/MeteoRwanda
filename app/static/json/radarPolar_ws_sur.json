@@ -1,0 +1,52 @@
+{
+    "fields": [
+    {
+        "label": "DBZ_F",
+        "field": "DBZ_F",
+        "unit": "dBZ",
+        "ckey": "dbz.colors",
+        "name": "Equivalent Reflectivity Factor"
+    },
+    {
+        "label": "DbzInput",
+        "field": "DBZ",
+        "unit": "dBZ",
+        "ckey": "dbz.colors",
+        "name": "Equivalent Reflectivity Factor"
+    },
+    {
+        "label": "VEL_F",
+        "field": "VEL_F",
+        "unit": "m/s",
+        "ckey": "vel.colors",
+        "name": "Mean Doppler Velocity"
+    },
+    {
+        "label": "VelInput",
+        "field": "VEL",
+        "unit": "m/s",
+        "ckey": "vel.colors",
+        "name": "Mean Doppler Velocity"
+    },
+    {
+        "label": "WIDTH_F",
+        "field": "WIDTH_F",
+        "unit": "m/s",
+        "ckey": "width.colors",
+        "name": "Doppler Spectrum Width"
+    },
+    {
+        "label": "SNR_F",
+        "field": "SNR_F",
+        "unit": "dB",
+        "ckey": "snr.colors",
+        "name": "Signal to Noise Ratio"
+    },
+    {
+        "label": "CMD_FLAG",
+        "field": "CMD_FLAG",
+        "unit": "",
+        "ckey": "cmd_flag.colors",
+        "name": "Clutter Mitigation Decision Flag"
+    }]
+}
