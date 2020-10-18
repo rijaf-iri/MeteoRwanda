@@ -139,7 +139,7 @@ config.py
 run.py
 wsgi.py
 
-**/__pycache__/
-**/*.py[cod]
+app/*.py[cod]
+app/__pycache__/
 
 
