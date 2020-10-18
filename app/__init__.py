@@ -44,4 +44,4 @@ app.register_blueprint(radar_module)
 
 ## check the rules registered on the application
 ## debugging only
-print(app.url_map)
+# print(app.url_map)

@@ -33,8 +33,8 @@ $(document).ready(function() {
         );
     }
     var vhour = daty.getHours();
-    // $("#hour3").val((vhour < 10 ? "0" : "") + vhour);
-    $("#hour3").val("14");
+    $("#hour3").val((vhour < 10 ? "0" : "") + vhour);
+    // $("#hour3").val("14");
 
     //
     $('#day3').attr('enabled', 'true');
@@ -48,8 +48,8 @@ $(document).ready(function() {
         );
     }
     var vday = daty.getDate();
-    // $("#day3").val((vday < 10 ? "0" : "") + vday);
-    $("#day3").val("18");
+    $("#day3").val((vday < 10 ? "0" : "") + vday);
+    // $("#day3").val("18");
 
     //
     $('#month3').attr('enabled', 'true');
@@ -63,8 +63,8 @@ $(document).ready(function() {
         );
     }
     var vmon = daty.getMonth() + 1;
-    // $("#month3").val((vmon < 10 ? "0" : "") + vmon);
-    $("#month3").val("08");
+    $("#month3").val((vmon < 10 ? "0" : "") + vmon);
+    // $("#month3").val("08");
 
     //
     $('#year3').attr('enabled', 'true');

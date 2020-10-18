@@ -31,8 +31,8 @@ function setRadarSelectTime() {
         );
     }
     var vhour = daty.getHours();
-    // $("#hour3").val((vhour < 10 ? "0" : "") + vhour);
-    $("#hour3").val("14");
+    $("#hour3").val((vhour < 10 ? "0" : "") + vhour);
+    // $("#hour3").val("14");
 
     //
     for (var i = 1; i <= 31; i++) {
@@ -45,8 +45,8 @@ function setRadarSelectTime() {
         );
     }
     var vday = daty.getDate();
-    // $("#day3").val((vday < 10 ? "0" : "") + vday);
-    $("#day3").val("18");
+    $("#day3").val((vday < 10 ? "0" : "") + vday);
+    // $("#day3").val("18");
 
     //
     for (var i = 1; i <= 12; i++) {
@@ -59,8 +59,8 @@ function setRadarSelectTime() {
         );
     }
     var vmon = daty.getMonth() + 1;
-    // $("#month3").val((vmon < 10 ? "0" : "") + vmon);
-    $("#month3").val("08");
+    $("#month3").val((vmon < 10 ? "0" : "") + vmon);
+    // $("#month3").val("08");
 
     //
     var thisYear = daty.getFullYear();
