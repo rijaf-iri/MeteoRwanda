@@ -138,8 +138,9 @@ MeteoRwanda.ini
 config.py
 run.py
 wsgi.py
+clean_py.sh
 
-app/**/*.py[cod]
-app/**/__pycache__/
+**/*.py[cod]
+**/__pycache__/
 
 
