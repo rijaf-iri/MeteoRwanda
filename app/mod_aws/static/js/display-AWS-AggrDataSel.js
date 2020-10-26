@@ -1,6 +1,5 @@
 $(document).ready(function() {
     setAWSAggrDataTime();
-
     ////////////
 
     $.getJSON('/readCoords', function(json) {
