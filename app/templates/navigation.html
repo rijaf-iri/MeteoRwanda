@@ -17,6 +17,8 @@
                         <li class="divider"></li>
                         <li><a href="{{ url_for('aws.dispAWSAggrData_page') }}">AWS Aggregated Data</a></li>
                         <li class="divider"></li>
+                        <li><a href="{{ url_for('aws.dispAWSAggrDataSel_page') }}">AWS Aggregated Data - Selected stations</a></li>
+                        <li class="divider"></li>
                         <!-- wind1 -->
                         <li class="dropdown-submenu">
                             <a href="#"> AWS Wind Data </a>
@@ -30,6 +32,21 @@
                         </li>
                         <li class="divider"></li>
                         <li><a href="{{ url_for('aws.dispAWSAccumulRR_page') }}">Rainfall Accumulation</a></li>
+                        {% if session.logged_in %}
+                        <li class="divider"></li>
+                        <li class="dropdown-submenu">
+                            <a href="#"> AWS Quality Control Outputs </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#"> Native Time Step - Limit Check </a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Hourly - Spatial Check</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Daily - Climatological Comparison</a></li>
+                            </ul>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="#">AWS Processing Log Files</a></li>
+                        {% endif %}
                     </ul>
                 </li>
                 <!-- radar -->

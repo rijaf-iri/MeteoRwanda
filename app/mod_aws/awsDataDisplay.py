@@ -177,6 +177,10 @@ def downAWSAggrCDTDataCSV():
                        headers = {"Content-disposition": cd})
     return downcsv
 
+@mod_aws.route('/dispAWSAggrDataSelPage')
+def dispAWSAggrDataSel_page():
+    return render_template("display-AWS-AggrDataSel.html")
+
 @mod_aws.route('/readAWSWind')
 def readAWSWind():
     robj = mtrwaws.readAWSWind(dirAWS)
