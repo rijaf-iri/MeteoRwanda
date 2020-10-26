@@ -117,7 +117,7 @@ def radarCart_CrossSec():
 
 @mod_radar.route('/radarCAPPIQPEPage')
 def radarCAPPIQPE_page():
-    wmsURL = "http://" + config.IP_ncWMS + ":8080/wms"
+    wmsURL = "http://" + config.IP_ncWMS + ":"+ str(config.PORT_ncWMS) + "/" + config.SERVICE_ncWMS
     wmsData = qpewms_5minutes(wmsURL, 4)
 
     return render_template("display-CAPPI-QPE.html", wmsURL = wmsURL, wmsData = wmsData)
@@ -127,7 +127,7 @@ def radarCAPPIQPE_page():
 @mod_radar.route('/dispAggrQPEPage')
 def dispAggrQPE_page():
     # wmsURL = "http://localhost:8080/wms"
-    wmsURL = "http://" + config.IP_ncWMS + ":8080/wms"
+    wmsURL = "http://" + config.IP_ncWMS + ":"+ str(config.PORT_ncWMS) + "/" + config.SERVICE_ncWMS
     wmsData = qpewms_aggregate(wmsURL)
 
     return render_template("display-AggrData-QPE.html", wmsURL = wmsURL, wmsData = wmsData)
