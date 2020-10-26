@@ -14,6 +14,7 @@ from .scripts.plotradarCart import *
 from .scripts.uploadfiles import *
 from .scripts.windCtrec import ctrec_wind
 from .scripts.util import numpyArrayEncoder
+from .scripts.wmsQuery import *
 
 ################### 
 
@@ -116,65 +117,20 @@ def radarCart_CrossSec():
 
 @mod_radar.route('/radarCAPPIQPEPage')
 def radarCAPPIQPE_page():
-    return render_template("display-CAPPI-QPE.html")
+    wmsURL = "http://" + config.IP_ncWMS + ":8080/wms"
+    wmsData = qpewms_5minutes(wmsURL, 4)
 
-@mod_radar.route('/radarCAPPIQPE')
-def radarCAPPIQPE():
-    time = request.args.get('time')
-    qpe = request.args.get('qpe')
-
-    # intime = datetime.datetime.strptime(time, '%Y-%m-%d-%H-%M')
-    # temps = intime.strftime('%Y-%m-%d %H:%M:%S UTC')
-
-    # ckeyfile1 = os.path.join(dirCKey, 'precip_rate.colors')
-    # if not os.path.exists(ckeyfile1):
-    #     out = {'radar_time': temps, 'status': 'no-data',
-    #            'msg': 'no-ckey', 'ckey_name': 'precip_rate.colors'}
-    #     return json.dumps(out)
-
-    # breaks1, colors1, colors_ext1 = get_ColorScale(ckeyfile1)
-
-    # ckeyfile2 = os.path.join(dirCKey, 'precip.colors')
-    # if not os.path.exists(ckeyfile2):
-    #     out = {'radar_time': temps, 'status': 'no-data',
-    #            'msg': 'no-ckey', 'ckey_name': 'precip.colors'}
-    #     return json.dumps(out)
-
-    # breaks2, colors2, colors_ext2 = get_ColorScale(ckeyfile2)
-
-    # dirSource = os.path.join(dirMDV, "ctrec")
-    # mdvtime = mdv_end_time_file(dirSource, time)
-    # if mdvtime is None:
-    #     out = {'radar_time': temps, 'status': "no-data", 'msg': 'no-mdvfile'}
-    #     return json.dumps(out)
-
-    # mdvfile = os.path.join(dirSource, mdvtime[0], mdvtime[1] + ".mdv")
-    # grid = read_Grid_data(mdvfile)
-
-    #wind = get_wind_speed_dir(grid)
-    # wind = json.dumps(wind, cls = numpyArrayEncoder)
-    # data = calculate_qpe_cappi(grid, qpe)
-
-    # img_rate, ckeys_rate = get_ImagePngBase64((data['lon'], data['lat'], data['rate']),
-    #                                           breaks1, colors1, colors_ext1)
-    # img_precip, ckeys_precip = get_ImagePngBase64((data['lon'], data['lat'], data['precip']),
-    #                                               breaks2, colors2, colors_ext2)
-
-    # temps = grid_mdv_time(grid)
-    # img_out = {'rate': img_rate, 'precip': img_precip, 'wind': wind}
-    # ckeys = {'rate': ckeys_rate, 'precip': ckeys_precip}
-    # out = {'radar_time': temps, 'data': img_out,
-    #        'ckeys': ckeys, 'status': 'OK', 'msg': 'done'}
-
-    out = {'radar_time': temps, 'status': "no-data", 'msg': 'no-mdvfile'}
-
-    return json.dumps(out)
+    return render_template("display-CAPPI-QPE.html", wmsURL = wmsURL, wmsData = wmsData)
 
 ###################
 
 @mod_radar.route('/dispAggrQPEPage')
 def dispAggrQPE_page():
-    return render_template("display-AggrData-QPE.html")
+    # wmsURL = "http://localhost:8080/wms"
+    wmsURL = "http://" + config.IP_ncWMS + ":8080/wms"
+    wmsData = qpewms_aggregate(wmsURL)
+
+    return render_template("display-AggrData-QPE.html", wmsURL = wmsURL, wmsData = wmsData)
 
 @mod_radar.route('/dispAccumulQPEPage')
 def dispAccumulQPE_page():
@@ -199,15 +155,3 @@ def uploadShapeFiles():
 
     return getUploadedShapeFiles(dirUPLOAD, files, user)
 
-
-# file_csv = os.path.join(dirUPLOAD, fcsv.filename)
-# fcsv.save(file_csv)
-
-# # data_csv = csv.DictReader(open(file_csv, 'r'))
-# # pyobj = json.dumps([row for row in data_csv])
-# robj = mtrwdata.readUploadCsvCoords(file_csv)
-# pyobj = json.dumps(json.loads(robj[0]))
-
-# os.unlink(file_csv)
-
-# return pyobj

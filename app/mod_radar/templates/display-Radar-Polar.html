@@ -4,6 +4,8 @@
 {{ super() }}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/leaflet-1.6.0/leaflet.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/Plugins-leaflet/L.Control.MousePosition/L.Control.MousePosition.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('radar.static', filename='css/leaflet-radar-map.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('radar.static', filename='css/radar-polar-map.css') }}">
 <script type="text/javascript" src="{{ url_for('static', filename='lib/leaflet-1.6.0/leaflet.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/L.Control.MousePosition/L.Control.MousePosition.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/leaflet-color-markers/js/leaflet-color-markers.js') }}"></script>
@@ -13,8 +15,6 @@
 <script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/leaflet-providers.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/Leaflet-easyPrint/bundle.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/leaflet-windbarb.js') }}"></script>
-<link rel="stylesheet" type="text/css" href="{{ url_for('radar.static', filename='css/leaflet-radar-map.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ url_for('radar.static', filename='css/radar-polar-map.css') }}">
 {% endblock %}
 {% block content %}
 <div class="container-fluid">
@@ -287,6 +287,7 @@
 {% block javascript %}
 <script type="text/javascript" src="{{ url_for('radar.static', filename='js/display-Polar-Axis.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('radar.static', filename='js/set-radar-map.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('radar.static', filename='js/print-screen-map.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('radar.static', filename='js/ctrec-wind-barb.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('radar.static', filename='js/display-Radar-Polar.js') }}"></script>
 {% endblock %}

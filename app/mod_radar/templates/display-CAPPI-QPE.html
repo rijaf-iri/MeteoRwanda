@@ -1,51 +1,34 @@
 {% extends "layout.html" %}
-{% block title %} Meteo Rwanda Radar Polar QPE {% endblock %}
+{% block title %} Meteo Rwanda 5 Minutes QPE {% endblock %}
 {% block head %}
 {{ super() }}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/leaflet-1.6.0/leaflet.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/Plugins-leaflet/L.Control.MousePosition/L.Control.MousePosition.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/Plugins-leaflet/Leaflet.TimeDimension-1.1.1/leaflet.timedimension.control.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('radar.static', filename='css/leaflet-radar-map.css') }}">
 <script type="text/javascript" src="{{ url_for('static', filename='lib/leaflet-1.6.0/leaflet.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/L.Control.MousePosition/L.Control.MousePosition.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/leaflet-color-markers/js/leaflet-color-markers.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='lib/rstudio-leaflet-2.0.3.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/Leaflet.Spin-1.1.2/spin.js/spin.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/Leaflet.Spin-1.1.2/leaflet.spin.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/leaflet-providers.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/leaflet-windbarb.js') }}"></script>
-<link rel="stylesheet" type="text/css" href="{{ url_for('radar.static', filename='css/leaflet-radar-map.css') }}">
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/Leaflet-easyPrint/bundle.js') }}"></script>
+<!--  -->
 <style>
-    #mapRadarCross {
-    width: 100%;
-    height: 80vh;
+    a.leaflet-control-timecontrol.timecontrol-date {
+    width: 150px;
+    padding-left: 30px !important;
+    font-weight: bold;
+    /*color: red;*/
     }
-    #butMapVar{
-    width:100%;
-    margin-top: 5px;
-    }
-    #butMapVar table {
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: separate;
-    border-spacing: 5px 0;
-    }
-    #divcommand{
+    #divcommand {
     margin: 10px auto 5px auto;
     width: 100%;
     border-style: groove;
     padding: 3px 2px 5px 2px;
     }
-    .divcenter{
-    margin: 5px auto 15px auto;
-    width: 100%;
-    }
     #mapOpacity {
     width: 100%;
     }
-    #valueOpacity{
+    #valueOpacity {
     font-weight: bold;
-    }
-    #azimuth{
-    height: 20px;
     }
     </style>
 {% endblock %}
@@ -55,77 +38,33 @@
         <!-- Left Panel -->
         <div class="col-sm-3 input-sidebar-left">
             <div class="row">
+                <!--  -->
                 <div class="col-md-12 sidebar box">
                     <div class="input-container">
                         <div class="input-container-title">
-                            <span>Rain Rate CAPPI</span>
+                            <span>Radar Cartesian</span>
                             <span class="glyphicon glyphicon-plus input-container-icon"></span>
                         </div>
                         <div class="input-container-content">
                             <div>
-                                <label class="control-label">Select Method</label>
-                                <select name="qpeMethod" id="qpeMethod" class="form-control">
-                                    <option value="zpoly"> Polynomial Z-R (McGill University [DBZ]) </option>
-                                    <option value="plwz" selected> Power Law (Reflectivity [DBZ]) </option>
-                                    <option value="plwkdp"> Power Law (Specific Differential Phase [KDP]) </option>
-                                    <option value="plwsa"> Power Law (Specific Attenuation [SA]) </option>
-                                    <option value="plwzkdp"> Blending of Power Law (DBZ and KDP) </option>
-                                    <option value="plwzsa"> Blending of Power Law (DBZ and SA) </option>
+                                <label class="control-label">Precipitation</label>
+                                <select id="precipType" class="form-control">
+                                    <option value="precip" selected>Precipitation accumulation</option>
+                                    <option value="rate">Estimated Rain Rate</option>
                                 </select>
                             </div>
-                            <!--  -->
-                            <div>
-                                <label class="control-label">Select Time (<code style="color:black;">5 minutes interval</code>)</label>
-                                <br>
-                                <table class="aws-select-time map-select-time"></table>
-                            </div>
-                            <!--  -->
-                            <div id="butMapVar">
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <a id="radMapPrev">
-                                                <button type="button" class="btn btn-primary btn-block">Previous</button>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a id="radMapDis">
-                                                <button type="button" class="btn btn-primary btn-block">Display</button>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a id="radMapNext">
-                                                <button type="button" class="btn btn-primary btn-block">Next</button>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <!--  -->
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+                <div class="col-md-12 sidebar box">
+                    <div class="input-container">
+                        <div class="input-container-title">
+                            <span>Layer Control</span>
+                            <span class="glyphicon glyphicon-plus input-container-icon"></span>
+                        </div>
+                        <div class="input-container-content">
                             <div id="divcommand">
-                                <div>
-                                    <label class="control-label">Precipitation</label>
-                                    <select name="precipType" id="precipType" class="form-control">
-                                        <option value="rate" selected>Estimated Rain Rate</option>
-                                        <option value="precip">Precipitation accumulation</option>
-                                    </select>
-                                </div>
-                                <!--  -->
-                                <div class='divcenter'>
-                                    <span>
-                                        <input type="checkbox" id="windbarb"> <strong>Display Wind Data</strong>
-                                    </span>
-                                </div>
-                                <!--  -->
-                                <div>
-                                    <span>
-                                        <strong>Image Type</strong>
-                                        <select name="rasterImgType" id="rasterImgType">
-                                            <option value="pixels" selected>Pixel</option>
-                                            <option value="smooth">Smooth</option>
-                                        </select>
-                                    </span>
-                                </div>
                                 <!--  -->
                                 <div>
                                     <table id="mapOpacity">
@@ -147,37 +86,12 @@
                                     </select>
                                 </div>
                                 <!--  -->
-                                <div>
-                                    <span>
-                                        <input type="checkbox" id="radarposition"> Radar Position
-                                    </span>
-                                </div>
                             </div>
                             <!--  -->
-                        </div>
-                    </div>
-                </div>
-                <!--  -->
-                <div class="col-md-12 sidebar box">
-                    <div class="input-container">
-                        <div class="input-container-title">
-                            <span> Export Data </span>
-                            <span class="glyphicon glyphicon-plus input-container-icon"></span>
-                        </div>
-                        <div class="input-container-content">
-                            <div>
-                                <label class="control-label">Output Format</label>
-                                <select name="exportDataS" id="exportDataS" class="form-control">
-                                    <option value="text" selected> Text/ASCII File </option>
-                                    <option value="netcdf"> NetCDF Format </option>
-                                </select>
+                            <div class="download">
+                                <button type="button" id="downLeafletMap" class="btn btn-primary btn-block"> Download Map </button>
                             </div>
                             <!--  -->
-                            <div>
-                                <a id="exportDataB">
-                                    <button type="button" class="btn btn-primary btn-block"><i class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="display:none;"></i> Export </button>
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -187,7 +101,7 @@
         <!-- Right panel -->
         <div class="col-sm-9 main box">
             <ul class="nav nav-tabs" id="myTab">
-                <li class="active"><a href="#radardisp" data-toggle="tab"> QPE Display </a></li>
+                <li class="active"><a href="#radardisp" data-toggle="tab">QPE Display</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="radardisp">
@@ -203,7 +117,6 @@
                                 <table class="cont-ckey">
                                     <tr>
                                         <td class="table-ckey">
-                                            <!-- <div class="table-cmap"></div> -->
                                         </td>
                                         <td class="title-ckey">
                                             <p></p>
@@ -214,7 +127,6 @@
                         </div>
                     </div>
                 </div>
-                <!--  -->
                 <p id="errorMSG"></p>
             </div>
         </div>
@@ -222,5 +134,15 @@
 </div>
 {% endblock %}
 {% block javascript %}
+<script type="text/javascript" src="{{ url_for('static', filename='lib/iso8601-js-period-0.2.1/iso8601.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/dateformat.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/Leaflet.TimeDimension-1.1.1/leaflet.timedimension.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('radar.static', filename='js/display-CAPPI-QPE.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('radar.static', filename='js/print-screen-map.js') }}"></script>
+<!--  -->
+<script type="text/javascript">
+var wmsURL = '{{ wmsURL }}';
+var wmsData = '{{ wmsData|tojson }}';
+wmsData = JSON.parse(wmsData);
+</script>
 {% endblock %}

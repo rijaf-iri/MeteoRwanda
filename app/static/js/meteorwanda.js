@@ -111,6 +111,8 @@ $.getJSON(Flask.url_for("static", {
 var mymapBE;
 var mytileBE;
 var zoomBE;
+var scaleBE;
+var mouseposBE;
 var mymarkersBE = [];
 var myimagesPNG = [];
 var myimageMASK;
@@ -298,11 +300,11 @@ function createLeafletTileLayer(container, aws_tile = true) {
         zoomBE = new L.Control.Zoom({
             position: 'bottomright'
         }).addTo(mymap);
-        new L.Control.Scale({
+        scaleBE = new L.Control.Scale({
             position: 'bottomleft',
             imperial: false
         }).addTo(mymap);
-        new L.control.mousePosition({
+        mouseposBE = new L.control.mousePosition({
             position: 'bottomleft',
             lngFormatter: funlonFrmt,
             latFormatter: funlatFrmt
@@ -519,6 +521,10 @@ function awsSpatialbindPopup(don, date, labelObj, labelT) {
 Number.prototype.mod = function(x) {
     return ((this % x) + x) % x;
 }
+
+Date.prototype.format = function(mask, utc) {
+    return dateFormat(this, mask, utc);
+};
 
 Date.prototype.getDekad = function() {
     var day = this.getDate();
@@ -1189,3 +1195,12 @@ function getHTMLElementModal(object) {
     recurse(object, []);
     return out;
 }
+
+////////////////////////
+function encodeQueryData(data) {
+    var ret = [];
+    for (var d in data)
+        ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+    return ret.join('&');
+}
+////////////////////////

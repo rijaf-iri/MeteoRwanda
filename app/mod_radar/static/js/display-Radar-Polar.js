@@ -112,7 +112,9 @@ $(document).ready(function() {
     $("#downLeafletMap").on("click", function() {
         var json = RADAR_DATA;
         var filename = "radar_map";
-        saveLeafletDispRadarMap(json, filename);
+        var sweep = $("#radarsweep option:selected").val();
+
+        saveLeafletDispRadarMap(json, sweep, filename);
     });
 
     /////////

@@ -5,9 +5,9 @@ from mtorwaradar.util.colorbar import get_ColorScale
 from mtorwaradar.util.radarDateTime import polar_mdv_last_time
 from mtorwaradar.mdv.projdata import polar_projData
 from mtorwaradar.mdv.polarxsec import polar_xsec_data
+from mtorwaradar.qpe.precipCalc_polar import calculate_PrecipRate
 
 from .getradarPolar import getradarPolarDerivedData, getradarPolarDataPars
-from .polarRainRate import calculate_PrecipRate
 from .imagePngBase64 import imagePng
 from .crossSection import polarXSec, polarXsecVide
 

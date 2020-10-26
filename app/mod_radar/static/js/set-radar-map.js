@@ -393,58 +393,6 @@ function leafletDispRadarMap(json, sweep) {
 }
 
 //////////////////////////////
-
-function saveLeafletDispRadarMap(json, filename) {
-    var mymap = mymapBE;
-    // 
-    if (json.status != "no-data") {
-        mymap.removeControl(zoomBE);
-
-        var colorBar = L.control({
-            position: 'bottomright'
-        });
-
-        colorBar.onAdd = function(map) {
-            var div = L.DomUtil.create('div', 'colorbar');
-            $(div).empty();
-
-            unit = '<p style="text-align:center;margin-top:1px;margin-bottom:1px;font-size:10;">' + json.unit + '</p>';
-            $(div).append(unit);
-            $(div).append(createColorKeyV(json.ckeys));
-
-            return div;
-        }
-
-        colorBar.addTo(mymap);
-        $('.leaflet-right .colorbar').css({
-            'margin-right': '0px',
-            'margin-bottom': '0px'
-        });
-        $('.colorbar').css('background-color', '#f4f4f4');
-        $('.colorbar .ckeyv').css({
-            'width': '50px',
-            'height': '70vh'
-        });
-        $('.colorbar .ckeyv-label').css('font-size', 12);
-
-        var sweep = $("#radarsweep option:selected").val();
-        filename = json.label + "_" + json.angle[sweep] + "-Deg_" + json.radar_time;
-    }
-
-    var printer = easyPrintMap();
-    printer.printMap('CurrentSize', filename);
-
-    setTimeout(
-        function() {
-            mymap.removeControl(colorBar);
-            zoomBE = new L.Control.Zoom({
-                position: 'bottomright'
-            }).addTo(mymap);
-            mymap.removeControl(printer);
-        }, 2000);
-}
-
-//////////////////////////////
 // Layers control
 
 $('#rasterImgType').on('change', function() {
