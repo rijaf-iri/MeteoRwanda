@@ -563,3 +563,11 @@ body {
     padding: 0px 2px;
     line-height: 1em;
 }
+
+.div-modal-select {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 0.2fr 1fr;
+    align-items: center;
+    grid-column-gap: 5px;
+}
