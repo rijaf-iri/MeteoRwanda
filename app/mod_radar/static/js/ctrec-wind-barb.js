@@ -19,7 +19,7 @@ function dispRadarWindBarb() {
     if ($("#windbarb").is(':checked')) {
         var wind = JSON.parse(json.wind);
 
-        $.each(wind, function(ix) {
+        $.each(wind, (ix) => {
 
             var w = wind[ix];
             if (w[2] < 1) {

@@ -19,6 +19,9 @@
     padding: 3px 2px 5px 2px;
     text-align: center;
     }
+    .selectAWSSP{
+    display:none;
+    }
     #contAWSGraph {
     width: 100%;
     height: 80vh;
@@ -117,11 +120,6 @@
                             </div>
                             -->
                             <!--  -->
-                            <div id="divselectAWS">
-                                <button type="button" id="selectAWSPlotTS" class="btn btn-default"> Select Stations to Display </button>
-                            </div>
-                            <div class="modal fade" id="selectAWSModalTS" role="dialog"></div>
-                            <!--  -->
                             <!--  -->
                             <div>
                                 <label class="control-label">Select Variable</label>
@@ -146,6 +144,11 @@
                                 <select name="pars" id="awsParams" class="awsplotts"></select>
                             </div>
                             <!--  -->
+                            <div id="divselectAWS">
+                                <button type="button" id="selectAWSPlotTS" class="btn btn-default"> Select Stations to Display </button>
+                            </div>
+                            <div class="modal fade" id="selectAWSModalTS" role="dialog"></div>
+                            <!--  -->
                             <div>
                                 <a id="plotAWSGraph">
                                     <button type="button" class="btn btn-primary btn-block"><i class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="display:none;"></i> Plot Parameter</button>
@@ -154,21 +157,15 @@
                             <!--  -->
                             {% if session.logged_in %}
                             <!--  -->
-                            <div class="download">
-                                <a id="downAWSVarOne" href="" target="_blank" download>
-                                    <button type="button" class="btn btn-primary btn-block">Download Data in CSV</button>
-                                </a>
-                            </div>
-                            <!--  -->
                             <div>
                                 <a id="dispAWSTable">
-                                    <button type="button" class="btn btn-primary btn-block"><i class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="display:none;"></i> Display Variables Table</button>
+                                    <button type="button" class="btn btn-primary btn-block"><i class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="display:none;"></i> Display Table</button>
                                 </a>
                             </div>
                             <!--  -->
                             <div class="download">
-                                <a id="downAWSVarAll" href="" target="_blank" download>
-                                    <button type="button" class="btn btn-primary btn-block">Download Table in CSV</button>
+                                <a id="downAWSVarOne" href="" target="_blank" download>
+                                    <button type="button" class="btn btn-primary btn-block">Download Data</button>
                                 </a>
                             </div>
                             <!--  -->
@@ -185,23 +182,10 @@
                             <span class="glyphicon glyphicon-plus input-container-icon"></span>
                         </div>
                         <div class="input-container-content">
-                            <!--  -->
-                            <div id="divselectAWS">
-                                <button type="button" id="selectAWSPlotSP" class="btn btn-default"> Select Stations to Display </button>
-                            </div>
-                            <div class="modal fade" id="selectAWSModalSP" role="dialog"></div>
-                            <!--  -->
-                            <div>
-                                <label class="control-label">Select Variables </label>
-                                <select name="spvars" id="awsSpVar" class="form-control">
-                                    <option value="" selected disabled hidden></option>
-                                </select>
-                            </div>
-                            <!--  -->
                             <div>
                                 <label class="control-label">Select Date</label>
                                 <br>
-                                <table class="aws-select-time  map-select-time"></table>
+                                <table class="aws-select-time map-select-time"></table>
                             </div>
                             <!--  -->
                             <div id="butMapVar">
@@ -226,11 +210,24 @@
                                 </table>
                             </div>
                             <!--  -->
+                            <div>
+                                <label class="control-label">Select Variables </label>
+                                <select id="awsSpVar" class="form-control">
+                                    <option value="" selected disabled hidden></option>
+                                </select>
+                            </div>
+                            <!--  -->
                             <div id="colKeyMapVar"></div>
+                            <!--  -->
+                            <div id="divselectAWS" class="selectAWSSP">
+                                <button type="button" id="selectAWSPlotSP" class="btn btn-default"> Select Stations to Display </button>
+                            </div>
+                            <div class="modal fade" id="selectAWSModalSP" role="dialog"></div>
                             <!--  -->
                             <div class="download">
                                 <button type="button" id="downLeafletMap" class="btn btn-primary btn-block"> Download Map </button>
                             </div>
+                            <!--  -->
                         </div>
                     </div>
                 </div>
@@ -275,5 +272,6 @@
 {% endif %}
 <script type="text/javascript" src="{{ url_for('aws.static', filename='js/aws-display-data.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('aws.static', filename='js/params-AWS-AggrData.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/print-screen-map.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('aws.static', filename='js/display-AWS-AggrDataSel.js') }}"></script>
 {% endblock %}

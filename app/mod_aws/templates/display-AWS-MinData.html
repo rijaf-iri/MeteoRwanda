@@ -93,14 +93,12 @@
                             </div>
                             <br>
                             <!--  -->
-                            <div>
-                                <span id="selpars">
-                                    <label>Select Parameter:</label>
-                                    <select name="pars" id="awsParams" class="awsplotts"></select>
-                                </span>
-                                <span id="rangepars">
-                                    <input type="checkbox" id="arearange"> Plot data range
-                                </span>
+                            <div id="selpars">
+                                <label>Select Parameter:</label>
+                                <select name="pars" id="awsParams" class="awsplotts"></select>
+                            </div>
+                            <div id="rangepars">
+                                <input type="checkbox" id="arearange"> Plot data range
                             </div>
                             <!--  -->
                             <div>
@@ -130,13 +128,6 @@
                         </div>
                         <div class="input-container-content">
                             <div>
-                                <label class="control-label">Select Variables </label>
-                                <select name="spvars" id="awsSpVar" class="form-control">
-                                    <option value="" selected disabled hidden></option>
-                                </select>
-                            </div>
-                            <!--  -->
-                            <div>
                                 <label class="control-label">Select Time (<code style="color:black;">10 minutes interval</code>)</label>
                                 <br>
                                 <table class="aws-select-time map-select-time"></table>
@@ -162,6 +153,13 @@
                                         </td>
                                     </tr>
                                 </table>
+                            </div>
+                            <!--  -->
+                            <div>
+                                <label class="control-label">Select Variables </label>
+                                <select name="spvars" id="awsSpVar" class="form-control">
+                                    <option value="" selected disabled hidden></option>
+                                </select>
                             </div>
                             <!--  -->
                             <div id="colKeyMapVar"></div>
@@ -218,5 +216,7 @@
 <script type="text/javascript" src="{{ url_for('aws.static', filename='js/export-AWS-MinData.js') }}"></script>
 {% endif %}
 <script type="text/javascript" src="{{ url_for('aws.static', filename='js/aws-display-data.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('aws.static', filename='js/params-AWS-MinData.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/print-screen-map.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('aws.static', filename='js/display-AWS-MinData.js') }}"></script>
 {% endblock %}

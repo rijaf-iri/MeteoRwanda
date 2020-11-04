@@ -234,7 +234,7 @@ function radarImgMaskValues(json) {
     }
 
     jQuery(myimageMASK)
-        .on('load', function() {
+        .on('load', () => {
             var datapng = maskMapLayerPNG();
             if (datapng != null) {
                 mymap.removeLayer(myimagesPNG[0]);
@@ -255,7 +255,7 @@ function radarImgMaskValues(json) {
                 myimagesPNG[0] = png_overlay;
             }
         })
-        .on('error', function() {
+        .on('error', () => {
             $('#errorMSG').css("background-color", "red")
                 .html("Unable to apply mask");
         })
@@ -387,7 +387,7 @@ function leafletDispRadarMap(json, sweep) {
 
     ////////////
 
-    $('a[href="#radardisp"]').on('shown.bs.tab', function(e) {
+    $('a[href="#radardisp"]').on('shown.bs.tab', (e) => {
         mymap.invalidateSize();
     });
 }
@@ -395,7 +395,7 @@ function leafletDispRadarMap(json, sweep) {
 //////////////////////////////
 // Layers control
 
-$('#rasterImgType').on('change', function() {
+$('#rasterImgType').on('change', () => {
     $('a[href="#radardisp"]').click();
     var json = RADAR_DATA;
     if (json.status == "no-data") {
@@ -415,7 +415,7 @@ $('#slideOpacity').on('input change', function() {
 
 ///////// 
 
-$("#maskValues").on("click", function() {
+$("#maskValues").on("click", () => {
     $('a[href="#radardisp"]').click();
     var json = RADAR_DATA;
     if (json.status == "no-data") {
@@ -426,7 +426,7 @@ $("#maskValues").on("click", function() {
 
 /////////
 
-$("#resetMask").on("click", function() {
+$("#resetMask").on("click", () => {
     $('a[href="#radardisp"]').click();
     var json = RADAR_DATA;
     if (json.status == "no-data") {
@@ -437,13 +437,13 @@ $("#resetMask").on("click", function() {
 
 /////////
 
-$("#showXsecLine").on("click", function() {
+$("#showXsecLine").on("click", () => {
     var azimuth = $("#azimuth").val();
     drawCrossSectionLine(Number(azimuth));
 });
 
 
-$("#clearXsecLine").on("click", function() {
+$("#clearXsecLine").on("click", () => {
     var mymap = mymapBE;
     if (myimagesPNG[2]) {
         mymap.removeLayer(myimagesPNG[2]);
@@ -506,7 +506,9 @@ function setXsecAxisLim(xzlim_polar_xsec) {
         'data-dismiss': 'modal'
     }).appendTo(divhead);
 
-    $("<h4>").text("Set Cross Section Axis Limits").css('font-size', '16px').appendTo(divhead);
+    $("<h4>").text("Set Cross Section Axis Limits")
+        .css('font-size', '16px')
+        .appendTo(divhead);
 
     // 
     var table = $('<table>');
@@ -573,7 +575,7 @@ function setXsecAxisLim(xzlim_polar_xsec) {
         'class': 'btn btn-default',
         text: 'Save',
         'data-dismiss': 'modal',
-        click: function() {
+        click: () => {
             var inputObj = {
                 'min_x': min_x,
                 'max_x': max_x,
@@ -641,7 +643,7 @@ function drawSegmentXsec(e) {
         $("#infoXsecSeg").empty();
         $("#infoXsecSeg").text(" (Click the end point of the segment)");
 
-        marker.on('dragend', function(event) {
+        marker.on('dragend', (event) => {
             var marker = event.target;
             var pos = marker.getLatLng();
             marker.setLatLng(new L.LatLng(pos.lat, pos.lng), { draggable: true });
@@ -681,7 +683,7 @@ function drawSegmentXsec(e) {
         }).addTo(mymapBE);
         markersXSEC[2] = polyline;
         // 
-        marker.on('dragend', function(event) {
+        marker.on('dragend', (event) => {
             var marker = event.target;
             var pos = marker.getLatLng();
             marker.setLatLng(new L.LatLng(pos.lat, pos.lng), { draggable: true });

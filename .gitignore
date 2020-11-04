@@ -139,6 +139,7 @@ config.py
 run.py
 wsgi.py
 clean_py.sh
+scripts/
 
 **/*.py[cod]
 **/__pycache__/

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(() => {
     var mymap = createLeafletTileLayer("mapRadarDisp", aws_tile = false);
     changeLeafletTileLayer("#basemapL");
 
@@ -7,7 +7,7 @@ $(document).ready(function() {
 
     /////////////
 
-    $("#aggrTime").on("change", function() {
+    $("#aggrTime").on("change", () => {
         var aggrtime = $("#aggrTime option:selected").val();
 
         disp_wmsqpe_aggregate(aggrtime);
@@ -25,9 +25,29 @@ $(document).ready(function() {
 
     /////////
 
-    $("#downLeafletMap").on("click", function() {
+    $("#downLeafletMap").on("click", () => {
         var aggrtime = $("#aggrTime option:selected").val();
-        saveLeafletDispQPEAMap(aggrtime, wmsData.ckeys);
+
+        if (myimagesPNG[1]._currentTime == undefined) {
+            var timestamp = myimagesPNG[1]._defaultTime;
+        } else {
+            var timestamp = myimagesPNG[1]._currentTime;
+        }
+        var date = new Date(timestamp);
+        switch (aggrtime) {
+            case "hourly":
+                dtformat = "yyyy-mm-dd_hh";
+                break;
+            case "daily":
+                dtformat = "yyyy-mm-dd";
+                break;
+            case "monthly":
+                dtformat = "yyyy-mm";
+        }
+        date = dateFormat(date, dtformat);
+        var filename = 'precip_' + aggrtime + "_" + date;
+
+        saveLeafletDispQPEMap(aggrtime, wmsData.ckeys, "mm", filename);
     });
 });
 
@@ -94,7 +114,7 @@ function disp_wmsqpe_aggregate(aggrtime) {
     /////////////
 
     L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
-        _getDisplayDateFormat: function(date) {
+        _getDisplayDateFormat: (date) => {
             return date.format(dtformat);
         }
     });

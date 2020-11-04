@@ -5,14 +5,14 @@ function getPolarCartCoords() {
     // radius: 140km
     var R = 1.260126;
 
-    x0 = start_trigo.map((x) => radarLON + R * Math.cos(x * Math.PI / 180));
-    y0 = start_trigo.map((x) => radarLAT + R * Math.sin(x * Math.PI / 180));
-    x1 = end_trigo.map((x) => radarLON + R * Math.cos(x * Math.PI / 180));
-    y1 = end_trigo.map((x) => radarLAT + R * Math.sin(x * Math.PI / 180));
+    x0 = start_trigo.map(x => radarLON + R * Math.cos(x * Math.PI / 180));
+    y0 = start_trigo.map(x => radarLAT + R * Math.sin(x * Math.PI / 180));
+    x1 = end_trigo.map(x => radarLON + R * Math.cos(x * Math.PI / 180));
+    y1 = end_trigo.map(x => radarLAT + R * Math.sin(x * Math.PI / 180));
 
     // convert angle to Bearings
-    start_bearings = start_trigo.map((x) => (450 - x) % 360);
-    end_bearings = end_trigo.map((x) => (450 - x) % 360);
+    start_bearings = start_trigo.map(x => (450 - x) % 360);
+    end_bearings = end_trigo.map(x => (450 - x) % 360);
 
     var outObj = [];
 
@@ -122,10 +122,10 @@ function drawCrossSectionLine(angle) {
     var R = 1.260126;
 
     angle_b = [angle, (angle + 180) % 360];
-    angle_tr = angle_b.map((x) => (450 - x) % 360);
+    angle_tr = angle_b.map(x => (450 - x) % 360);
 
-    x = angle_tr.map((x) => radarLON + R * Math.cos(x * Math.PI / 180));
-    y = angle_tr.map((x) => radarLAT + R * Math.sin(x * Math.PI / 180));
+    x = angle_tr.map(x => radarLON + R * Math.cos(x * Math.PI / 180));
+    y = angle_tr.map(x => radarLAT + R * Math.sin(x * Math.PI / 180));
 
     var polyline = L.polyline([
         [y[0], x[0]],

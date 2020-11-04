@@ -1,5 +1,5 @@
 function precipRateParams(ratemethod) {
-    var ix = radarPolar_rate_user.map((x) => { return x.label; }).indexOf(ratemethod);
+    var ix = radarPolar_rate_user.map(x => x.label).indexOf(ratemethod);
     // deep copy initial value
     var jsonObj = JSON.parse(JSON.stringify(radarPolar_rate_user[ix]));
 
@@ -91,7 +91,7 @@ function precipRateParams(ratemethod) {
         'class': 'btn btn-default',
         text: 'Save',
         'data-dismiss': 'modal',
-        click: function() {
+        click: () => {
             var parsObj = getHTMLElementModal(bodyObj.pars);
             for (var i = 0; i < parsObj.length; i++) {
                 updateNestedObject(radarPolar_rate_user[ix], parsObj[i].path, parsObj[i].val);
@@ -717,7 +717,7 @@ function field_filter_box(json, filter_field, field_name) {
     //////////
 
     $(use_filter).on('change', function() {
-        if ($(use_filter).is(':checked')) {
+        if (this.checked) {
             $(div_filter).show();
         } else {
             $(div_filter).hide();
@@ -1022,7 +1022,7 @@ function pia_attenuation_box(json) {
     $(use_pia).on('change', function() {
         $(div_constr).hide();
 
-        if ($(use_pia).is(':checked')) {
+        if (this.checked) {
             $(div_pia).show();
 
             if (select_pia_mthd.val() == "dbz") {

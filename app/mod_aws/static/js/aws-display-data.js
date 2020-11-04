@@ -25,13 +25,13 @@ function setAWSVariableSelect(aws) {
         for (var i = 0; i < AWS_INFO.PARS.length; ++i) {
             var vartxt = getAWSVariableName(AWS_INFO.PARS[i]);
             $('#awsObsVar').append(
-                $("<option></option>").text(vartxt).val(AWS_INFO.PARS[i])
+                $("<option>").text(vartxt).val(AWS_INFO.PARS[i])
             );
         }
     } else {
         var vartxt = getAWSVariableName(AWS_INFO.PARS);
         $('#awsObsVar').append(
-            $("<option></option>").text(vartxt).val(AWS_INFO.PARS)
+            $("<option>").text(vartxt).val(AWS_INFO.PARS)
         );
     }
     $('#awsObsVar option[value=RR]').attr('selected', true);
@@ -40,7 +40,8 @@ function setAWSVariableSelect(aws) {
 //
 function setAWSParamSelect(vvar, source) {
     var dpars;
-    var loadspin = '<i class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="display:none;"></i>';
+    var loadspin = $("<i>").addClass("glyphicon glyphicon-refresh glyphicon-refresh-animate");
+    loadspin.css("display", "none");
     if (AWS_INFO.AWSGroup != "REMA") {
         $('#selpars').show();
         $("#plotAWSGraph .btn").html(loadspin + 'Plot Parameter');
@@ -56,12 +57,12 @@ function setAWSParamSelect(vvar, source) {
         if ($.isArray(vpars)) {
             for (var i = 0; i < vpars.length; ++i) {
                 $('#awsParams').append(
-                    $("<option></option>").text(vpars[i]).val(vpars[i])
+                    $("<option>").text(vpars[i]).val(vpars[i])
                 );
             }
         } else {
             $('#awsParams').append(
-                $("<option></option>").text(vpars).val(vpars)
+                $("<option>").text(vpars).val(vpars)
             );
         }
     } else {
@@ -76,10 +77,11 @@ function setAWSVariableSelect1() {
     $.each(AWS_AggrTsObj, function() {
         if (Lvars.includes(this.var)) {
             $('#awsObsVar').append(
-                $("<option></option>").text(this.name).val(this.var)
+                $("<option>").text(this.name).val(this.var)
             );
         }
     });
+
     $("#awsObsVar").val($("#awsObsVar option:first").val());
 }
 //
@@ -88,19 +90,21 @@ function setAWSParamSelect1(vvar) {
     if (vvar == "RR") {
         $('#rangepars').hide();
         $('#awsParams').append(
-            $("<option></option>").text("Tot").val("Tot")
+            $("<option>").text("Total").val("Tot")
         );
     } else {
         $('#rangepars').show();
-        vpars = ['Ave', 'Min', 'Max'];
-        for (var i = 0; i < vpars.length; ++i) {
+        valpars = ['Ave', 'Min', 'Max'];
+        txtpars = ['Average', 'Minimum', 'Maximum'];
+        for (var i = 0; i < valpars.length; ++i) {
             $('#awsParams').append(
-                $("<option></option>").text(vpars[i]).val(vpars[i])
+                $("<option>").text(txtpars[i]).val(valpars[i])
             );
         }
     }
 }
-//
+
+// TODO: replace to asynchronous
 function getAWSInfosParams(url, data) {
     return $.ajax({
         url: url,
@@ -109,6 +113,7 @@ function getAWSInfosParams(url, data) {
         dataType: 'json',
     }).responseJSON;
 }
+
 //
 function getListMetadata() {
     var info = new Array();

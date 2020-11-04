@@ -108,3 +108,438 @@ function setAWSAggrSpVariable() {
     });
     $("#awsSpVar").val("PRECIP");
 }
+
+function setAWSAggrTsVariableSel() {
+    $.each(AWS_AggrTsObj, function() {
+        $('#awsObsVar').append(
+            $("<option>").text(this.name).val(this.var)
+        );
+    });
+    var firstSel = $("#awsObsVar option:first").val();
+    $("#awsObsVar").val(firstSel);
+    setAWSParamSelect1(firstSel);
+}
+
+function setAWSAggrTsVariable() {
+    $.each(AWS_JSON, function() {
+        var text = this.id + " - " + this.stationName + " - " + this.AWSGroup;
+        var val = this.id;
+        $('#stationDispAWS').append(
+            $("<option>").text(text).val(val)
+        );
+    });
+    $('#stationDispAWS option[value=000003]').attr('selected', true);
+    AWS_INFO = getAWSInfos('000003');
+
+    setAWSVariableSelect1();
+    setAWSParamSelect1("RR");
+}
+
+//////////
+
+function selectAWS2DispTS(json, selAWS) {
+    var divmodal = $('<div>').addClass('modal-dialog');
+    var divcont = $('<div>').addClass('modal-content');
+    var divhead = $('<div>').addClass('modal-header');
+    var divbody = $('<div>').addClass('modal-body');
+    var divfoot = $('<div>').addClass('modal-footer');
+
+    $(divhead).css({
+        'background-color': '#337AB7',
+        'color': '#FFF',
+        'padding': '0.5em 1em'
+    })
+    $("<button>", {
+        type: 'button',
+        'class': 'close',
+        text: 'x',
+        'data-dismiss': 'modal'
+    }).appendTo(divhead);
+
+    $("<h4>").text("AWS Selection").appendTo(divhead);
+
+    //////
+    // body
+    var divSelect = $('<div>').addClass('div-modal-select');
+    var divLeft = $('<div>').css({
+        'text-align': 'right',
+        // 'background-color': 'red',
+    });
+    var divRight = $('<div>').css({
+        'text-align': 'left',
+        // 'background-color': 'blue',
+    });
+    var divCenter = $('<div>').css({
+        'text-align': 'center',
+        // 'background-color': 'green',
+    });
+
+    var select_left = $('<select>').appendTo(divLeft);
+    select_left.attr("multiple", "multiple");
+    select_left.attr("size", 20);
+    select_left.addClass('left-select');
+    select_left.css('width', '250px');
+
+    $.each(json, function() {
+        var text = this.id + " - " + this.stationName + " - " + this.AWSGroup;
+        select_left.append($("<option>").val(this.id).text(text));
+    });
+
+    //
+    var select_right = $('<select>').appendTo(divRight);
+    select_right.attr("multiple", "multiple");
+    select_right.attr("size", 20);
+    select_right.css('width', '250px');
+
+    if (selAWS.length > 0) {
+        for (var i = 0; i < selAWS.length; ++i) {
+            var ix = json.map(x => x.id).indexOf(selAWS[i]);
+            var obj = json[ix];
+            var text = obj.id + " - " + obj.stationName + " - " + obj.AWSGroup;
+            select_right.append($("<option>").val(obj.id).text(text));
+        }
+    }
+
+    // 
+    $("<button>", {
+        type: 'button',
+        'class': 'btn btn-default',
+        text: ' >> ',
+        click: () => {
+            var sel_aws_val = select_left.val();
+            if (sel_aws_val.length == 0) {
+                return false;
+            }
+            var sel_aws_txt = $('.left-select option:selected').toArray().map(item => item.text);
+
+            for (var i = 0; i < sel_aws_val.length; ++i) {
+                if (selAWS.includes(sel_aws_val[i])) {
+                    continue;
+                } else {
+                    selAWS.push(sel_aws_val[i]);
+                    select_right.append($("<option>").val(sel_aws_val[i]).text(sel_aws_txt[i]));
+                }
+            }
+        }
+    }).appendTo(divCenter);
+
+    $("<button>", {
+        type: 'button',
+        'class': 'btn btn-default',
+        text: ' << ',
+        click: () => {
+            var sel_aws_val = select_right.val();
+            if (sel_aws_val.length == 0) {
+                return false;
+            }
+
+            for (var i = 0; i < sel_aws_val.length; ++i) {
+                select_right.find('[value="' + sel_aws_val[i] + '"]').remove();
+                var ix = selAWS.indexOf(sel_aws_val[i]);
+                if (ix > -1) {
+                    selAWS.splice(ix, 1);
+                }
+            }
+        }
+    }).appendTo(divCenter);
+
+    //////
+
+    divSelect.append(divLeft);
+    divSelect.append(divCenter);
+    divSelect.append(divRight);
+    divbody.append(divSelect);
+
+    //////
+
+    $("<button>", {
+        type: 'button',
+        'class': 'btn btn-default',
+        text: 'Close',
+        'data-dismiss': 'modal'
+    }).appendTo(divfoot);
+
+    // 
+    divcont.append(divhead);
+    divcont.append(divbody);
+    divcont.append(divfoot);
+    divmodal.append(divcont);
+
+    return divmodal;
+}
+
+//////////
+
+function selectDataAWSSP(json, selAWS) {
+    var aws_list = json.data.map(x => x.id);
+    var aws_ix = [];
+    for (var i = 0; i < selAWS.length; i++) {
+        aws_ix.push(aws_list.indexOf(selAWS[i]));
+    }
+    aws_ix = aws_ix.filter(x => x !== -1);
+
+    var aws_sel = aws_ix.map(i => json.data[i]);
+    json.data = aws_sel;
+
+    var var_col = new Object();
+    for (x in json.color) {
+        var_col[x] = aws_ix.map(i => json.color[x][i]);
+    }
+    json.color = var_col;
+
+    return json;
+}
+
+//////////
+
+function selectAWS2DispSP(json, selAWS, vars) {
+    var divmodal = $('<div>').addClass('modal-dialog');
+    var divcont = $('<div>').addClass('modal-content');
+    var divhead = $('<div>').addClass('modal-header');
+    var divbody = $('<div>').addClass('modal-body');
+    var divfoot = $('<div>').addClass('modal-footer');
+
+    $(divhead).css({
+        'background-color': '#337AB7',
+        'color': '#FFF',
+        'padding': '0.5em 1em'
+    })
+    $("<button>", {
+        type: 'button',
+        'class': 'close',
+        text: 'x',
+        'data-dismiss': 'modal',
+        click: () => {
+            if (selAWS.length > 0) {
+                json = selectDataAWSSP(json, selAWS);
+            }
+            leafletMapAggrAWS(vars, json);
+        }
+    }).appendTo(divhead);
+
+    $("<h4>").text("AWS Selection").appendTo(divhead);
+
+    //////
+    // body
+    var divSelect = $('<div>').addClass('div-modal-select');
+    var divLeft = $('<div>').css({
+        'text-align': 'right',
+        // 'background-color': 'red',
+    });
+    var divRight = $('<div>').css({
+        'text-align': 'left',
+        // 'background-color': 'blue',
+    });
+    var divCenter = $('<div>').css({
+        'text-align': 'center',
+        // 'background-color': 'green',
+    });
+
+    var select_left = $('<select>').appendTo(divLeft);
+    select_left.attr("multiple", "multiple");
+    select_left.attr("size", 20);
+    select_left.addClass('left-select');
+    select_left.css('width', '250px');
+
+    $.each(json.data, function() {
+        var text = this.id + " - " + this.stationName + " - " + this.AWSGroup;
+        select_left.append($("<option>").val(this.id).text(text));
+    });
+
+    //
+    var select_right = $('<select>').appendTo(divRight);
+    select_right.attr("multiple", "multiple");
+    select_right.attr("size", 20);
+    select_right.css('width', '250px');
+
+    if (selAWS.length > 0) {
+        for (var i = 0; i < selAWS.length; ++i) {
+            var ix = json.data.map(x => x.id).indexOf(selAWS[i]);
+            if (ix === -1) continue;
+            var obj = json.data[ix];
+            var text = obj.id + " - " + obj.stationName + " - " + obj.AWSGroup;
+            select_right.append($("<option>").val(obj.id).text(text));
+        }
+    }
+
+    // 
+    $("<button>", {
+        type: 'button',
+        'class': 'btn btn-default',
+        text: ' >> ',
+        click: () => {
+            var sel_aws_val = select_left.val();
+            if (sel_aws_val.length == 0) {
+                return false;
+            }
+            var sel_aws_txt = $('.left-select option:selected').toArray().map(item => item.text);
+
+            for (var i = 0; i < sel_aws_val.length; ++i) {
+                if (selAWS.includes(sel_aws_val[i])) {
+                    continue;
+                } else {
+                    selAWS.push(sel_aws_val[i]);
+                    select_right.append($("<option>").val(sel_aws_val[i]).text(sel_aws_txt[i]));
+                }
+            }
+        }
+    }).appendTo(divCenter);
+
+    $("<button>", {
+        type: 'button',
+        'class': 'btn btn-default',
+        text: ' << ',
+        click: () => {
+            var sel_aws_val = select_right.val();
+            if (sel_aws_val.length == 0) {
+                return false;
+            }
+
+            for (var i = 0; i < sel_aws_val.length; ++i) {
+                select_right.find('[value="' + sel_aws_val[i] + '"]').remove();
+                var ix = selAWS.indexOf(sel_aws_val[i]);
+                if (ix > -1) {
+                    selAWS.splice(ix, 1);
+                }
+            }
+        }
+    }).appendTo(divCenter);
+
+    //////
+
+    divSelect.append(divLeft);
+    divSelect.append(divCenter);
+    divSelect.append(divRight);
+    divbody.append(divSelect);
+
+    //////
+
+    $("<button>", {
+        type: 'button',
+        'class': 'btn btn-default',
+        text: 'Close',
+        'data-dismiss': 'modal',
+        click: () => {
+            if (selAWS.length > 0) {
+                json = selectDataAWSSP(json, selAWS);
+            }
+            leafletMapAggrAWS(vars, json);
+        }
+    }).appendTo(divfoot);
+
+    // 
+    divcont.append(divhead);
+    divcont.append(divbody);
+    divcont.append(divfoot);
+    divmodal.append(divcont);
+
+    return divmodal;
+}
+
+//////////
+
+function leafletMapAggrAWS(pars, json) {
+    var mymap = createLeafletTileLayer("mapAWSVars");
+
+    // //////
+    if (json.status == "no-data") {
+        var popup = L.popup()
+            .setLatLng([mapCenterLAT, mapCenterLON])
+            .setContent("No available data")
+            .openOn(mymap);
+        return false;
+    }
+    mymap.closePopup();
+    // 
+    let text2Op = {
+        direction: 'bottom',
+        className: 'tooltipbottom'
+    };
+    var lastIconActive = "";
+
+    //
+    $.each(json.data, (ix) => {
+        var don = json.data[ix];
+        if (don[pars] == undefined) {
+            return;
+        }
+
+        var divIconHtml = $('<div>').addClass("pin");
+        var divIco = $('<div>').addClass("pin-inner");
+        $('<span>').addClass("pin-label")
+            .html(Math.round(don[pars]))
+            .appendTo(divIco);
+        divIconHtml.append(divIco);
+
+        var txttip = '<b>ID : </b>' + don.id + '<br>' + '<b>NAME : </b>' +
+            don.stationName + '<br>' + '<b>GROUP : </b>' + don.AWSGroup;
+        var tablePopup = awsSpatialbindPopup(don, json.date, AWS_AggrSpObj, 'Date');
+        //
+        var icon = L.divIcon({
+            iconSize: null,
+            iconAnchor: new L.Point(15, 30),
+            popupAnchor: new L.Point(0, -15),
+            className: 'pindivIcon' + ix,
+            html: divIconHtml.prop('outerHTML')
+        });
+
+        var lalo = new L.LatLng(don.latitude, don.longitude);
+        var marker = L.marker(lalo, { icon: icon })
+            .bindPopup(tablePopup.prop('outerHTML'))
+            .bindTooltip(txttip, text2Op)
+            .addTo(mymap);
+        mymarkersBE.push(marker);
+        // 
+        var thisPin = '.pindivIcon' + ix + ' .pin-inner';
+        $(thisPin).css("background-color", json.color[pars][ix]);
+        // 
+        marker.on('click', (e) => {
+            if (lastIconActive != "") {
+                var activePin = lastIconActive + ' .pin';
+                $(activePin).css("background-color", '#3071a9');
+            }
+            var goPin = '.pindivIcon' + ix;
+            var thisPin = goPin + ' .pin';
+            $(thisPin).css("background-color", 'red');
+            lastIconActive = goPin;
+        });
+        // 
+        marker.getPopup().on('remove', () => {
+            if (lastIconActive != "") {
+                var activePin = lastIconActive + ' .pin';
+                $(activePin).css("background-color", '#3071a9');
+            }
+        });
+    });
+    // 
+    mymap.on('click', (e) => {
+        if (lastIconActive != "") {
+            var activePin = lastIconActive + ' .pin';
+            $(activePin).css("background-color", '#3071a9');
+        }
+    });
+    //
+    var vkey = getVarNameColorKey(pars);
+    $('#colKeyMapVar').empty();
+
+    var ix = AWS_AggrSpObj.map(x => x.var).indexOf(pars);
+    var titre = AWS_AggrSpObj[ix].name + ' (' + AWS_AggrSpObj[ix].unit + ')';
+
+    $('<p>').html(titre).css({
+        'margin-top': '1px',
+        'margin-bottom': '2px',
+        'font-size': '10'
+    }).appendTo('#colKeyMapVar');
+    $('#colKeyMapVar').append(createColorKeyH(json.key[vkey]));
+    $('#colKeyMapVar .ckeyh').css({
+        'width': '290px',
+        'height': '35px'
+    });
+    $('#colKeyMapVar .ckeyh-label').css('font-size', 10);
+
+    /////////////
+
+    $('a[href="#dispawssp"]').on('shown.bs.tab', (e) => {
+        mymap.invalidateSize();
+    });
+}

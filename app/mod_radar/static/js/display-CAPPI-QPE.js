@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(() => {
     var mymap = createLeafletTileLayer("mapRadarDisp", aws_tile = false);
     changeLeafletTileLayer("#basemapL");
 
@@ -13,7 +13,7 @@ $(document).ready(function() {
     /////////////
 
     L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
-        _getDisplayDateFormat: function(date) {
+        _getDisplayDateFormat: (date) => {
             return date.format("yyyy-mm-dd hh:MM:ss");
         }
     });
@@ -28,7 +28,7 @@ $(document).ready(function() {
 
     /////////////
 
-    $("#precipType").on("change", function() {
+    $("#precipType").on("change", () => {
         var ptype = $("#precipType option:selected").val();
         disp_wmsqpe_5minutes(ptype);
     });
@@ -44,9 +44,22 @@ $(document).ready(function() {
 
     /////////
 
-    $("#downLeafletMap").on("click", function() {
+    $("#downLeafletMap").on("click", () => {
         var variable = $("#precipType option:selected").val();
-        saveLeafletDispQPEMap(variable, wmsData.ckeys);
+
+        var unit = variable == "precip" ? "mm" : "mm/h";
+
+        if (myimagesPNG[1]._currentTime == undefined) {
+            var timestamp = myimagesPNG[1]._defaultTime;
+        } else {
+            var timestamp = myimagesPNG[1]._currentTime;
+        }
+        var date = new Date(timestamp);
+        date = dateFormat(date, "yyyy-mm-dd_hh-MM-ss");
+        var prefix = variable == "precip" ? "precip_accum" : "precip_rate";
+        var filename = prefix + "_" + date;
+
+        saveLeafletDispQPEMap(variable, wmsData.ckeys, unit, filename);
     });
 });
 

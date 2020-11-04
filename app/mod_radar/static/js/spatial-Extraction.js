@@ -164,7 +164,7 @@ function setMultiPointsFromUser(extract_geom) {
     });
 
     // 
-    $('#uploadCsvBtn').on('click', function() {
+    $('#uploadCsvBtn').on('click', () => {
         if (dataVide) {
             errorUploadCsvFile('vide');
             return false;
@@ -181,20 +181,20 @@ function setMultiPointsFromUser(extract_geom) {
             contentType: false,
             processData: false,
             dataType: "json",
-            success: function(data) {
+            success: (data) => {
                 leafletMapExtractSpatial(extract_geom, data);
             },
-            error: function(request, status, error) {
+            error: (request, status, error) => {
                 $('#uploadCsvError').css("background-color", "red");
                 $('#uploadCsvError').html("Error: " + request + status + error);
             },
-            beforeSend: function() {
+            beforeSend: () => {
                 $("#pb-upload-csv").show();
             },
-            xhr: function() {
+            xhr: () => {
                 var myXhr = $.ajaxSettings.xhr();
                 if (myXhr.upload) {
-                    myXhr.upload.addEventListener('progress', function(e) {
+                    myXhr.upload.addEventListener('progress', (e) => {
                         if (e.lengthComputable) {
                             $('#pb-upload-csv').attr({
                                 value: e.loaded,
@@ -205,7 +205,7 @@ function setMultiPointsFromUser(extract_geom) {
                 }
                 return myXhr;
             }
-        }).always(function() {
+        }).always(() => {
             $("#pb-upload-csv").hide();
         });
     });
@@ -277,7 +277,7 @@ function setShapefileFromUser(extract_geom) {
     });
 
     // 
-    $('#uploadShpBtn').on('click', function() {
+    $('#uploadShpBtn').on('click', () => {
         if (dataVide) {
             errorUploadShpFiles('vide');
             return false;
@@ -298,7 +298,7 @@ function setShapefileFromUser(extract_geom) {
             contentType: false,
             processData: false,
             dataType: "json",
-            success: function(json) {
+            success: (json) => {
                 leafletMapExtractSpatial(extract_geom, json.data);
 
                 // update attribute field select
@@ -323,17 +323,17 @@ function setShapefileFromUser(extract_geom) {
                 // remove duplicated
                 spatialGeomSelected = Array.from(new Set(arr));
             },
-            error: function(x, t, e) {
+            error: (x, t, e) => {
                 $('#uploadShpError').css("background-color", "red");
                 $('#uploadShpError').html(e + '; ' + x.status + ': ' + x.statusText);
             },
-            beforeSend: function() {
+            beforeSend: () => {
                 $("#pb-upload-shp").show();
             },
-            xhr: function() {
+            xhr: () => {
                 var myXhr = $.ajaxSettings.xhr();
                 if (myXhr.upload) {
-                    myXhr.upload.addEventListener('progress', function(e) {
+                    myXhr.upload.addEventListener('progress', (e) => {
                         if (e.lengthComputable) {
                             $('#pb-upload-shp').attr({
                                 value: e.loaded,
@@ -344,7 +344,7 @@ function setShapefileFromUser(extract_geom) {
                 }
                 return myXhr;
             }
-        }).always(function() {
+        }).always(() => {
             $("#pb-upload-shp").hide();
         });
     });
@@ -364,7 +364,7 @@ function setShapefileFromUser(extract_geom) {
     }
 
     //
-    $('#sppolySelect').on('change', function() {
+    $('#sppolySelect').on('change', () => {
         var spextr = $("#sppolySelect option:selected").val();
         if (spextr == 'multiple') {
             $("#div-attr-field").show();
@@ -402,14 +402,14 @@ function setAdministrativeProvince(extract_geom) {
     $('#provinceSelect option[value="RWA.3_1"]').attr('selected', true);
 
     // 
-    $("#provinceSelect").change(function() {
+    $("#provinceSelect").change(() => {
         var l_id = $("#provinceSelect option:selected").val();
         setAdministrativeStyleLayer(layers_obj, l_id, 'GID_1');
     });
     $("#provinceSelect").trigger("change");
 
     // 
-    $("#clearSelAdmin").on("click", function() {
+    $("#clearSelAdmin").on("click", () => {
         clearAdministrativeLayers(layers_obj)
     });
     // 
@@ -468,14 +468,14 @@ function setAdministrativeDistrict(extract_geom) {
     $('#districtSelect option[value="RWA.3.1_1"]').attr('selected', true);
 
     //
-    $("#districtSelect").change(function() {
+    $("#districtSelect").change(() => {
         var l_id = $("#districtSelect option:selected").val();
         setAdministrativeStyleLayer(layers_obj, l_id, 'GID_2');
     });
     $("#districtSelect").trigger("change");
 
     // 
-    $("#clearSelAdmin").on("click", function() {
+    $("#clearSelAdmin").on("click", () => {
         clearAdministrativeLayers(layers_obj)
     });
     // 
@@ -518,7 +518,7 @@ function setAdministrativeSector(extract_geom) {
     $('#provinceSelect option[value="RWA.3_1"]').attr('selected', true);
 
     // 
-    $("#provinceSelect").change(function() {
+    $("#provinceSelect").change(() => {
         $('#districtSelect').empty();
         var l1_id = $("#provinceSelect option:selected").val();
 
@@ -549,7 +549,7 @@ function setAdministrativeSector(extract_geom) {
     $('#districtSelect option[value="RWA.3.1_1"]').attr('selected', true);
 
     // 
-    $("#districtSelect").change(function() {
+    $("#districtSelect").change(() => {
         $('#sectorSelect').empty();
         var l2_id = $("#districtSelect option:selected").val();
 
@@ -568,7 +568,7 @@ function setAdministrativeSector(extract_geom) {
     $('#sectorSelect option[value="RWA.3.1.10_1"]').attr('selected', true);
 
     // 
-    $("#sectorSelect").change(function() {
+    $("#sectorSelect").change(() => {
         var l3_id = $("#sectorSelect option:selected").val();
         setAdministrativeStyleLayer(layers_obj, l3_id, 'GID_3');
     });
@@ -577,7 +577,7 @@ function setAdministrativeSector(extract_geom) {
     // remove default
     removeFirstSelectedSector(layers_obj);
     // 
-    $("#clearSelAdmin").on("click", function() {
+    $("#clearSelAdmin").on("click", () => {
         clearAdministrativeLayers(layers_obj)
     });
     // 
@@ -659,39 +659,38 @@ function clearAdministrativeLayers(layers_obj) {
 function createPaddingLatLonForm() {
     var div = $('<div>');
     div.css("margin-top", "15px");
-    var lab = $('<label>').addClass('control-label');
-    lab.text("Spatially Average Over a Rectangle");
-    div.append(lab);
+
+    $('<label>').addClass('control-label')
+        .text("Spatially Average Over a Rectangle")
+        .appendTo(div);
 
     var div1 = $('<div>');
 
-    var lab_lo = $('<label>').attr('for', "padLon");
-    lab_lo.text("Longitude: ");
-    div1.append(lab_lo);
+    $('<label>').attr('for', "padLon")
+        .text("Longitude: ")
+        .appendTo(div1);
 
-    var inp_lo = $("<input>").attr({
+    $("<input>").attr({
         name: "padLon",
         id: "padLon",
         type: "text",
         value: "0.0",
         size: 10,
         maxlength: 10
-    });
-    div1.append(inp_lo);
+    }).appendTo(div1);
 
-    var lab_la = $('<label>').attr('for', "padLat");
-    lab_la.text("Latitude: ");
-    div1.append(lab_la);
+    $('<label>').attr('for', "padLat")
+        .text("Latitude: ")
+        .appendTo(div1);
 
-    var inp_la = $("<input>").attr({
+    $("<input>").attr({
         name: "padLat",
         id: "padLat",
         type: "text",
         value: "0.0",
         size: 10,
         maxlength: 10
-    });
-    div1.append(inp_la);
+    }).appendTo(div1);
 
     div.append(div1);
 
@@ -708,32 +707,40 @@ function createPaddingLatLonForm() {
 
 function createFormtoUploadCsvFile() {
     var div = $('<div>');
-    var b0 = ' <br>';
-    var f0 = '<form enctype="multipart/form-data">';
+    div.append('<br>');
+    var form = $("<form>").attr("enctype", "multipart/form-data");
 
-    var l1 = '<div class="custom-file">';
-    var l2 = '<input id="uploadCsvFile" type="file" class="custom-file-input" />';
-    var l3 = '</div>';
-    var fl = l1 + l2 + l3;
+    var div1 = $('<div>').addClass('custom-file');
 
-    var d0 = '<div class="upload-user-files">'
+    $("<input>").attr({
+        id: "uploadCsvFile",
+        type: "file",
+        class: "custom-file-input"
+    }).appendTo(div1);
 
-    var p1 = '<div>';
-    var p2 = '<progress id="pb-upload-csv" style="display:none;"></progress>';
-    var p3 = '</div>';
-    var pg = p1 + p2 + p3;
+    var div2 = $('<div>').addClass('upload-user-files');
 
-    var b1 = '<div>';
-    var b2 = '<input id="uploadCsvBtn" type="button" value="Upload" class="btn btn-primary btn-block" />'
-    var b3 = '</div>';
-    var bt = b1 + b2 + b3;
+    var divpb = $('<div>');
+    $("<progress>")
+        .attr("id", "pb-upload-csv")
+        .css("display", "none")
+        .appendTo(divpb);
+    div2.append(divpb);
 
-    var d1 = '</div>';
-    var f1 = '</form>';
-    div.append(b0 + f0 + fl + d0 + pg + bt + d1 + f1);
+    var divbt = $('<div>');
+    $("<input>").attr({
+        id: "uploadCsvBtn",
+        type: "button",
+        class: "btn btn-primary btn-block",
+        value: "Upload"
+    }).appendTo(divbt);
+    div2.append(divbt);
 
-    var err = '<div id="uploadCsvError"></div>';
-    div.append(err);
+    form.append(div1);
+    form.append(div2);
+    div.append(form);
+
+    $('<div>').attr("id", "uploadCsvError").appendTo(div);
 
     return div;
 }
@@ -760,32 +767,41 @@ function errorUploadCsvFile(x) {
 
 function createFormtoUploadShpFiles() {
     var div = $('<div>');
-    var b0 = ' <br>';
-    var f0 = '<form enctype="multipart/form-data">';
+    div.append('<br>');
+    var form = $("<form>").attr("enctype", "multipart/form-data");
 
-    var l1 = '<div class="custom-file">';
-    var l2 = '<input id="uploadShpFiles" type="file" class="custom-file-input" multiple/>';
-    var l3 = '</div>';
-    var fl = l1 + l2 + l3;
+    var div1 = $('<div>').addClass('custom-file');
 
-    var d0 = '<div class="upload-user-files">'
+    $("<input>").attr({
+        id: "uploadShpFiles",
+        type: "file",
+        class: "custom-file-input",
+        multiple: true
+    }).appendTo(div1);
 
-    var p1 = '<div>';
-    var p2 = '<progress id="pb-upload-shp" style="display:none;"></progress>';
-    var p3 = '</div>';
-    var pg = p1 + p2 + p3;
+    var div2 = $('<div>').addClass('upload-user-files');
 
-    var b1 = '<div>';
-    var b2 = '<input id="uploadShpBtn" type="button" value="Upload" class="btn btn-primary btn-block" />'
-    var b3 = '</div>';
-    var bt = b1 + b2 + b3;
+    var divpb = $('<div>');
+    $("<progress>")
+        .attr("id", "pb-upload-shp")
+        .css("display", "none")
+        .appendTo(divpb);
+    div2.append(divpb);
 
-    var d1 = '</div>';
-    var f1 = '</form>';
-    div.append(b0 + f0 + fl + d0 + pg + bt + d1 + f1);
+    var divbt = $('<div>');
+    $("<input>").attr({
+        id: "uploadShpBtn",
+        type: "button",
+        class: "btn btn-primary btn-block",
+        value: "Upload"
+    }).appendTo(divbt);
+    div2.append(divbt);
 
-    var err = '<div id="uploadShpError"></div>';
-    div.append(err);
+    form.append(div1);
+    form.append(div2);
+    div.append(form);
+
+    $('<div>').attr("id", "uploadShpError").appendTo(div);
 
     return div;
 }
@@ -974,7 +990,7 @@ function dispMapPoints(map) {
         className: 'tooltipbottom'
     };
 
-    map.on('click', function(e) {
+    map.on('click', (e) => {
         var txttip = '<b>Longitude : </b>' + e.latlng.lng + '<br>' + '<b>Latitude : </b>' + e.latlng.lat;
 
         // 
@@ -986,7 +1002,7 @@ function dispMapPoints(map) {
         });
 
         // 
-        marker.on('click', function() {
+        marker.on('click', () => {
             if (marker) {
                 var mrkr_id = marker._leaflet_id;
                 map.removeLayer(marker);
@@ -1119,7 +1135,7 @@ function leafletMapExtractSpatial(extract_geom, json_data = null) {
             mymap.off('click');
     }
 
-    $('a[href="#extractmap"]').on('shown.bs.tab', function(e) {
+    $('a[href="#extractmap"]').on('shown.bs.tab', (e) => {
         mymap.invalidateSize();
     });
 }

@@ -129,7 +129,7 @@ var chartButtonMenuItems = [
 /////////////////
 
 // container toggle
-$(function() {
+$(() => {
     $('.input-container-title').on('click', function(event) {
         event.preventDefault();
         var accordion = $(this);
@@ -138,9 +138,15 @@ $(function() {
         accordionContent.slideToggle(250);
         // 
         if (accordion.hasClass("open")) {
-            $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+            $(this).parent()
+                .find(".glyphicon-plus")
+                .removeClass("glyphicon-plus")
+                .addClass("glyphicon-minus");
         } else {
-            $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+            $(this).parent()
+                .find(".glyphicon-minus")
+                .removeClass("glyphicon-minus")
+                .addClass("glyphicon-plus");
         }
     });
     $('.input-container .input-container-title').first().click();
@@ -374,7 +380,7 @@ function createLeafletTileLayer(container, aws_tile = true) {
 ////////////////////////
 
 function changeLeafletTileLayer(container) {
-    $(container).on("change", function() {
+    $(container).on("change", () => {
         var mytile = mytileBE;
         var mymap = mymapBE;
         mymap.removeLayer(mytile);
@@ -487,10 +493,11 @@ var spinner_opts = {
 // aws map popup table
 function awsSpatialbindPopup(don, date, labelObj, labelT) {
     var div = $('<div>');
-    var stn1 = '<p class="awsTablebindPopupP"> <b>' + labelT + ': </b>' + date + '<br>';
-    var stn2 = '<b>ID : </b>' + don.id + '<b>; NAME : </b>' + don.stationName;
-    var stn3 = '<b>; GROUP : </b>' + don.AWSGroup + '</p>';
-    div.append(stn1 + stn2 + stn3);
+    var popTitre = '<b>' + labelT + ': </b>' + date + '<br>' +
+        '<b>ID : </b>' + don.id + '<b>; NAME : </b>' +
+        don.stationName + '<b>; GROUP : </b>' + don.AWSGroup;
+    $('<p>').html(popTitre).addClass("awsTablebindPopupP").appendTo(div);
+
     var table = $('<table>').addClass('awsTablebindPopup');
     var head = $('<tr>').addClass('awsTablebindPopupTh');
     var head1 = $('<th>').text("Variable");
@@ -508,7 +515,7 @@ function awsSpatialbindPopup(don, date, labelObj, labelT) {
         val = (val == undefined) ? '' : Math.round((val + Number.EPSILON) * 10) / 10;
         var col2 = $('<td>').text(val);
         row.append(col2);
-        var col3 = $('<td>').text(labelObj[i].unit);
+        var col3 = $('<td>').html(labelObj[i].unit);
         row.append(col3);
         table.append(row);
     }
@@ -1077,7 +1084,10 @@ function maskMapLayerPNG() {
         context.drawImage(myimageMASK, 0, 0);
         var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 
-        raplaceColorAlpha({ 'data': imageData.data, 'col': kol1 }, function(data) {
+        raplaceColorAlpha({
+            'data': imageData.data,
+            'col': kol1
+        }, (data) => {
             imageData.data = data;
             context.putImageData(imageData, 0, 0);
         });

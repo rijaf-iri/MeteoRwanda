@@ -1,28 +1,22 @@
-$(document).ready(function() {
+$(document).ready(() => {
     setAWSAggrDataTime();
 
-    ////////////
-
-    $.getJSON('/readCoords', function(json) {
+    $.getJSON('/readCoords', (json) => {
         AWS_JSON = json;
-        $('#stationDispAWS').attr('enabled', 'true');
-        $.each(AWS_JSON, function() {
-            var text = this.id + " - " + this.stationName + " - " + this.AWSGroup;
-            var val = this.id;
-            $('#stationDispAWS').append(
-                $("<option>").text(text).val(val)
-            );
-        });
-        $('#stationDispAWS option[value=000003]').attr('selected', true);
         AWS_INFO = getAWSInfos('000003');
 
-        setAWSVariableSelect1();
-        setAWSParamSelect1("RR");
+        if (AWS_AggrTsObj == undefined) {
+            setTimeout(() => {
+                setAWSAggrTsVariable();
+            }, 1000);
+        } else {
+            setAWSAggrTsVariable();
+        }
     });
 
     ////////////
 
-    $("#stationDispAWS").on("change", function() {
+    $("#stationDispAWS").on("change", () => {
         var aws = $("#stationDispAWS option:selected").val();
         AWS_INFO = getAWSInfos(aws);
         setAWSVariableSelect1();
@@ -33,21 +27,11 @@ $(document).ready(function() {
 
     ////////////
 
-    $("#awsObsVar").on("change", function() {
+    $("#awsObsVar").on("change", () => {
         var vvar = $("#awsObsVar option:selected").val();
         setAWSParamSelect1(vvar);
     });
     $("#awsObsVar").trigger("change");
-
-    ////////////
-
-    if (AWS_AggrSpObj == undefined) {
-        setTimeout(function() {
-            setAWSAggrSpVariable();
-        }, 1000);
-    } else {
-        setAWSAggrSpVariable();
-    }
 
     ////////////
 
@@ -63,7 +47,7 @@ $(document).ready(function() {
     plotTSAggrAWS(data0);
 
     //
-    $("#plotAWSGraph").on("click", function() {
+    $("#plotAWSGraph").on("click", () => {
         $('a[href="#dispawsts"]').click();
         //
         var obj = checkDateTimeRange();
@@ -72,13 +56,7 @@ $(document).ready(function() {
         }
         var tstep = $("#timestepDispTS option:selected").val();
         var vrange = startEndDateTime(tstep, obj);
-        //
-        var plotrange = 0;
-        if ($("#arearange").is(':checked')) {
-            plotrange = 1;
-        } else {
-            plotrange = 0;
-        }
+        var plotrange = $("#arearange").is(':checked') ? 1 : 0;
         //
         var data = {
             "aws": $("#stationDispAWS option:selected").val(),
@@ -98,14 +76,14 @@ $(document).ready(function() {
     plotMapAggrAWS(daty0);
 
     ////////
-    $("#AWSMapDis").on("click", function() {
+    $("#AWSMapDis").on("click", () => {
         $('a[href="#dispawssp"]').click();
         //
         var daty = getDateTimeMapData();
         plotMapAggrAWS(daty);
     });
     //
-    $("#AWSMapNext").on("click", function() {
+    $("#AWSMapNext").on("click", () => {
         $('a[href="#dispawssp"]').click();
         //
         setDateTimeMapData(1);
@@ -113,7 +91,7 @@ $(document).ready(function() {
         plotMapAggrAWS(daty);
     });
     //
-    $("#AWSMapPrev").on("click", function() {
+    $("#AWSMapPrev").on("click", () => {
         $('a[href="#dispawssp"]').click();
         //
         setDateTimeMapData(-1);
@@ -121,62 +99,44 @@ $(document).ready(function() {
         plotMapAggrAWS(daty);
     });
 
+    ////////////
+
+    if (AWS_AggrSpObj == undefined) {
+        setTimeout(() => {
+            setAWSAggrSpVariable();
+        }, 1000);
+    } else {
+        setAWSAggrSpVariable();
+    }
+
+    ////////////
+
+    $("#awsSpVar").on("change", () => {
+        var vars = $("#awsSpVar option:selected").val();
+        var json = AWS_DATA;
+        leafletMapAggrAWS(vars, json);
+    });
+
     //////////
 
-    $("#downLeafletMap").on("click", function() {
-        var mymap = mymapBE;
+    $("#downLeafletMap").on("click", () => {
         var pars = $("#awsSpVar option:selected").val();
         var json = AWS_DATA;
-        var filename = "aggregated_data";
-        // 
-        if (json.status != "no-data") {
-            mymap.removeControl(zoomBE);
-
-            var colorBar = L.control({
-                position: 'bottomright'
-            });
-
-            colorBar.onAdd = function(map) {
-                var div = L.DomUtil.create('div', 'colorbar');
-                $(div).empty();
-
-                var vkey = getVarNameColorKey(pars);
-                var ix = AWS_AggrSpObj.map(function(x) { return x.var; }).indexOf(pars);
-                var titre = AWS_AggrSpObj[ix].name + ' (' + AWS_AggrSpObj[ix].unit + ')';
-
-                titre = '<p style="text-align:center;margin-top:1px;margin-bottom:2px;font-size:10;">' + titre + '</p>';
-                $(div).append(titre);
-                $(div).append(createColorKeyH(json.key[vkey]));
-
-                return div;
-            }
-
-            colorBar.addTo(mymap);
-            $('.leaflet-right .colorbar').css('margin-right', '0px');
-            $('.leaflet-right .colorbar').css('margin-bottom', '0px');
-            $('.colorbar').css('background-color', '#f4f4f4');
-            $('.colorbar .ckeyh').css('width', '290px');
-            $('.colorbar .ckeyh').css('height', '35px');
-            $('.colorbar .ckeyh-label').css('font-size', 10);
-
+        if (json.status == "no-data") {
+            filename = "aggregated_data";
+        } else {
             var tstep = $("#timestepDispTS option:selected").val();
             var daty = getDateTimeMapData();
             filename = pars + "_" + tstep + "_" + daty;
         }
 
-        var printer = easyPrintMap();
-        printer.printMap('CurrentSize', filename);
-
-        setTimeout(
-            function() {
-                mymap.removeControl(colorBar);
-                zoomBE = new L.Control.Zoom({
-                    position: 'bottomright'
-                }).addTo(mymap);
-                mymap.removeControl(printer);
-            }, 2000);
+        saveLeafletDispAWS(AWS_AggrSpObj, json, pars, filename);
     });
 });
+
+//////////
+
+var TEST;
 
 //////////
 function plotTSAggrAWS(data) {
@@ -185,11 +145,15 @@ function plotTSAggrAWS(data) {
         url: '/chartAggrAWSData',
         data: data,
         timeout: 120000,
-        success: highchartsTSAggrAWS,
-        beforeSend: function() {
+        // success: highchartsTSAggrAWS,
+        success: (json) => {
+            TEST = json;
+            highchartsTSAggrAWS(json);
+        },
+        beforeSend: () => {
             $("#plotAWSGraph .glyphicon-refresh").show();
         },
-        error: function(request, status, error) {
+        error: (request, status, error) => {
             if (status === "timeout") {
                 $('#errorMSG').css("background-color", "orange");
                 $('#errorMSG').html("Take too much time to render, select a shorter time range or refresh your web browser");
@@ -198,11 +162,37 @@ function plotTSAggrAWS(data) {
                 $('#errorMSG').html("Error: " + request + status + error);
             }
         }
-    }).always(function() {
+    }).always(() => {
         $("#plotAWSGraph .glyphicon-refresh").hide();
     });
 }
+
 ////
+
+function plotMapAggrAWS(daty) {
+    var data = {
+        "tstep": $("#timestepDispTS option:selected").val(),
+        "time": daty
+    };
+    // 
+    $.ajax({
+        dataType: "json",
+        url: '/displayMAPAggr',
+        data: data,
+        success: (json) => {
+            AWS_DATA = json;
+            var vars = $("#awsSpVar option:selected").val();
+            leafletMapAggrAWS(vars, json);
+        },
+        error: (request, status, error) => {
+            $('#errorMSG').css("background-color", "red");
+            $('#errorMSG').html("Error: " + request + status + error);
+        }
+    });
+}
+
+//////////
+
 function highchartsTSAggrAWS(json) {
     if (json.opts.status == "no-data") {
         $('#errorMSG').css("background-color", "orange").html("No data");
@@ -304,120 +294,4 @@ function highchartsTSAggrAWS(json) {
     options.series = series;
 
     Highcharts.stockChart('contAWSGraph', options);
-}
-
-//////////
-function plotMapAggrAWS(daty) {
-    var vars = $("#awsSpVar option:selected").val();
-    var data = {
-        "tstep": $("#timestepDispTS option:selected").val(),
-        "time": daty
-    };
-    // 
-    $.ajax({
-        dataType: "json",
-        url: '/displayMAPAggr',
-        data: data,
-        success: function(json) {
-            leafletMapAggrAWS(vars, json);
-            AWS_DATA = json;
-        },
-        error: function(request, status, error) {
-            $('#errorMSG').css("background-color", "red");
-            $('#errorMSG').html("Error: " + request + status + error);
-        }
-    });
-}
-
-////
-
-function leafletMapAggrAWS(pars, json) {
-    var mymap = createLeafletTileLayer("mapAWSVars");
-
-    // //////
-    if (json.status == "no-data") {
-        var popup = L.popup()
-            .setLatLng([mapCenterLAT, mapCenterLON])
-            .setContent("No available data")
-            .openOn(mymap);
-        return false;
-    }
-    mymap.closePopup();
-    // 
-    let text2Op = {
-        direction: 'bottom',
-        className: 'tooltipbottom'
-    };
-    var lastIconActive = "";
-
-    //
-    $.each(json.data, function(ix) {
-        var don = json.data[ix];
-        if (don[pars] == undefined) {
-            return;
-        }
-
-        var divIconHtml = '<div class="pin"><div class="pin-inner"><span class="pin-label">' + Math.round(don[pars]) + '</span></div></div>';
-
-        var txttip = '<b>ID : </b>' + don.id + '<br>' + '<b>NAME : </b>' + don.stationName + '<br>' + '<b>GROUP : </b>' + don.AWSGroup;
-        var tablePopup = awsSpatialbindPopup(don, json.date, AWS_AggrSpObj, 'Date').prop('outerHTML');
-        //
-        var icon = L.divIcon({
-            iconSize: null,
-            iconAnchor: new L.Point(15, 30),
-            popupAnchor: new L.Point(0, -15),
-            className: 'pindivIcon' + ix,
-            html: divIconHtml
-        });
-
-        var lalo = new L.LatLng(don.latitude, don.longitude);
-        var marker = L.marker(lalo, { icon: icon }).bindPopup(tablePopup).bindTooltip(txttip, text2Op).addTo(mymap);
-        mymarkersBE.push(marker);
-        // 
-        var thisPin = '.pindivIcon' + ix + ' .pin-inner';
-        $(thisPin).css("background-color", json.color[pars][ix]);
-        // 
-        marker.on('click', function(e) {
-            if (lastIconActive != "") {
-                var activePin = lastIconActive + ' .pin';
-                $(activePin).css("background-color", '#3071a9');
-            }
-            var goPin = '.pindivIcon' + ix;
-            var thisPin = goPin + ' .pin';
-            $(thisPin).css("background-color", 'red');
-            lastIconActive = goPin;
-        });
-        // 
-        marker.getPopup().on('remove', function() {
-            if (lastIconActive != "") {
-                var activePin = lastIconActive + ' .pin';
-                $(activePin).css("background-color", '#3071a9');
-            }
-        });
-    });
-    // 
-    mymap.on('click', function(e) {
-        if (lastIconActive != "") {
-            var activePin = lastIconActive + ' .pin';
-            $(activePin).css("background-color", '#3071a9');
-        }
-    });
-    //
-    var vkey = getVarNameColorKey(pars);
-    $('#colKeyMapVar').empty();
-    var ix = AWS_AggrSpObj.map(function(x) { return x.var; }).indexOf(pars);
-    var titre = AWS_AggrSpObj[ix].name + ' (' + AWS_AggrSpObj[ix].unit + ')';
-
-    titre = '<p style="margin-top:1px;margin-bottom:2px;font-size:10;">' + titre + '</p>';
-    $('#colKeyMapVar').append(titre);
-    $('#colKeyMapVar').append(createColorKeyH(json.key[vkey]));
-    $('#colKeyMapVar .ckeyh').css('width', '290px');
-    $('#colKeyMapVar .ckeyh').css('height', '35px');
-    $('#colKeyMapVar .ckeyh-label').css('font-size', 10);
-
-    /////////////
-
-    $('a[href="#dispawssp"]').on('shown.bs.tab', function(e) {
-        mymap.invalidateSize();
-    });
 }

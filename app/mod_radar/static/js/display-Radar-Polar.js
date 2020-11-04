@@ -1,8 +1,8 @@
-$(document).ready(function() {
-    $("#mdvsource").on("change", function() {
+$(document).ready(() => {
+    $("#mdvsource").on("change", () => {
         if (radarPolar_ops_sur == undefined ||
             radarPolar_ws_sur == undefined) {
-            setTimeout(function() {
+            setTimeout(() => {
                 setradarPolarField();
             }, 1000);
         } else {
@@ -42,7 +42,7 @@ $(document).ready(function() {
 
     ////////
     // map initialization
-    $("#radarsweep").on("change", function() {
+    $("#radarsweep").on("change", () => {
         $('a[href="#radardisp"]').click();
         var sweep = $("#radarsweep option:selected").val();
         leafletDispRadarMap(RADAR_DATA, sweep);
@@ -52,14 +52,14 @@ $(document).ready(function() {
     $("#radarsweep").trigger("change");
 
     ////////
-    $("#radMapDis").on("click", function() {
+    $("#radMapDis").on("click", () => {
         $('a[href="#radardisp"]').click();
         //
         var d5min = formatDateMapMin();
         radarDisplayMap(d5min);
     });
 
-    $("#radMapNext").on("click", function() {
+    $("#radMapNext").on("click", () => {
         $('a[href="#radardisp"]').click();
         //
         setDateTimeMapDataMin(5);
@@ -67,7 +67,7 @@ $(document).ready(function() {
         radarDisplayMap(d5min);
     });
     //
-    $("#radMapPrev").on("click", function() {
+    $("#radMapPrev").on("click", () => {
         $('a[href="#radardisp"]').click();
         //
         setDateTimeMapDataMin(-5);
@@ -77,7 +77,7 @@ $(document).ready(function() {
 
     /////////
 
-    $("#dispCrossSec").on("click", function() {
+    $("#dispCrossSec").on("click", () => {
         $('a[href="#radarcross"]').click();
         //
         var time = formatDateMapMin();
@@ -86,7 +86,7 @@ $(document).ready(function() {
 
     ///////// 
 
-    $("#xzAxisLim").on("click", function() {
+    $("#xzAxisLim").on("click", () => {
         $('#xzModalLim').empty();
 
         var divmodal = setXsecAxisLim(xzlim_polar_xsec);
@@ -97,7 +97,7 @@ $(document).ready(function() {
 
     ///////// 
 
-    $('#maskOpr').on('change', function() {
+    $('#maskOpr').on('change', () => {
         var opr = $("#maskOpr option:selected").val();
         if (opr == '>=<') {
             $('#maskThres2').show();
@@ -109,12 +109,18 @@ $(document).ready(function() {
 
     /////////
 
-    $("#downLeafletMap").on("click", function() {
+    $("#downLeafletMap").on("click", () => {
         var json = RADAR_DATA;
-        var filename = "radar_map";
         var sweep = $("#radarsweep option:selected").val();
 
-        saveLeafletDispRadarMap(json, sweep, filename);
+        if (json.status == "no-data") {
+            filename = "radar_map";
+        } else {
+            var unit = json.radar_type == "polar" ? "-Deg_" : "-Meter_";
+            filename = json.label + "_" + json.angle[sweep] + unit + json.radar_time;
+        }
+
+        saveLeafletDispRadarMap(json, filename);
     });
 
     /////////
@@ -145,7 +151,7 @@ function radarDisplayMap(daty) {
     var cmdmask = $("#cmdmask option:selected").val();
 
     var jsonObj = (source == "ws") ? radarPolar_ws_sur : radarPolar_ops_sur;
-    var ix = jsonObj.map((x) => { return x.field; }).indexOf(field);
+    var ix = jsonObj.map(x => x.field).indexOf(field);
     var params = jsonObj[ix];
 
     var data = {
@@ -163,7 +169,7 @@ function radarDisplayMap(daty) {
         contentType: "application/json",
         timeout: 180000,
         dataType: "json",
-        success: function(json) {
+        success: (json) => {
             RADAR_DATA = json;
             // 
             $('#maskThres1').empty();
@@ -190,11 +196,11 @@ function radarDisplayMap(daty) {
             // 
             dispRadarWindBarb();
         },
-        beforeSend: function() {
+        beforeSend: () => {
             mymapBE.closePopup();
             mymapBE.spin(true, spinner_opts);
         },
-        error: function(request, status, error) {
+        error: (request, status, error) => {
             if (status === "timeout") {
                 $('#errorMSG').css("background-color", "orange");
                 $('#errorMSG').html("Timeout: Take too much time to render");
@@ -203,7 +209,7 @@ function radarDisplayMap(daty) {
                 $('#errorMSG').html("Error: " + request + status + error);
             }
         }
-    }).always(function() {
+    }).always(() => {
         mymapBE.spin(false);
     });
 }
@@ -228,7 +234,7 @@ function radarDisplayXsec(time) {
     var cmdmask = $("#cmdmask option:selected").val();
 
     var jsonObj = (source == "ws") ? radarPolar_ws_sur : radarPolar_ops_sur;
-    var ix = jsonObj.map((x) => { return x.field; }).indexOf(field);
+    var ix = jsonObj.map(x => x.field).indexOf(field);
     var params = jsonObj[ix];
 
     if (Number(xzlim_polar_xsec.max_x) <= Number(xzlim_polar_xsec.min_x)) {
@@ -258,18 +264,18 @@ function radarDisplayXsec(time) {
         url: '/radarPolar_CrossSec',
         data: JSON.stringify(data),
         contentType: "application/json",
-        success: function(data) {
+        success: (data) => {
             drawCrossSectionLine(Number(azimuth));
             $("#radarPolarXsec").attr("src", data);
         },
-        beforeSend: function() {
+        beforeSend: () => {
             $("#dispCrossSec .glyphicon-refresh").show();
         },
-        error: function() {
+        error: () => {
             $('#errorMSG').css("background-color", "red")
                 .html("Unable to load image");
         }
-    }).always(function() {
+    }).always(() => {
         $("#dispCrossSec .glyphicon-refresh").hide();
     });
 }
