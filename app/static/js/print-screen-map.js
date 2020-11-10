@@ -103,10 +103,10 @@ function saveLeafletDispRadarMap(json, filename) {
 
 ////////////
 
-function saveLeafletDispAWS(AWS_PObj, json, pars, filename) {
+function saveLeafletDispAWS(key_draw, key_col, key_title, filename) {
     var mymap = mymapBE;
 
-    if (json.status != "no-data") {
+    if (key_draw) {
         mymap.removeControl(zoomBE);
 
         var colorBar = L.control({
@@ -117,17 +117,14 @@ function saveLeafletDispAWS(AWS_PObj, json, pars, filename) {
             var div = L.DomUtil.create('div', 'colorbar');
             $(div).empty();
 
-            var vkey = getVarNameColorKey(pars);
-            var ix = AWS_PObj.map((x) => { return x.var; }).indexOf(pars);
-            var titre = AWS_PObj[ix].name + ' (' + AWS_PObj[ix].unit + ')';
-
-            $('<p>').html(titre).css({
+            $('<p>').html(key_title).css({
                 'text-align': 'center',
                 'margin-top': '1px',
                 'margin-bottom': '2px',
                 'font-size': '10'
             }).appendTo(div);
-            $(div).append(createColorKeyH(json.key[vkey]));
+
+            $(div).append(createColorKeyH(key_col));
 
             return div;
         }
@@ -158,5 +155,3 @@ function saveLeafletDispAWS(AWS_PObj, json, pars, filename) {
         mymap.removeControl(printer);
     }, 2000);
 }
-
-////////////

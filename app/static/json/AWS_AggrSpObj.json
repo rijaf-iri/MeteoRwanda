@@ -49,5 +49,35 @@
         "var": "RADMIN",
         "name": "Minimum Global Radiation",
         "unit": "W/m2"
+    },
+    {
+        "var": "PRESAVG",
+        "name": "Average Air Pressure",
+        "unit": "mb"
+    },
+    {
+        "var": "PRESMAX",
+        "name": "Maximum Air Pressure",
+        "unit": "mb"
+    },
+    {
+        "var": "PRESMIN",
+        "name": "Minimum Air Pressure",
+        "unit": "mb"
+    },
+    {
+        "var": "FFAVG",
+        "name": "Average Wind Speed",
+        "unit": "m/s"
+    },
+    {
+        "var": "FFMAX",
+        "name": "Maximum Wind Speed",
+        "unit": "m/s"
+    },
+    {
+        "var": "FFMIN",
+        "name": "Minimum Wind Speed",
+        "unit": "m/s"
     }]
 }

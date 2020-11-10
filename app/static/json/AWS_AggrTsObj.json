@@ -19,5 +19,15 @@
         "var": "RAD",
         "name": "Global Radiation",
         "unit": "W/m2"
+    },
+    {
+        "var": "PRES",
+        "name": "Air Pressure",
+        "unit": "mb"
+    },
+    {
+        "var": "FF",
+        "name": "Wind Speed",
+        "unit": "m/s"
     }]
 }

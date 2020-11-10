@@ -157,17 +157,26 @@ $(document).ready(() => {
     //////////
 
     $("#downLeafletMap").on("click", () => {
-        var pars = $("#awsSpVar option:selected").val();
         var json = AWS_DATA;
+        var key_title;
+        var key_col;
         if (json.status == "no-data") {
+            var key_draw = false;
             filename = "aggregated_data";
         } else {
+            var key_draw = true;
+            var pars = $("#awsSpVar option:selected").val();
+            var vkey = getVarNameColorKey(pars);
+            var ix = AWS_AggrSpObj.map((x) => { return x.var; }).indexOf(pars);
+            key_title = AWS_AggrSpObj[ix].name + ' (' + AWS_AggrSpObj[ix].unit + ')';
+            key_col = json.key[vkey];
+
             var tstep = $("#timestepDispTS option:selected").val();
             var daty = getDateTimeMapData();
             filename = pars + "_" + tstep + "_" + daty;
         }
 
-        saveLeafletDispAWS(AWS_AggrSpObj, json, pars, filename);
+        saveLeafletDispAWS(key_draw, key_col, key_title, filename);
     });
 });
 

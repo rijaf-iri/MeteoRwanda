@@ -1,113 +1,22 @@
-$(document).ready(function() {
-    $('#dekad1, #dekad2, #pentad1, #pentad2').hide();
-    //
-    var label = ['Year', 'Mon', 'Day', 'Hour', 'Min'];
-    var pname = ['year', 'month', 'day', 'hour', 'minute'];
-    // 
-    $(".ts-start-time").append(selectTimesTsMap(1, ".ts-start-time", label, pname, true));
-    $(".ts-end-time").append(selectTimesTsMap(2, ".ts-end-time", label, pname, false));
-    //
-    var daty = new Date();
-    //
-    $('#minute1, #minute2').attr('enabled', 'true');
-    for (var i = 0; i < 60; ++i) {
-        var mn = i;
-        if (i < 10) {
-            mn = "0" + i;
-        }
-        $('#minute1, #minute2').append(
-            $("<option></option>").text(mn).val(mn)
-        );
-    }
-    var vmin = daty.getMinutes();
-    $("#minute1").val("00");
-    $("#minute2").val((vmin < 10 ? "0" : "") + vmin);
-    //
-    $('#hour1, #hour2').attr('enabled', 'true');
-    for (var i = 0; i < 24; ++i) {
-        var hr = i;
-        if (i < 10) {
-            hr = "0" + i;
-        }
-        $('#hour1, #hour2').append(
-            $("<option></option>").text(hr).val(hr)
-        );
-    }
-    var vhour = daty.getHours();
-    $("#hour1").val("00");
-    $("#hour2").val((vhour < 10 ? "0" : "") + vhour);
-    //
-    $('#day1, #day2').attr('enabled', 'true');
-    for (var i = 1; i <= 31; ++i) {
-        var dy = i;
-        if (i < 10) {
-            dy = "0" + i;
-        }
-        $('#day1, #day2').append(
-            $("<option></option>").text(dy).val(dy)
-        );
-    }
-    var vday = daty.getDate();
-    $("#day1").val("01");
-    $("#day2").val((vday < 10 ? "0" : "") + vday);
-    //
-    $('#month1, #month2').attr('enabled', 'true');
-    for (var i = 1; i <= 12; ++i) {
-        var mo = i;
-        if (i < 10) {
-            mo = "0" + i;
-        }
-        $('#month1, #month2').append(
-            $("<option></option>").text(mo).val(mo)
-        );
-    }
-    var vmon = daty.getMonth() + 1;
-    $("#month1").val("01");
-    $("#month2").val((vmon < 10 ? "0" : "") + vmon);
-    //
-    $('#year1, #year2').attr('enabled', 'true');
-    var thisYear = daty.getFullYear();
-    for (var yr = 2013; yr <= thisYear; ++yr) {
-        $('#year1, #year2').append(
-            $("<option></option>").text(yr).val(yr)
-        );
-    }
-    $("#year1").val(2020);
-    $("#year2").val(thisYear);
-    //
-    //
-    $.getJSON('/readAWSWind', function(json) {
-        AWS_JSON = json;
-        $('#stationDispAWS').attr('enabled', 'true');
-        $.each(json, function() {
-            var text = this.id + " - " + this.stationName + " - " + this.AWSGroup;
-            var val = this.id;
-            $('#stationDispAWS').append(
-                $("<option></option>").text(text).val(val)
-            );
-        });
-        $('#stationDispAWS option[value=000003]').attr('selected', true);
-    });
-    //
-    $("#timestepDispTS").change(function() {
-        if ($(this).val() == "hourly") {
-            $(".aws-select-time td:last-child").hide();
-        } else {
-            $(".aws-select-time td:last-child").show();
-        }
-    });
-    $("#timestepDispTS").trigger("change");
+$(document).ready(() => {
+    setAWSWindDataTime(60);
 
     ////////
+    var today = new Date();
+    var daty2 = dateFormat(today, "yyyy-mm-dd-hh");
+    today.setDate(today.getDate() - 60);
+    var daty1 = dateFormat(today, "yyyy-mm-dd-hh");
+
     var data0 = {
         "aws": "000003",
         "tstep": "hourly",
-        "start": "2019-11-01-00",
-        "end": "2019-12-31-23"
+        "start": daty1,
+        "end": daty2
     };
     plotWindRose10MinHourly(data0);
+
     //
-    $("#plotWindroseBut").on("click", function() {
+    $("#plotWindroseBut").on("click", () => {
         var obj = checkDateTimeRange();
         if (!obj) {
             return false;
@@ -124,32 +33,44 @@ $(document).ready(function() {
         };
         plotWindRose10MinHourly(data);
     });
+
     /////////
-    $("#downWindroseBut").on("click", function() {
+    $("#downWindroseBut").on("click", () => {
         var obj = checkDateTimeRange();
         if (!obj) {
             return false;
         }
         //
         var timestep = $("#timestepDispTS option:selected").val();
-        var aws = $("#stationDispAWS option:selected").val();
         var vrange = startEndDateTime(timestep, obj);
-        var url = '/openairWindrose' + '?tstep=' + timestep + '&aws=' + aws;
-        url = url + "&start=" + vrange.start + "&end=" + vrange.end;
+        var data = {
+            tstep: timestep,
+            aws: $("#stationDispAWS option:selected").val(),
+            start: vrange.start,
+            end: vrange.end
+        };
+
+        var url = '/openairWindrose' + '?' + encodeQueryData(data);
         $("#downWindroseBut").attr("href", url).attr('target', '_blank');
     });
+
     ////////
-    $("#downTableFreqBut").on("click", function() {
+    $("#downTableFreqBut").on("click", () => {
         var obj = checkDateTimeRange();
         if (!obj) {
             return false;
         }
         //
         var timestep = $("#timestepDispTS option:selected").val();
-        var aws = $("#stationDispAWS option:selected").val();
         var vrange = startEndDateTime(timestep, obj);
-        var url = '/donwWindFreqCSV' + '?tstep=' + timestep + '&aws=' + aws;
-        url = url + "&start=" + vrange.start + "&end=" + vrange.end;
+        var data = {
+            tstep: timestep,
+            aws: $("#stationDispAWS option:selected").val(),
+            start: vrange.start,
+            end: vrange.end
+        };
+
+        var url = '/donwWindFreqCSV' + '?' + encodeQueryData(data);
         $("#downTableFreqBut").attr("href", url).attr('target', '_blank');
     });
 });
@@ -161,16 +82,16 @@ function plotWindRose10MinHourly(data) {
         url: '/dispWindRose',
         data: data,
         timeout: 120000,
-        success: function(json) {
+        success: (json) => {
             var ret = highchartsWindRose10MinHourly(json);
             if (ret) {
                 titleWindRose10MinHourly();
             }
         },
-        beforeSend: function() {
+        beforeSend: () => {
             $("#plotWindroseBut .glyphicon-refresh").show();
         },
-        error: function(request, status, error) {
+        error: (request, status, error) => {
             if (status === "timeout") {
                 $('#errorMSG').css("background-color", "orange");
                 $('#errorMSG').html("Take too much time to render, select a shorter time range or refresh your web browser");
@@ -179,7 +100,7 @@ function plotWindRose10MinHourly(data) {
                 $('#errorMSG').html("Error: " + request + status + error);
             }
         }
-    }).always(function() {
+    }).always(() => {
         $("#plotWindroseBut .glyphicon-refresh").hide();
     });
 }

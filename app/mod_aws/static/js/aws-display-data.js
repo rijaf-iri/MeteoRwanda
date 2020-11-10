@@ -38,38 +38,23 @@ function setAWSVariableSelect(aws) {
 }
 
 //
-function setAWSParamSelect(vvar, source) {
-    var dpars;
-    var loadspin = $("<i>").addClass("glyphicon glyphicon-refresh glyphicon-refresh-animate");
-    loadspin.css("display", "none");
-    if (AWS_INFO.AWSGroup != "REMA") {
-        $('#selpars').show();
-        $("#plotAWSGraph .btn").html(loadspin + 'Plot Parameter');
-        //
-        if (source == 'raw') {
-            dpars = AWS_VarPars['vars'];
-        } else {
-            dpars = AWS_VarPars['vars.qc'];
-        }
-        //
-        var vpars = dpars[vvar];
-        $('#awsParams').empty();
-        if ($.isArray(vpars)) {
-            for (var i = 0; i < vpars.length; ++i) {
-                $('#awsParams').append(
-                    $("<option>").text(vpars[i]).val(vpars[i])
-                );
-            }
-        } else {
+function setAWSParamSelect(vvar) {
+    var dpars = AWS_VarPars['vars'];
+    var vpars = dpars[vvar];
+    $('#awsParams').empty();
+    if ($.isArray(vpars)) {
+        for (var i = 0; i < vpars.length; ++i) {
             $('#awsParams').append(
-                $("<option>").text(vpars).val(vpars)
+                $("<option>").text(vpars[i]).val(vpars[i])
             );
         }
     } else {
-        $('#selpars').hide();
-        $("#plotAWSGraph .btn").html(loadspin + 'Plot Observation');
+        $('#awsParams').append(
+            $("<option>").text(vpars).val(vpars)
+        );
     }
 }
+
 // 
 function setAWSVariableSelect1() {
     $('#awsObsVar').empty();
@@ -128,25 +113,21 @@ function getListMetadata() {
     info[8] = "<b>Start Time :</b> " + AWS_VarPars.start;
     info[9] = "<b>End Time :</b> " + AWS_VarPars.end;
     info[10] = "<b>Temporal Resolution :</b> " + AWS_VarPars.tstep + " minutes";
-    if (AWS_INFO.AWSGroup == "REMA") {
-        for (var i = 0; i < AWS_VarPars.vars.length; ++i) {
-            info[i + 11] = '<b>' + getAWSVariableName(AWS_VarPars.vars[i]) + '</b>';
+
+    var j = 0;
+    for (var vvar in AWS_VarPars.vars) {
+        var vpars = AWS_VarPars.vars[vvar];
+        var vartxt = getAWSVariableName(vvar);
+        var par;
+        if ($.isArray(vpars)) {
+            par = vpars.join(", ");
+        } else {
+            par = vpars;
         }
-    } else {
-        var j = 0;
-        for (var vvar in AWS_VarPars.vars) {
-            var vpars = AWS_VarPars.vars[vvar];
-            var vartxt = getAWSVariableName(vvar);
-            var par;
-            if ($.isArray(vpars)) {
-                par = vpars.join(", ");
-            } else {
-                par = vpars;
-            }
-            info[j + 11] = '<b>' + vartxt + " :</b> " + par;
-            j = j + 1;
-        }
+        info[j + 11] = '<b>' + vartxt + " :</b> " + par;
+        j = j + 1;
     }
+    // }
     return info;
 }
 

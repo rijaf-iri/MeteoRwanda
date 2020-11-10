@@ -1,20 +1,17 @@
-$(document).ready(function() {
+$(document).ready(() => {
     updateStatusMap();
-    $("#updateStatus").on("click", function() {
-        updateStatusMap();
-    })
+    $("#updateStatus").on("click", updateStatusMap);
 
-    $("#downLeafletMap").on("click", function() {
+    $("#downLeafletMap").on("click", () => {
         var mymap = mymapBE;
         var json = AWS_DATA;
 
         var printer = easyPrintMap();
         printer.printMap('CurrentSize', 'aws_status' + '_' + json.time);
 
-        setTimeout(
-            function() {
-                mymap.removeControl(printer);
-            }, 2000);
+        setTimeout(() => {
+            mymap.removeControl(printer);
+        }, 2000);
     });
 });
 
@@ -22,7 +19,7 @@ function updateStatusMap() {
     $.getJSON('/dispAWSStatusMap', {
             hour: $("#lastAvail option:selected").val()
         },
-        function(json) {
+        (json) => {
             $('#timeStatus').empty();
             $('#lastUpdate').empty();
             $('#timeStatus').html(json.time);
@@ -67,7 +64,9 @@ function leafletAWSStatusMap(data) {
         var cont4 = '<br>' + '<b>Availability : </b>' + this.Availability + '<br>';
         var contenu = cont1 + cont2 + cont3 + cont4;
 
-        var marker = L.marker([this.latitude, this.longitude], { icon: icons[this.StatusX].icon }).bindPopup(contenu).addTo(mymap);
+        var marker = L.marker([this.latitude, this.longitude], { icon: icons[this.StatusX].icon })
+            .bindPopup(contenu)
+            .addTo(mymap);
         mymarkersBE.push(marker);
     });
 

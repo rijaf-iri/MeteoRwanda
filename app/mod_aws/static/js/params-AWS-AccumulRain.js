@@ -1,43 +1,21 @@
-function setAWSMinDataTime() {
-    var label = ['Year', 'Mon', 'Day', 'Hour', 'Min'];
-    var pname = ['year', 'month', 'day', 'hour', 'minute'];
+function setAWSAccumulRainTime() {
+    var label = ['Year', 'Mon', 'Day', 'Hour'];
+    var pname = ['year', 'month', 'day', 'hour'];
     // 
     $(".ts-start-time").append(selectTimesTsMap(1, ".ts-start-time", label, pname, true));
     $(".ts-end-time").append(selectTimesTsMap(2, ".ts-end-time", label, pname, false));
     $(".map-select-time").append(selectTimesTsMap(3, ".map-select-time", label, pname, true));
     //
-    $('#dekad1, #dekad2, #dekad3, #pentad1, #pentad2, #pentad3').hide();
-    $("#timestepDispTS").val("minute");
-    $("#timestepDispTS").hide();
+
+    $('#minute1, #minute2', '#minute3').hide();
+    $('#pentad1, #pentad2', '#pentad3').hide();
+    $('#dekad1, #dekad2', '#dekad3').hide();
+
     //
     lastDaty = new Date();
-    lastDaty.setDate(lastDaty.getDate() - 5);
-
+    lastDaty.setDate(lastDaty.getDate() - 90);
     var daty = new Date();
-    //
-    for (var i = 0; i < 60; ++i) {
-        var mn = i;
-        if (i < 10) {
-            mn = "0" + i;
-        }
-        $('#minute1, #minute2').append(
-            $("<option>").text(mn).val(mn)
-        );
-    }
-    var vmin = daty.getMinutes();
-    $("#minute1").val("00");
-    $("#minute2").val((vmin < 10 ? "0" : "") + vmin);
-    //
-    for (var i = 0; i < 60; i += 10) {
-        var mn1 = i;
-        if (i < 10) {
-            mn1 = "0" + i;
-        }
-        $('#minute3').append(
-            $("<option>").text(mn1).val(mn1)
-        );
-    }
-    $("#minute3").val("00");
+
     //
     for (var i = 0; i < 24; ++i) {
         var hr = i;
@@ -48,6 +26,7 @@ function setAWSMinDataTime() {
             $("<option>").text(hr).val(hr)
         );
     }
+    //
     var vhour0 = lastDaty.getHours();
     $("#hour1").val((vhour0 < 10 ? "0" : "") + vhour0);
     var vhour = daty.getHours();
@@ -90,26 +69,119 @@ function setAWSMinDataTime() {
     var thisYear0 = lastDaty.getFullYear();
     $("#year1").val(thisYear0);
     $("#year2, #year3").val(thisYear);
-}
-
-function setAWSMinSpVariable() {
-    $.each(AWS_10MinVarObj, function() {
-        if (this.var == "WDD") {
-            return;
+    //
+    $("#timestepDispTS").change(function() {
+        if ($(this).val() == "hourly") {
+            $(".aws-select-time td:last-child").show();
+            $("#accumulTime").attr("max", "72");
+        } else {
+            $(".aws-select-time td:last-child").hide();
+            $("#accumulTime").attr("max", "45");
         }
-        $('#awsSpVar').append(
-            $("<option>").text(this.name).val(this.var)
-        );
     });
-    $("#awsSpVar").val("PRECIP");
+    $("#timestepDispTS").trigger("change");
 }
 
 //////////
 
-function leafletMap10MinAWS(pars, json) {
+function rainAccumulbindPopup(don, date) {
+    var div = $('<div>');
+    var stn1 = '<p class="awsTablebindPopupP"><b> Date : </b>' + date + '<br>';
+    var stn2 = '<b>ID : </b>' + don.id + '<b>; NAME : </b>' + don.stationName;
+    var stn3 = '<b>; GROUP : </b>' + don.AWSGroup + '<br>';
+
+    var tstep = $("#timestepDispTS option:selected").val();
+    var suffix = (tstep == "hourly") ? "Hour" : "Day";
+    var accum = $("#accumulTime").val();
+    var lab = "<b>Precipitation " + accum + "-" + suffix + " Accumulation : </b>";
+    var val = don.accumul + ' mm' + '</p>';
+
+    div.append(stn1 + stn2 + stn3 + lab + val);
+    return div;
+}
+
+//////////
+
+function highchartsRainAccumulAWS(json) {
+    if (json.opts.status == "no-data") {
+        $('#errorMSG').css("background-color", "orange").html("No data");
+        return false;
+    }
+    var options = {
+        title: {
+            text: json.opts.title
+        },
+        xAxis: {
+            type: 'datetime'
+        },
+        yAxis: {
+            title: {
+                text: null
+            },
+            opposite: false,
+            minorTickInterval: "auto",
+            minorGridLineDashStyle: "LongDashDotDot"
+        },
+        theme: {
+            chart: {
+                backgroundColor: "transparent"
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                turboThreshold: 0
+            }
+        },
+        rangeSelector: {
+            selected: 1
+        }
+
+    };
+
+    var series = [{
+        // type: 'area',
+        data: json.data,
+        name: json.opts.name,
+        color: 'rgba(9, 133, 43, 1)',
+        // fillColor: {
+        //     linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+        //     stops: [
+        //         [0, 'rgba(9, 133, 43, 0.99)'],
+        //         [1, 'rgba(203, 247, 215, 0.1)']
+        //     ]
+        // },
+        tooltip: {
+            valueSuffix: ' mm',
+            valueDecimals: 1
+        }
+    }];
+
+    var exporting = {
+        enabled: true,
+        filename: json.opts.filename,
+        buttons: {
+            contextButton: {
+                menuItems: chartButtonMenuItems
+            }
+        }
+    };
+
+    // 
+    options.exporting = exporting;
+    options.series = series;
+
+    Highcharts.stockChart('contAWSGraph', options);
+}
+
+//////////
+
+function leafletMapRainAccumulAWS(json) {
     var mymap = createLeafletTileLayer("mapAWSVars");
 
-    ////////
+    // //////
     if (json.status == "no-data") {
         var popup = L.popup()
             .setLatLng([mapCenterLAT, mapCenterLON])
@@ -118,60 +190,42 @@ function leafletMap10MinAWS(pars, json) {
         return false;
     }
     mymap.closePopup();
-    //
-    var plotType = (pars == "WFF" || pars == "WGFF") ? "arrow" : "label";
     // 
     let text2Op = {
         direction: 'bottom',
         className: 'tooltipbottom'
     };
     var lastIconActive = "";
+
     //
     $.each(json.data, (ix) => {
         var don = json.data[ix];
-        if (don[pars] == undefined) {
+        if (don.accumul == null) {
             return;
         }
 
-        var divIconHtml = $('<div>').addClass("pin");
-        var divIco = $('<div>').addClass("pin-inner");
-        if (plotType == "label") {
-            $('<span>').addClass("pin-label")
-                .html(Math.round(don[pars]))
-                .appendTo(divIco);
-        }
-        if (plotType == "arrow") {
-            $('<div>').addClass("pin-arrow")
-                .appendTo(divIco);
-        }
-        divIconHtml.append(divIco);
+        var divIconHtml = '<div class="pin"><div class="pin-inner"><span class="pin-label">' + Math.round(don.accumul) + '</span></div></div>';
 
-        var txttip = '<b>ID : </b>' + don.id + '<br>' + '<b>NAME : </b>' +
-            don.stationName + '<br>' + '<b>GROUP : </b>' + don.AWSGroup;
-        var tablePopup = awsSpatialbindPopup(don, json.date, AWS_10MinVarObj, "Observation Time");
+        var txttip = '<b>ID : </b>' + don.id + '<br>' + '<b>NAME : </b>' + don.stationName + '<br>' + '<b>GROUP : </b>' + don.AWSGroup;
+        var tablePopup = rainAccumulbindPopup(don, json.date).prop('outerHTML');
         //
         var icon = L.divIcon({
             iconSize: null,
             iconAnchor: new L.Point(15, 30),
             popupAnchor: new L.Point(0, -15),
             className: 'pindivIcon' + ix,
-            html: divIconHtml.prop('outerHTML')
+            html: divIconHtml
         });
 
         var lalo = new L.LatLng(don.latitude, don.longitude);
         var marker = L.marker(lalo, { icon: icon })
-            .bindPopup(tablePopup.prop('outerHTML'))
+            .bindPopup(tablePopup)
             .bindTooltip(txttip, text2Op)
             .addTo(mymap);
         mymarkersBE.push(marker);
         // 
         var thisPin = '.pindivIcon' + ix + ' .pin-inner';
-        $(thisPin).css("background-color", json.color[pars][ix]);
-
-        if (plotType == "arrow") {
-            var thisArrow = '.pindivIcon' + ix + ' .pin-arrow';
-            $(thisArrow).css('transform', 'rotate(' + don.WDD + 'deg)');
-        }
+        $(thisPin).css("background-color", json.color[ix]);
         // 
         marker.on('click', (e) => {
             if (lastIconActive != "") {
@@ -199,22 +253,12 @@ function leafletMap10MinAWS(pars, json) {
         }
     });
     //
-    var vkey = getVarNameColorKey(pars);
     $('#colKeyMapVar').empty();
-
-    var ix = AWS_10MinVarObj.map(x => x.var).indexOf(pars);
-    var titre = AWS_10MinVarObj[ix].name + ' (' + AWS_10MinVarObj[ix].unit + ')';
-
-    $('<p>').html(titre).css({
-        'margin-top': '1px',
-        'margin-bottom': '2px',
-        'font-size': '10'
-    }).appendTo('#colKeyMapVar');
-    $('#colKeyMapVar').append(createColorKeyH(json.key[vkey]));
-    $('#colKeyMapVar .ckeyh').css({
-        'width': '290px',
-        'height': '35px'
-    });
+    titre = '<p style="margin-top:1px;margin-bottom:2px;font-size:10;"> Rainfall Accumulation (mm)</p>';
+    $('#colKeyMapVar').append(titre);
+    $('#colKeyMapVar').append(createColorKeyH(json.key));
+    $('#colKeyMapVar .ckeyh').css('width', '290px');
+    $('#colKeyMapVar .ckeyh').css('height', '35px');
     $('#colKeyMapVar .ckeyh-label').css('font-size', 10);
 
     $('a[href="#dispawssp"]').on('shown.bs.tab', (e) => {

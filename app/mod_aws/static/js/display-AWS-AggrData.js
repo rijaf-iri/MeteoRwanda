@@ -35,13 +35,19 @@ $(document).ready(() => {
 
     ////////////
 
+    var today = new Date();
+    var daty2 = dateFormat(today, "yyyy-mm-dd");
+    today.setDate(today.getDate() - 30);
+    var daty1 = dateFormat(today, "yyyy-mm-dd");
+
     var data0 = {
         "aws": "000003",
         "tstep": "daily",
         "vars": "RR",
         "pars": "Tot",
-        "start": "2020-01-01-00-00",
-        "end": "2020-01-26-10-54",
+        "start": daty1,
+        "end": daty2,
+        "group": "LSI-XLOG",
         "plotrange": 0
     };
     plotTSAggrAWS(data0);
@@ -65,6 +71,7 @@ $(document).ready(() => {
             "tstep": tstep,
             "start": vrange.start,
             "end": vrange.end,
+            "group": AWS_INFO.AWSGroup,
             "plotrange": plotrange
         };
         plotTSAggrAWS(data);
@@ -120,17 +127,26 @@ $(document).ready(() => {
     //////////
 
     $("#downLeafletMap").on("click", () => {
-        var pars = $("#awsSpVar option:selected").val();
         var json = AWS_DATA;
+        var key_title;
+        var key_col;
         if (json.status == "no-data") {
-            filename = "aggregated_data";
+            var key_draw = false;
+            var filename = "aggregated_data";
         } else {
+            var key_draw = true;
+            var pars = $("#awsSpVar option:selected").val();
+            var vkey = getVarNameColorKey(pars);
+            var ix = AWS_AggrSpObj.map((x) => { return x.var; }).indexOf(pars);
+            key_title = AWS_AggrSpObj[ix].name + ' (' + AWS_AggrSpObj[ix].unit + ')';
+            key_col = json.key[vkey];
+
             var tstep = $("#timestepDispTS option:selected").val();
             var daty = getDateTimeMapData();
-            filename = pars + "_" + tstep + "_" + daty;
+            var filename = pars + "_" + tstep + "_" + daty;
         }
 
-        saveLeafletDispAWS(AWS_AggrSpObj, json, pars, filename);
+        saveLeafletDispAWS(key_draw, key_col, key_title, filename);
     });
 });
 

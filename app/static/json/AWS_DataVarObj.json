@@ -49,10 +49,6 @@
         "name": "Wind Speed"
     },
     {
-        "var": "FFmax",
-        "name": "Wind Gust"
-    },
-    {
         "var": "RAD",
         "name": "Global Solar Radiation"
     },

@@ -286,6 +286,12 @@ function getVarNameColorKey(pars) {
     if (["PMIN", "PMAX", "PAVG"].includes(pars)) {
         return 'PR';
     }
+    if (["PRESMIN", "PRESMAX", "PRESAVG"].includes(pars)) {
+        return 'PR';
+    }
+    if (["FFMIN", "FFMAX", "FFAVG"].includes(pars)) {
+        return 'FF';
+    }
     if (["WGFF", "WFF"].includes(pars)) {
         return 'FF';
     }

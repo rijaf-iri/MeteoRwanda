@@ -1,14 +1,10 @@
-$(document).ready(function() {
+$(document).ready(() => {
     var mymap = L.map('mapAWSCoords', {
         center: [mapCenterLAT, mapCenterLON],
         minZoom: 2,
         zoom: 8.5,
         zoomControl: false
     });
-    // var southWest = L.latLng(-2.764616667, 28.908573);
-    // var northEast = L.latLng(-1.0, 30.75297222);
-    // var bounds = L.latLngBounds(southWest, northEast);
-    // mymap.fitBounds(bounds);
 
     //////
     new L.Control.Zoom({
@@ -49,7 +45,7 @@ $(document).ready(function() {
     //////
     $('#jsonTable thead tr').html('');
     $('#jsonTable tbody tr').html('');
-    $.getJSON('/dispAWSCoordsMap', function(json) {
+    $.getJSON('/dispAWSCoordsMap', (json) => {
         var colHeader = Object.keys(json[1]);
         colHeader.splice(13, 2);
         for (var i = 0; i < colHeader.length; i++) {
@@ -65,7 +61,8 @@ $(document).ready(function() {
             var cont7 = '<br>' + 'Parameters : ' + this.PARS + '<br>';
             var contenu = cont1 + cont2 + cont3 + cont4 + cont5 + cont6 + cont7;
             if (this.LonX != null) {
-                L.marker([this.LatX, this.LonX], { icon: icons[this.StatusX].icon }).bindPopup(contenu).addTo(mymap);
+                L.marker([this.LatX, this.LonX], { icon: icons[this.StatusX].icon })
+                    .bindPopup(contenu).addTo(mymap);
             } else {
                 $('#jsonTable tbody').append('<tr></tr>');
                 $.each($(this).get(0), function(index, value) {
@@ -75,7 +72,7 @@ $(document).ready(function() {
         });
     });
     //////
-    $("#maptype").on("change", function() {
+    $("#maptype").on("change", () => {
         mymap.removeLayer(mytile);
         mymap.attributionControl.removeAttribution();
         var maptype = $("#maptype option:selected").val();
@@ -127,7 +124,7 @@ $(document).ready(function() {
         hidden: true
     }).addTo(mymap);
 
-    $("#downLeafletMap").on("click", function() {
+    $("#downLeafletMap").on("click", () => {
         printer.printMap('CurrentSize', 'aws_map');
     });
 });

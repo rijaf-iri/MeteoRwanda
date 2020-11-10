@@ -19,7 +19,7 @@ mod_aws = Blueprint(
 )
 
 grdevices = importr('grDevices')
-mtrwaws = importr('meteoRwandaAWS')
+mtrwaws = importr('mtorwaws')
 
 dirAWS = config.AWS_DATA_DIR
 
@@ -57,22 +57,20 @@ def readAWSInfo():
 def chartMinAWSData():
     aws = request.args.get('aws')
     group = request.args.get('group')
-    source = request.args.get('source')
     vvars = request.args.get('vars')
     pars = request.args.get('pars')
     start = request.args.get('start')
     end = request.args.get('end')
     plotrange = request.args.get('plotrange')
-    robj = mtrwaws.chartMinAWSData(aws, vvars, pars, source, start,
-                                   end, group, plotrange, dirAWS)
+    robj = mtrwaws.chartMinAWSData(aws, vvars, pars, start, end,
+                                   plotrange, group, dirAWS)
     pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
 
 @mod_aws.route('/displayMAP10min')
 def displayMAP10min():
     time = request.args.get('time')
-    source = request.args.get('source')
-    robj = mtrwaws.displayMAP10min(time, source, dirAWS)
+    robj = mtrwaws.displayMAP10min(time, dirAWS)
     pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
 
@@ -81,11 +79,10 @@ def displayMAP10min():
 def downAWSMinDataCSV():
     aws = request.args.get('aws')
     group = request.args.get('group')
-    source = request.args.get('source')
     vvars = request.args.get('vars')
     start = request.args.get('start')
     end = request.args.get('end')
-    robj = mtrwaws.downAWSMinDataCSV(aws, vvars, source, start, end, group, dirAWS)
+    robj = mtrwaws.downAWSMinDataCSV(aws, vvars, start, end, group, dirAWS)
 
     filename = "data_" + vvars + "_" + aws + ".csv"
     cd = "attachment; filename=" + filename
@@ -113,9 +110,10 @@ def chartAggrAWSData():
     pars = request.args.get('pars')
     start = request.args.get('start')
     end = request.args.get('end')
+    group = request.args.get('group')
     plotrange = request.args.get('plotrange')
-    robj = mtrwaws.chartAggrAWSData(tstep, aws, vvars, pars,
-                                    start, end, plotrange, dirAWS)
+    robj = mtrwaws.chartAggrAWSData(tstep, aws, vvars, pars, start,
+                                    end, plotrange, group, dirAWS)
     pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
 
@@ -126,7 +124,8 @@ def displayTableAgrrAWS():
     tstep = request.args.get('tstep')
     start = request.args.get('start')
     end = request.args.get('end')
-    robj = mtrwaws.displayTableAgrrAWS(tstep, aws, start, end, dirAWS)
+    group = request.args.get('group')
+    robj = mtrwaws.displayTableAgrrAWS(tstep, aws, start, end, group, dirAWS)
     pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
 
@@ -137,7 +136,8 @@ def downTableAggrCSV():
     tstep = request.args.get('tstep')
     start = request.args.get('start')
     end = request.args.get('end')
-    robj = mtrwaws.downTableAggrCSV(tstep, aws, start, end, dirAWS)
+    group = request.args.get('group')
+    robj = mtrwaws.downTableAggrCSV(tstep, aws, start, end, group, dirAWS)
 
     filename = tstep + "_" + aws + ".csv"
     cd = "attachment; filename=" + filename
@@ -153,7 +153,8 @@ def downAWSAggrOneVarCSV():
     tstep = request.args.get('tstep')
     start = request.args.get('start')
     end = request.args.get('end')
-    robj = mtrwaws.downAWSAggrOneVarCSV(tstep, aws, vvars, start, end, dirAWS)
+    group = request.args.get('group')
+    robj = mtrwaws.downAWSAggrOneVarCSV(tstep, aws, vvars, start, end, group, dirAWS)
 
     filename = vvars + "_" + tstep + "_" + aws + ".csv"
     cd = "attachment; filename=" + filename
@@ -282,7 +283,7 @@ def dispWindContours():
 
     fp = tempfile.NamedTemporaryFile(delete = False)
     fpng = fp.name + ".png"
-    grdevices.png(file = fpng, width = 1010, height = 520)
+    grdevices.png(file = fpng, width = 950, height = 520)
     mtrwaws.dispWindContours(tstep, aws, start, end, centre, dirAWS)
     grdevices.dev_off()
 

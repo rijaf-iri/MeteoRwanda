@@ -22,13 +22,12 @@ $(document).ready(() => {
             'group': "LSI-XLOG"
         });
         //
-        setAWSParamSelect("RR", "qc");
+        setAWSParamSelect("RR");
         displayMetadata();
     });
 
     //
     $("#stationDispAWS").on("change", () => {
-        var source = $("#awsSource option:selected").val();
         var aws = $("#stationDispAWS option:selected").val();
         //
         AWS_INFO = getAWSInfos(aws);
@@ -40,40 +39,42 @@ $(document).ready(() => {
         });
         //
         var vvar = $("#awsObsVar option:selected").val();
-        setAWSParamSelect(vvar, source);
+        setAWSParamSelect(vvar);
         displayMetadata();
     });
 
     //
     $('#rangepars').hide();
     $("#stationDispAWS, #awsObsVar").on("change", () => {
-        var source = $("#awsSource option:selected").val();
         var vvar = $("#awsObsVar option:selected").val();
-        setAWSParamSelect(vvar, source);
+        setAWSParamSelect(vvar);
         //
         $('#rangepars').hide();
-        if (AWS_INFO.AWSGroup != "REMA") {
-            var vpars = AWS_VarPars['vars'][vvar];
-            if ($.isArray(vpars)) {
-                var isMax = $.inArray('Max', vpars);
-                var isMin = $.inArray('Min', vpars);
-                var isAve = $.inArray('Ave', vpars);
-                if (isMax !== -1 && isMin !== -1 && isAve !== -1) {
-                    $('#rangepars').show();
-                }
+        var vpars = AWS_VarPars['vars'][vvar];
+        if ($.isArray(vpars)) {
+            var isMax = $.inArray('Max', vpars);
+            var isMin = $.inArray('Min', vpars);
+            var isAve = $.inArray('Ave', vpars);
+            if (isMax !== -1 && isMin !== -1 && isAve !== -1) {
+                $('#rangepars').show();
             }
         }
     });
 
     ///////////////
     // Initialize chart
+
+    var today = new Date();
+    var daty2 = dateFormat(today, "yyyy-mm-dd-hh-MM");
+    today.setDate(today.getDate() - 5);
+    var daty1 = dateFormat(today, "yyyy-mm-dd-hh-MM");
+
     var data0 = {
         "aws": "000003",
-        "source": "qc",
         "vars": "RR",
         "pars": "Tot",
-        "start": "2020-01-01-00-00",
-        "end": "2020-01-26-10-54",
+        "start": daty1,
+        "end": daty2,
         "group": "LSI-XLOG",
         "plotrange": 0
     };
@@ -82,7 +83,6 @@ $(document).ready(() => {
 
     ///////
     $("#plotAWSGraph").on("click", () => {
-        // activate tab dispawsts
         $('a[href="#dispawsts"]').click();
         //
         var obj = checkDateTimeRange();
@@ -94,7 +94,6 @@ $(document).ready(() => {
 
         var data = {
             "aws": $("#stationDispAWS option:selected").val(),
-            "source": $("#awsSource option:selected").val(),
             "vars": $("#awsObsVar option:selected").val(),
             "pars": $("#awsParams option:selected").val(),
             "start": vrange.start,
@@ -156,16 +155,25 @@ $(document).ready(() => {
     //////////
 
     $("#downLeafletMap").on("click", () => {
-        var pars = $("#awsSpVar option:selected").val();
         var json = AWS_DATA;
+        var key_title;
+        var key_col;
         if (json.status == "no-data") {
-            filename = "aws_10min_data";
+            var key_draw = false;
+            var filename = "aws_10min_data";
         } else {
+            var key_draw = true;
+            var pars = $("#awsSpVar option:selected").val();
+            var vkey = getVarNameColorKey(pars);
+            var ix = AWS_10MinVarObj.map((x) => { return x.var; }).indexOf(pars);
+            key_title = AWS_10MinVarObj[ix].name + ' (' + AWS_10MinVarObj[ix].unit + ')';
+            key_col = json.key[vkey];
+
             var daty = formatDateMapMin();
-            filename = pars + "_" + daty;
+            var filename = pars + "_" + daty;
         }
 
-        saveLeafletDispAWS(AWS_10MinVarObj, json, pars, filename);
+        saveLeafletDispAWS(key_draw, key_col, key_title, filename);
     });
 });
 
@@ -173,7 +181,6 @@ $(document).ready(() => {
 
 function plotMap10MinAWS(daty) {
     var data = {
-        "source": $("#awsSource option:selected").val(),
         "time": daty
     };
     // 
