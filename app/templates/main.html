@@ -3,28 +3,61 @@
 {% block head %}
 {{ super() }}
 <style type="text/css">
-#homer {
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    margin-top: 50px;
+body {
+    background-image: url("{{ url_for('static', filename='images/background.png') }}");
+    background-repeat: round;
+    background-size: 100px 100px;
 }
 
-#daty-now {
+.titre-rw {
+    grid-area: headr;
+}
+
+.image-radar {
+    grid-area: radar;
+}
+
+.image-aws {
+    grid-area: aws;
+}
+
+.container {
+    display: grid;
+    grid-template-areas:
+        'headr headr headr headr headr headr headr headr'
+        'radar radar radar radar aws aws aws aws';
+    grid-gap: 5px;
+    padding: 2px;
+}
+
+.container>div {
+    text-align: center;
+}
+
+.imgAccueil {
+    width: 600px;
+    height: 500px;
+}
+
+.daty-now {
     text-align: center;
 }
 </style>
 {% endblock %}
 {% block content %}
-<div class="container-fluid">
-    <div class="row wrapper">
-        <!-- Left Panel -->
-        <div id="homer">
-            <img src="{{ url_for('static', filename='images/Homer.png') }}" alt="Homer" />
-        </div>
-        <p id="daty-now"> Today {{ date_now("%Y-%m-%d") }}</p>
-        <!-- Right panel -->
+<div class="container">
+    <div class="titre-rw">
+        <h1>Welcome to Meteo Rwanda AWS and Radar Data Visualization</h1>
     </div>
+    <div class="image-radar">
+        <img class="imgAccueil" src="{{ url_for('static', filename='images/radar.png') }}" alt="radar" />
+    </div>
+    <div class="image-aws">
+        <img class="imgAccueil" src="{{ url_for('static', filename='images/aws.png') }}" alt="aws" />
+    </div>
+</div>
+<div>
+    <p class="daty-now"> {{ date_now("%Y-%m-%d %H:%M") }}</p>
 </div>
 {% endblock %}
 {% block javascript %}
