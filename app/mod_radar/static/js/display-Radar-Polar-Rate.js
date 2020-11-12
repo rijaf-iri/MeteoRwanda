@@ -139,7 +139,7 @@ function ratePolarDisplayMap(daty) {
         url: '/radarPolar_PrecipRate',
         data: JSON.stringify(data),
         contentType: "application/json",
-        timeout: 180000,
+        timeout: 120000,
         dataType: "json",
         success: (json) => {
             RADAR_DATA = json;

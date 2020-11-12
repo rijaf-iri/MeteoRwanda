@@ -153,7 +153,10 @@ function selectAWS2DispTS(json, selAWS) {
         type: 'button',
         'class': 'close',
         text: 'x',
-        'data-dismiss': 'modal'
+        'data-dismiss': 'modal',
+        click: () => {
+            selAWSTS = selAWS;
+        }
     }).appendTo(divhead);
 
     $("<h4>").text("AWS Selection").appendTo(divhead);
@@ -256,7 +259,10 @@ function selectAWS2DispTS(json, selAWS) {
         type: 'button',
         'class': 'btn btn-default',
         text: 'Close',
-        'data-dismiss': 'modal'
+        'data-dismiss': 'modal',
+        click: () => {
+            selAWSTS = selAWS;
+        }
     }).appendTo(divfoot);
 
     // 
@@ -314,6 +320,7 @@ function selectAWS2DispSP(json, selAWS, vars) {
                 json = selectDataAWSSP(json, selAWS);
             }
             leafletMapAggrAWS(vars, json);
+            selAWSSP = selAWS;
         }
     }).appendTo(divhead);
 
@@ -424,6 +431,7 @@ function selectAWS2DispSP(json, selAWS, vars) {
                 json = selectDataAWSSP(json, selAWS);
             }
             leafletMapAggrAWS(vars, json);
+            selAWSSP = selAWS;
         }
     }).appendTo(divfoot);
 

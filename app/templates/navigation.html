@@ -32,16 +32,16 @@
                         </li>
                         <li class="divider"></li>
                         <li><a href="{{ url_for('aws.dispAWSAccumulRR_page') }}">Rainfall Accumulation</a></li>
-                        {% if session.logged_in %}
+                        {% if session.logged_in and session.userlevel > 1 %}
                         <li class="divider"></li>
                         <li class="dropdown-submenu">
                             <a href="#"> AWS Quality Control Outputs </a>
                             <ul class="dropdown-menu">
-                                <li><a href="#"> Native Time Step - Limit Check </a></li>
+                                <li><a href="{{ url_for('aws.dispQCMinutes_page') }}"> Native Time Step - Limit Check </a></li>
                                 <li class="divider"></li>
-                                <li><a href="#">Hourly - Spatial Check</a></li>
+                                <li><a href="{{ url_for('aws.dispQCHourly_page') }}">Hourly - Spatial Check</a></li>
                                 <li class="divider"></li>
-                                <li><a href="#">Daily - Climatological Comparison</a></li>
+                                <li><a href="{{ url_for('aws.dispQCDaily_page') }}">Daily - Climatological Comparison</a></li>
                             </ul>
                         </li>
                         <li class="divider"></li>

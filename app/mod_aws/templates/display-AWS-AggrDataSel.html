@@ -164,11 +164,15 @@
                             </div>
                             <!--  -->
                             <div class="download">
-                                <a id="downAWSVarOne" href="" target="_blank" download>
-                                    <button type="button" class="btn btn-primary btn-block">Download Data</button>
-                                </a>
+                                <button id="downAWSVars" type="button" class="btn btn-primary btn-block">Download Data</button>
                             </div>
-                            <!--  -->
+                            <!--
+                <div class="download">
+                    <a id="downAWSVars" href="" target="_blank" download>
+                        <button type="button" class="btn btn-primary btn-block">Download Data</button>
+                    </a>
+                </div>
+                -->
                             {% endif %}
                             <!--  -->
                         </div>
@@ -268,7 +272,7 @@
 <!--  -->
 {% if session.logged_in %}
 <script type="text/javascript" src="{{ url_for('static', filename='lib/highcharts-8.1.2/modules/export-data.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('aws.static', filename='js/export-AWS-AggrData.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('aws.static', filename='js/export-AWS-AggrDataSel.js') }}"></script>
 {% endif %}
 <script type="text/javascript" src="{{ url_for('aws.static', filename='js/aws-display-data.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('aws.static', filename='js/params-AWS-AggrData.js') }}"></script>

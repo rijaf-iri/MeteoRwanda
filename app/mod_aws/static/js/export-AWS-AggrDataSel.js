@@ -11,15 +11,18 @@ today.setDate(today.getDate() - 30);
 var daty1 = dateFormat(today, "yyyy-mm-dd");
 
 var data0 = {
-    "aws": "000003",
+    "aws": ["000003"],
+    "vars": "RR",
+    "pars": "Tot",
     "tstep": "daily",
-    "start": daty1,
-    "end": daty2,
-    "group": "LSI-XLOG"
+    "range": {
+        "start": daty1,
+        "end": daty2
+    }
 };
 
 dispTableAWSAggr(data0);
-$('#pTable').html("000003 - Gitega - LSI-XLOG");
+$('#pTable').html("Precipitation - Total");
 
 //
 $("#dispAWSTable").on("click", () => {
@@ -32,32 +35,36 @@ $("#dispAWSTable").on("click", () => {
     var tstep = $("#timestepDispTS option:selected").val();
     var vrange = startEndDateTime(tstep, obj);
     //
+
     var data = {
-        "aws": $("#stationDispAWS option:selected").val(),
+        "aws": selAWSTS,
+        "vars": $("#awsObsVar option:selected").val(),
+        "pars": $("#awsParams option:selected").val(),
         "tstep": tstep,
-        "start": vrange.start,
-        "end": vrange.end,
-        "group": AWS_INFO.AWSGroup
+        "range": vrange
     };
+
     dispTableAWSAggr(data);
-    var awsTxt = $("#stationDispAWS option:selected").html();
-    $('#pTable').html(awsTxt);
 });
+
 ////////////
 
 function dispTableAWSAggr(data) {
     $.ajax({
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        url: '/displayTableAgrrDataSel',
         dataType: "json",
-        data: data,
-        url: '/displayTableAgrrAWS',
         timeout: 120000,
         success: (json) => {
             $('.jsonTable').remove();
+            $('#pTable').html(json.title);
 
             //
-            var colHeader = Object.keys(json[0]);
+            var colHeader = json.order;
             var colNb = colHeader.length;
-            var rowNb = json.length;
+            var rowNb = json.data.length;
             //
             var table = $('<table>').addClass('jsonTable').attr('id', 'jsonTable');
             var rowh = $('<tr>');
@@ -69,7 +76,7 @@ function dispTableAWSAggr(data) {
             for (var i = 0; i < rowNb; i++) {
                 var row = $('<tr>');
                 for (var j = 0; j < colNb; j++) {
-                    var col = $('<td>').text(json[i][colHeader[j]]);
+                    var col = $('<td>').text(json.data[i][colHeader[j]]);
                     row.append(col);
                 }
                 table.append(row);
@@ -93,9 +100,10 @@ function dispTableAWSAggr(data) {
         $("#dispAWSTable .glyphicon-refresh").hide();
     });
 }
+
 ////////////
 
-$("#downAWSVarOne").on("click", () => {
+$("#downAWSVars").on("click", () => {
     var obj = checkDateTimeRange();
     if (!obj) {
         return false;
@@ -103,54 +111,49 @@ $("#downAWSVarOne").on("click", () => {
     var tstep = $("#timestepDispTS option:selected").val();
     var vrange = startEndDateTime(tstep, obj);
     var data = {
-        vars: $("#awsObsVar option:selected").val(),
-        aws: $("#stationDispAWS option:selected").val(),
-        group: AWS_INFO.AWSGroup,
-        tstep: tstep,
-        start: vrange.start,
-        end: vrange.end
+        'aws': selAWSTS,
+        'vars': $("#awsObsVar option:selected").val(),
+        'pars': $("#awsParams option:selected").val(),
+        'tstep': tstep,
+        'range': vrange
     };
 
-    var url = '/downAWSAggrOneVarCSV' + '?' + encodeQueryData(data);
-    $("#downAWSVarOne").attr("href", url).attr('target', '_blank');
-});
-////////////
+    $.ajax({
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        url: '/downTableAggrDataSelCSV',
+        xhrFields: {
+            responseType: 'blob'
+        },
+        success: (blob, status, xhr) => {
+            // default filename if not found
+            var filename = data["vars"] + "_" + data["pars"] + "_" + data["tstep"] + ".csv"
 
-$("#downAWSVarCDT").on("click", () => {
-    var obj = checkDateTimeRange();
-    if (!obj) {
-        return false;
-    }
-    var tstep = $("#timestepDispTS option:selected").val();
-    var vrange = startEndDateTime(tstep, obj);
-    var data = {
-        vars: $("#awsObsVar option:selected").val(),
-        pars: $("#awsParams option:selected").val(),
-        tstep: tstep,
-        start: vrange.start,
-        end: vrange.end
-    };
+            // check for a filename
+            var dispos = xhr.getResponseHeader('Content-Disposition');
+            if (dispos && dispos.indexOf('attachment') !== -1) {
+                var pregex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                var matches = pregex.exec(dispos);
+                if (matches != null && matches[1]) {
+                    filename = matches[1].replace(/['"]/g, '');
+                }
+            }
 
-    var url = '/downAWSAggrCDTDataCSV' + '?' + encodeQueryData(data);
-    $("#downAWSVarCDT").attr("href", url).attr('target', '_blank');
-});
-////////////
+            var URL = window.URL || window.webkitURL;
+            var downloadUrl = URL.createObjectURL(blob);
 
-$("#downAWSVarAll").on("click", () => {
-    var obj = checkDateTimeRange();
-    if (!obj) {
-        return false;
-    }
-    var tstep = $("#timestepDispTS option:selected").val();
-    var vrange = startEndDateTime(tstep, obj);
-    var data = {
-        aws: $("#stationDispAWS option:selected").val(),
-        group: AWS_INFO.AWSGroup,
-        tstep: tstep,
-        start: vrange.start,
-        end: vrange.end
-    };
+            // create downloadable link
+            var downlink = document.createElement("a");
+            downlink.href = downloadUrl;
+            downlink.download = filename;
+            document.body.appendChild(downlink);
+            downlink.click();
 
-    var url = '/downTableAggrCSV' + '?' + encodeQueryData(data);
-    $("#downAWSVarAll").attr("href", url).attr('target', '_blank');
+            // cleanup
+            setTimeout(() => {
+                URL.revokeObjectURL(downloadUrl);
+            }, 100);
+        }
+    });
 });

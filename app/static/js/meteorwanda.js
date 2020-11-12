@@ -12,7 +12,7 @@ AWS_DATA.status = "no-data";
 var AWS_JSON = "";
 var AWS_INFO = "";
 var AWS_VarPars = "";
-
+var QC_DATA = new Object();
 // 
 var AWS_10MinVarObj;
 $.getJSON(Flask.url_for("static", {

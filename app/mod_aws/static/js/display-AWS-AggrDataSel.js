@@ -15,7 +15,6 @@ $(document).ready(() => {
 
     ////////////
 
-    var selAWSTS = ["000003"];
     var oldVAR = $("#awsObsVar option:selected").val();
 
     $("#selectAWSPlotTS").on("click", () => {
@@ -48,17 +47,23 @@ $(document).ready(() => {
 
     ////////////
 
+    var today = new Date();
+    var daty2 = dateFormat(today, "yyyy-mm-dd");
+    today.setDate(today.getDate() - 30);
+    var daty1 = dateFormat(today, "yyyy-mm-dd");
+
     var data0 = {
         "aws": ["000003"],
         "vars": "RR",
         "pars": "Tot",
         "tstep": "daily",
         "range": {
-            "start": "2020-01-01",
-            "end": "2020-01-26"
+            "start": daty1,
+            "end": daty2
         }
     };
-    // plotTSAggrAWS(data0);
+
+    plotTSAggrAWS(data0);
 
     //
     $("#plotAWSGraph").on("click", () => {
@@ -86,13 +91,10 @@ $(document).ready(() => {
             "range": vrange
         };
 
-        console.log(data);
-        // plotTSAggrAWS(data);
+        plotTSAggrAWS(data);
     });
 
     ////////////
-
-    var selAWSSP = [];
 
     $("#selectAWSPlotSP").on("click", () => {
         $('#selectAWSModalSP').empty();
@@ -182,6 +184,11 @@ $(document).ready(() => {
 
 //////////
 
+var selAWSTS = ["000003"];
+var selAWSSP = [];
+
+//////////
+
 function plotMapAggrAWS(daty, selaws) {
     var data = {
         "tstep": $("#timestepDispTS option:selected").val(),
@@ -224,7 +231,7 @@ function plotMapAggrAWS(daty, selaws) {
 function plotTSAggrAWS(data) {
     $.ajax({
         type: 'POST',
-        url: '/chartAggrAWSData',
+        url: '/chartAggrAWSDataSel',
         data: JSON.stringify(data),
         contentType: "application/json",
         timeout: 120000,

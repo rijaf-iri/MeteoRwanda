@@ -43,7 +43,7 @@ function saveLeafletDispQPEMap(xvar, ckeys, unit, filename) {
             position: 'bottomright'
         }).addTo(mymap);
         mymap.removeControl(printer);
-    }, 2000);
+    }, 1000);
 }
 
 ////////////
@@ -98,7 +98,7 @@ function saveLeafletDispRadarMap(json, filename) {
             }).addTo(mymap);
         }
         mymap.removeControl(printer);
-    }, 2000);
+    }, 1000);
 }
 
 ////////////
@@ -153,5 +153,5 @@ function saveLeafletDispAWS(key_draw, key_col, key_title, filename) {
             }).addTo(mymap);
         }
         mymap.removeControl(printer);
-    }, 2000);
+    }, 1000);
 }

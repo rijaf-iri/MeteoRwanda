@@ -85,18 +85,21 @@ function setAWSAccumulRainTime() {
 //////////
 
 function rainAccumulbindPopup(don, date) {
-    var div = $('<div>');
-    var stn1 = '<p class="awsTablebindPopupP"><b> Date : </b>' + date + '<br>';
-    var stn2 = '<b>ID : </b>' + don.id + '<b>; NAME : </b>' + don.stationName;
-    var stn3 = '<b>; GROUP : </b>' + don.AWSGroup + '<br>';
-
     var tstep = $("#timestepDispTS option:selected").val();
     var suffix = (tstep == "hourly") ? "Hour" : "Day";
     var accum = $("#accumulTime").val();
-    var lab = "<b>Precipitation " + accum + "-" + suffix + " Accumulation : </b>";
-    var val = don.accumul + ' mm' + '</p>';
 
-    div.append(stn1 + stn2 + stn3 + lab + val);
+    var content = '<b> Date : </b>' + date + '<br>' +
+        '<b>ID : </b>' + don.id +
+        '<b>; NAME : </b>' + don.stationName +
+        '<b>; GROUP : </b>' + don.AWSGroup + '<br>' +
+        "<b>Precipitation " + accum + "-" + suffix +
+        " Accumulation : </b>" + don.accumul + ' mm';
+
+    var div = $('<div>');
+    $('<p>').addClass("awsTablebindPopupP")
+        .html(content).appendTo(div);
+
     return div;
 }
 
@@ -204,9 +207,15 @@ function leafletMapRainAccumulAWS(json) {
             return;
         }
 
-        var divIconHtml = '<div class="pin"><div class="pin-inner"><span class="pin-label">' + Math.round(don.accumul) + '</span></div></div>';
+        var divIconHtml = $('<div>').addClass("pin");
+        var divIco = $('<div>').addClass("pin-inner");
+        $('<span>').addClass("pin-label")
+            .html(Math.round(don.accumul))
+            .appendTo(divIco);
+        divIconHtml.append(divIco);
 
-        var txttip = '<b>ID : </b>' + don.id + '<br>' + '<b>NAME : </b>' + don.stationName + '<br>' + '<b>GROUP : </b>' + don.AWSGroup;
+        var txttip = '<b>ID : </b>' + don.id + '<br>' + '<b>NAME : </b>' +
+            don.stationName + '<br>' + '<b>GROUP : </b>' + don.AWSGroup;
         var tablePopup = rainAccumulbindPopup(don, json.date).prop('outerHTML');
         //
         var icon = L.divIcon({
@@ -214,7 +223,7 @@ function leafletMapRainAccumulAWS(json) {
             iconAnchor: new L.Point(15, 30),
             popupAnchor: new L.Point(0, -15),
             className: 'pindivIcon' + ix,
-            html: divIconHtml
+            html: divIconHtml.prop('outerHTML')
         });
 
         var lalo = new L.LatLng(don.latitude, don.longitude);
@@ -254,11 +263,18 @@ function leafletMapRainAccumulAWS(json) {
     });
     //
     $('#colKeyMapVar').empty();
-    titre = '<p style="margin-top:1px;margin-bottom:2px;font-size:10;"> Rainfall Accumulation (mm)</p>';
-    $('#colKeyMapVar').append(titre);
+
+    var titre = "Rainfall Accumulation (mm)";
+    $('<p>').html(titre).css({
+        'margin-top': '1px',
+        'margin-bottom': '2px',
+        'font-size': '10'
+    }).appendTo('#colKeyMapVar');
     $('#colKeyMapVar').append(createColorKeyH(json.key));
-    $('#colKeyMapVar .ckeyh').css('width', '290px');
-    $('#colKeyMapVar .ckeyh').css('height', '35px');
+    $('#colKeyMapVar .ckeyh').css({
+        'width': '290px',
+        'height': '35px'
+    });
     $('#colKeyMapVar .ckeyh-label').css('font-size', 10);
 
     $('a[href="#dispawssp"]').on('shown.bs.tab', (e) => {

@@ -152,20 +152,13 @@ $(document).ready(() => {
 
 //////////
 
-var TEST;
-
-//////////
 function plotTSAggrAWS(data) {
     $.ajax({
         dataType: "json",
         url: '/chartAggrAWSData',
         data: data,
         timeout: 120000,
-        // success: highchartsTSAggrAWS,
-        success: (json) => {
-            TEST = json;
-            highchartsTSAggrAWS(json);
-        },
+        success: highchartsTSAggrAWS,
         beforeSend: () => {
             $("#plotAWSGraph .glyphicon-refresh").show();
         },
