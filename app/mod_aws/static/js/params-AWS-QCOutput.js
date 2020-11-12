@@ -84,7 +84,81 @@ function leafletMapQCoutput(json) {
     }
     mymap.closePopup();
 
+    let text2Op = {
+        direction: 'bottom',
+        className: 'tooltipbottom'
+    };
+    var lastIconActive = "";
+
     ////////
+
+    $.each(json.data, (ix) => {
+        var don = json.data[ix];
+        var crd = don.crd[0];
+        var qc = don.qc;
+
+        var txttip = '<b>ID : </b>' + crd.id + '<br>' + '<b>NAME : </b>' +
+            crd.stationName + '<br>' + '<b>GROUP : </b>' + crd.AWSGroup;
+
+        var lalo = new L.LatLng(crd.latitude, crd.longitude);
+        var marker = L.marker(lalo)
+            .bindTooltip(txttip, text2Op)
+            .addTo(mymap);
+        mymarkersBE.push(marker);
+
+        // 
+        marker.on('click', (e) => {
+            $("#contQCTable").empty();
+            $('a[href="#dispawsqc"]').click();
+
+            // 
+            var div0 = $('<div>').css({
+                'margin-top': '5px',
+                'margin-bottom': '1px',
+                'text-align': 'center',
+            }).appendTo("#contQCTable");
+
+            var titre = '<b>ID : </b>' + crd.id + '&nbsp;&nbsp;<b>NAME : </b>' +
+                crd.stationName + '&nbsp;&nbsp;<b>GROUP : </b>' + crd.AWSGroup;
+            $('<p>').html(titre).appendTo(div0);
+
+            // 
+            var daty = Object.keys(qc);
+
+            for (var j = 0; j < daty.length; j++) {
+                var colHeader = Object.keys(qc[daty[j]][0]);
+                var colNb = colHeader.length;
+                // 
+                var div = $('<div>').css({
+                    'margin-top': '5px',
+                    'margin-bottom': '5px',
+                });
+
+                var table = $('<table>')
+                    .addClass('jsonTable')
+                    .attr('id', 'jsonTable');
+
+                var rowh = $('<tr>');
+                $('<th>').text('Date').appendTo(rowh);
+                for (var i = 0; i < colNb; i++) {
+                    $('<th>').text(colHeader[i])
+                        .appendTo(rowh);
+                }
+                table.append(rowh);
+
+                var row = $('<tr>');
+                $('<td>').text(daty[j]).appendTo(row);
+                for (var i = 0; i < colNb; i++) {
+                    $('<td>').text(qc[daty[j]][0][colHeader[i]])
+                        .appendTo(row);
+                }
+                table.append(row);
+
+                div.append(table);
+                $("#contQCTable").append(div);
+            }
+        });
+    });
 
     ////////
 

@@ -39,9 +39,15 @@ $(document).ready(() => {
     });
     // 
 
-    // $("#downLeafletMap").on("click", () => {
-    //     //
-    // });
+    $("#downLeafletMap").on("click", () => {
+        var daty = getDateTimeMapData();
+        var filename = "QC_Outputs_Minutes_" + daty;
+        var printer = easyPrintMap();
+        printer.printMap('CurrentSize', filename);
+        setTimeout(() => {
+            mymapBE.removeControl(printer);
+        }, 1000);
+    });
 });
 
 //////////

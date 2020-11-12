@@ -471,9 +471,8 @@ def dispQCMinutes_page():
 @login_required
 def displayQCMinutes():
     time = request.args.get("time")
-    # robj = mtrwaws.displayQCMinutes(time, dirAWS)
-    # pyobj = json.loads(robj[0])
-    pyobj = {"status": "no-data"}
+    robj = mtrwaws.displayQCMinutes(time, dirAWS)
+    pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
 
 

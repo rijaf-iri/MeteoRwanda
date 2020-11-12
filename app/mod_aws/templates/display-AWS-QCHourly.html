@@ -7,8 +7,9 @@
 <script type="text/javascript" src="{{ url_for('static', filename='lib/leaflet-1.6.0/leaflet.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/L.Control.MousePosition/L.Control.MousePosition.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/Plugins-leaflet/Leaflet-easyPrint/bundle.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('aws.static', filename='css/aws.css') }}">
 <style>
-    #contAWSGraph {
+    #contQCTable {
     width: 100%;
     height: 80vh;
     }
@@ -82,14 +83,14 @@
         <div class="col-sm-9 main box">
             <ul class="nav nav-tabs" id="myTab">
                 <li class="active"><a href="#dispawssp" data-toggle="tab">QC Map</a></li>
-                <li><a href="#dispawsts" data-toggle="tab">QC Table</a></li>
+                <li><a href="#dispawsqc" data-toggle="tab">QC Outputs</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="dispawssp">
                     <div id="mapAWSVars"></div>
                 </div>
-                <div class="tab-pane" id="dispawsts">
-                    <div id="contAWSGraph"></div>
+                <div class="tab-pane" id="dispawsqc">
+                    <div id="contQCTable"></div>
                 </div>
             </div>
         </div>
@@ -100,6 +101,5 @@
 <!--  -->
 <script type="text/javascript" src="{{ url_for('aws.static', filename='js/aws-display-data.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('aws.static', filename='js/params-AWS-QCOutput.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/print-screen-map.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('aws.static', filename='js/display-AWS-QCHourly.js') }}"></script>
 {% endblock %}
