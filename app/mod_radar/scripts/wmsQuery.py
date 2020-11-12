@@ -13,8 +13,8 @@ def qpewms_5minutes(wmsURL, lastDay):
         }
 
     ## change for production
-    # now = datetime.datetime.today()
-    now = datetime.datetime.strptime("2020-10-25T15:39:02Z", '%Y-%m-%dT%H:%M:%SZ')
+    # now = datetime.datetime.strptime("2020-10-25T15:39:02Z", '%Y-%m-%dT%H:%M:%SZ')
+    now = datetime.datetime.today()
     daty = [now - datetime.timedelta(days = d) for d in range(lastDay, 0, -1)]
     daty = daty + [now]
 
