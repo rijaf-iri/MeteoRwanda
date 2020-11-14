@@ -449,7 +449,11 @@ function selectAWS2DispSP(json, selAWS, vars) {
 function leafletMapAggrAWS(pars, json) {
     var mymap = createLeafletTileLayer("mapAWSVars");
 
-    // //////
+    $('a[href="#dispawssp"]').on('shown.bs.tab', (e) => {
+        mymap.invalidateSize();
+    });
+
+    ////////
     if (json.status == "no-data") {
         var popup = L.popup()
             .setLatLng([mapCenterLAT, mapCenterLON])
@@ -544,10 +548,4 @@ function leafletMapAggrAWS(pars, json) {
         'height': '35px'
     });
     $('#colKeyMapVar .ckeyh-label').css('font-size', 10);
-
-    /////////////
-
-    $('a[href="#dispawssp"]').on('shown.bs.tab', (e) => {
-        mymap.invalidateSize();
-    });
 }

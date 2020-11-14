@@ -57,10 +57,7 @@ function plotMapAWSQCOutput(daty) {
         url: '/displayQCHourly',
         data: { "time": daty },
         dataType: "json",
-        success: (json) => {
-            leafletMapQCoutput(json);
-            QC_DATA = json;
-        },
+        success: leafletMapQCoutput,
         error: (request, status, error) => {
             $('#errorMSG').css("background-color", "red");
             $('#errorMSG').html("Error: " + request + status + error);

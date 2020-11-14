@@ -109,6 +109,10 @@ function setAWSMinSpVariable() {
 function leafletMap10MinAWS(pars, json) {
     var mymap = createLeafletTileLayer("mapAWSVars");
 
+    $('a[href="#dispawssp"]').on('shown.bs.tab', (e) => {
+        mymap.invalidateSize();
+    });
+
     ////////
     if (json.status == "no-data") {
         var popup = L.popup()
@@ -216,8 +220,4 @@ function leafletMap10MinAWS(pars, json) {
         'height': '35px'
     });
     $('#colKeyMapVar .ckeyh-label').css('font-size', 10);
-
-    $('a[href="#dispawssp"]').on('shown.bs.tab', (e) => {
-        mymap.invalidateSize();
-    });
 }

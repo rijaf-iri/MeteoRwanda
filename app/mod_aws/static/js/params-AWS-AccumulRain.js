@@ -184,6 +184,10 @@ function highchartsRainAccumulAWS(json) {
 function leafletMapRainAccumulAWS(json) {
     var mymap = createLeafletTileLayer("mapAWSVars");
 
+    $('a[href="#dispawssp"]').on('shown.bs.tab', (e) => {
+        mymap.invalidateSize();
+    });
+
     // //////
     if (json.status == "no-data") {
         var popup = L.popup()
@@ -276,8 +280,4 @@ function leafletMapRainAccumulAWS(json) {
         'height': '35px'
     });
     $('#colKeyMapVar .ckeyh-label').css('font-size', 10);
-
-    $('a[href="#dispawssp"]').on('shown.bs.tab', (e) => {
-        mymap.invalidateSize();
-    });
 }

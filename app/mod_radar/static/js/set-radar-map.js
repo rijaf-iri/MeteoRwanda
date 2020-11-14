@@ -289,6 +289,11 @@ function radarImgResetMask(json) {
 
 function leafletDispRadarMap(json, sweep) {
     var mymap = createLeafletTileLayer("mapRadarDisp", aws_tile = false);
+
+    $('a[href="#radardisp"]').on('shown.bs.tab', (e) => {
+        mymap.invalidateSize();
+    });
+
     changeLeafletTileLayer("#basemapL");
 
     ////////////
@@ -383,12 +388,6 @@ function leafletDispRadarMap(json, sweep) {
     $('.table-ckey .ckeyv').css({
         'width': '55px',
         'height': '75vh'
-    });
-
-    ////////////
-
-    $('a[href="#radardisp"]').on('shown.bs.tab', (e) => {
-        mymap.invalidateSize();
     });
 }
 

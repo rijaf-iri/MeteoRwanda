@@ -463,6 +463,7 @@ def downRainAccumulSP():
 
 
 @mod_aws.route("/dispQCMinutesPage")
+@login_required
 def dispQCMinutes_page():
     return render_template("display-AWS-QCMinutes.html")
 
@@ -477,6 +478,7 @@ def displayQCMinutes():
 
 
 @mod_aws.route("/dispQCHourlyPage")
+@login_required
 def dispQCHourly_page():
     return render_template("display-AWS-QCHourly.html")
 
@@ -492,6 +494,7 @@ def displayQCHourly():
 
 
 @mod_aws.route("/dispQCDailyPage")
+@login_required
 def dispQCDaily_page():
     return render_template("display-AWS-QCDaily.html")
 
@@ -503,4 +506,20 @@ def displayQCDaily():
     # robj = mtrwaws.displayQCDaily(date, dirAWS)
     # pyobj = json.loads(robj[0])
     pyobj = {"status": "no-data"}
+    return json.dumps(pyobj)
+
+
+@mod_aws.route("/dispLogFilesPage")
+@login_required
+def dispLogFiles_page():
+    return render_template("display-AWS-LogFiles.html")
+
+@mod_aws.route("/displayLogFiles")
+@login_required
+def displayLogFiles():
+    date = request.args.get("date")
+    logtype = request.args.get("logtype")
+    awsnet = request.args.get("awsnet")
+    robj = mtrwaws.displayLogFiles(logtype, dirAWS, awsnet, date)
+    pyobj = json.loads(robj[0])
     return json.dumps(pyobj)

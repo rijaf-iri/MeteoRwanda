@@ -74,6 +74,10 @@ function setQCOutputTime() {
 function leafletMapQCoutput(json) {
     var mymap = createLeafletTileLayer("mapAWSVars");
 
+    $('a[href="#dispawssp"]').on('shown.bs.tab', (e) => {
+        mymap.invalidateSize();
+    });
+
     ////////
     if (json.status == "no-data") {
         var popup = L.popup()
@@ -129,10 +133,11 @@ function leafletMapQCoutput(json) {
                 var colHeader = Object.keys(qc[daty[j]][0]);
                 var colNb = colHeader.length;
                 // 
-                var div = $('<div>').css({
-                    'margin-top': '5px',
-                    'margin-bottom': '5px',
-                });
+                // var div = $('<div>').css({
+                //     'margin-top': '5px',
+                //     'margin-bottom': '5px',
+                // });
+                var div = $('<div>').css('margin', '2px 10px 5px 10px');
 
                 var table = $('<table>')
                     .addClass('jsonTable')
@@ -158,11 +163,5 @@ function leafletMapQCoutput(json) {
                 $("#contQCTable").append(div);
             }
         });
-    });
-
-    ////////
-
-    $('a[href="#dispawssp"]').on('shown.bs.tab', (e) => {
-        mymap.invalidateSize();
     });
 }

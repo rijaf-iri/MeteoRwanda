@@ -41,7 +41,7 @@ $(document).ready(() => {
 
     $("#downLeafletMap").on("click", () => {
         var daty = getDateTimeMapData();
-        var filename = "QC_Outputs_Minutes_" + daty;
+        var filename = "QC_Outputs_Daily_" + daty;
         var printer = easyPrintMap();
         printer.printMap('CurrentSize', filename);
         setTimeout(() => {
@@ -57,10 +57,7 @@ function plotMapAWSQCOutput(daty) {
         url: '/displayQCDaily',
         data: { "date": daty },
         dataType: "json",
-        success: (json) => {
-            leafletMapQCoutput(json);
-            QC_DATA = json;
-        },
+        success: leafletMapQCoutput,
         error: (request, status, error) => {
             $('#errorMSG').css("background-color", "red");
             $('#errorMSG').html("Error: " + request + status + error);

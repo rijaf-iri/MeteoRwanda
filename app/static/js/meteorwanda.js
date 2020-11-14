@@ -12,7 +12,6 @@ AWS_DATA.status = "no-data";
 var AWS_JSON = "";
 var AWS_INFO = "";
 var AWS_VarPars = "";
-var QC_DATA = new Object();
 // 
 var AWS_10MinVarObj;
 $.getJSON(Flask.url_for("static", {
@@ -964,7 +963,25 @@ function setDateTimeMapDataMin(n) {
     $("#day3").val((vday < 10 ? "0" : "") + vday);
     var vmon = dObj.getMonth() + 1;
     $("#month3").val((vmon < 10 ? "0" : "") + vmon);
-    $("#year3").val(dObj.getFullYear());
+
+    var years = $("#year3 option")
+        .map(function() { return $(this).val(); })
+        .get();
+    years = years.map(x => Number(x));
+    years = years.filter(x => x != 0);
+    var minyr = Math.min(...years);
+    var maxyr = Math.max(...years);
+
+    var thisYear = dObj.getFullYear();
+    var valYear;
+    if (thisYear < minyr) {
+        valYear = maxyr;
+    } else if (thisYear > maxyr) {
+        valYear = minyr;
+    } else {
+        valYear = thisYear;
+    }
+    $("#year3").val(valYear);
 }
 
 function setDateTimeMapData(n) {
@@ -987,7 +1004,7 @@ function setDateTimeMapData(n) {
         dObj = getDateMap1Pentad();
         dObj = dObj.setPentad(dObj.getPentad() + n);
         $("#pentad3").val(dObj.getPentad());
-        // change def of setPentad to use  it directly
+        // change def of setPentad to use it directly
     } else if (timestep == "dekadal") {
         dObj = getDateMap1Dekad();
         dObj = dObj.setDekad(dObj.getDekad() + n);
@@ -1000,7 +1017,25 @@ function setDateTimeMapData(n) {
 
     var vmon = dObj.getMonth() + 1;
     $("#month3").val((vmon < 10 ? "0" : "") + vmon);
-    $("#year3").val(dObj.getFullYear());
+
+    var years = $("#year3 option")
+        .map(function() { return $(this).val(); })
+        .get();
+    years = years.map(x => Number(x));
+    years = years.filter(x => x != 0);
+    var minyr = Math.min(...years);
+    var maxyr = Math.max(...years);
+
+    var thisYear = dObj.getFullYear();
+    var valYear;
+    if (thisYear < minyr) {
+        valYear = maxyr;
+    } else if (thisYear > maxyr) {
+        valYear = minyr;
+    } else {
+        valYear = thisYear;
+    }
+    $("#year3").val(valYear);
 }
 
 function getDateTimeMapData() {
