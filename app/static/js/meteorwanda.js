@@ -627,6 +627,18 @@ Date.prototype.setPentad = function(n) {
 
 ////////////////////////////
 
+function convertDate2UTC(date) {
+    return new Date(
+        date.getUTCFullYear(),
+        date.getUTCMonth(),
+        date.getUTCDate(),
+        date.getUTCHours(),
+        date.getUTCMinutes(),
+        date.getUTCSeconds()
+    );
+}
+
+////////////////////////////
 
 function startEndDateTime(timestep, obj) {
     var start_date = "";

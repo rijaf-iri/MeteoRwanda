@@ -5,6 +5,7 @@ function setRadarSelectTime() {
 
     //
     var daty = new Date();
+    daty = convertDate2UTC(daty);
 
     //
     for (var i = 0; i < 60; i += 5) {
