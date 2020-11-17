@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(() => {
     // 
     var label = ['Year', 'Mon', 'Day', 'Hour'];
     var pname = ['year', 'month', 'day', 'hour'];
@@ -19,7 +19,7 @@ $(document).ready(function() {
             hr = "0" + i;
         }
         $('#hour3').append(
-            $("<option></option>").text(hr).val(hr)
+            $("<option>").text(hr).val(hr)
         );
     }
     //
@@ -33,7 +33,7 @@ $(document).ready(function() {
             dy = "0" + i;
         }
         $(' #day3').append(
-            $("<option></option>").text(dy).val(dy)
+            $("<option>").text(dy).val(dy)
         );
     }
     var vday = daty.getDate();
@@ -46,7 +46,7 @@ $(document).ready(function() {
             mo = "0" + i;
         }
         $('#month3').append(
-            $("<option></option>").text(mo).val(mo)
+            $("<option>").text(mo).val(mo)
         );
     }
     var vmon = daty.getMonth() + 1;
@@ -56,7 +56,7 @@ $(document).ready(function() {
     var thisYear = daty.getFullYear();
     for (var yr = 2018; yr <= thisYear; ++yr) {
         $('#year3').append(
-            $("<option></option>").text(yr).val(yr)
+            $("<option>").text(yr).val(yr)
         );
     }
     $("#year3").val(thisYear);
@@ -73,43 +73,86 @@ $(document).ready(function() {
     $("#timestepDispTS").trigger("change");
 
     ////////////
-    ////////
 
     // map initialization here
     leafletQPEAggrMap(RADAR_DATA);
 
     ////////
-    $("#radMapDis").on("click", function() {
-        // $('a[href="#radardisp"]').click();
-        //
+    $("#radMapDis").on("click", () => {
         var daty = getDateTimeMapData();
-        // var d5min = formatDateMapMin();
-        // qpeCappiDisplayMap(d5min);
+        plotMapRainAccumulQPE(daty);
     });
 
-    $("#radMapNext").on("click", function() {
-        // $('a[href="#radardisp"]').click();
-        //
+    $("#radMapNext").on("click", () => {
         setDateTimeMapData(1);
         var daty = getDateTimeMapData();
-        //
-        // setDateTimeMapDataMin(5);
-        // var d5min = formatDateMapMin();
-        // qpeCappiDisplayMap(d5min);
+        plotMapRainAccumulQPE(daty);
     });
     //
-    $("#radMapPrev").on("click", function() {
-        // $('a[href="#radardisp"]').click();
-        //
+    $("#radMapPrev").on("click", () => {
         setDateTimeMapData(-1);
         var daty = getDateTimeMapData();
-        //
-        // setDateTimeMapDataMin(-5);
-        // var d5min = formatDateMapMin();
-        // qpeCappiDisplayMap(d5min);
+        plotMapRainAccumulQPE(daty);
     });
+
+    // 
+    $('#rasterImgType').on('change', () => {
+        var json = RADAR_DATA;
+        if (json.status == "no-data") {
+            return false;
+        }
+        changeQPERasterImgType(json);
+    });
+    // 
+    $('#slideOpacity').on('input change', function() {
+        $('#valueOpacity').html(this.value);
+        if (myimagesPNG[0]) {
+            myimagesPNG[0].setOpacity(this.value);
+        }
+    });
+
 });
 
+//////////
+
+function plotMapRainAccumulQPE(daty) {
+    var data = {
+        "tstep": $("#timestepDispTS option:selected").val(),
+        "accumul": $("#accumulTime").val(),
+        "time": daty
+    };
+
+    // console.log(data)
+
+    $.ajax({
+        url: '/dispAccumulQPE',
+        data: data,
+        timeout: 120000,
+        dataType: "json",
+        success: (json) => {
+            RADAR_DATA = json;
+            // console.log(json)
+            leafletQPEAggrMap(json);
+        },
+        beforeSend: () => {
+            mymapBE.closePopup();
+            mymapBE.spin(true, spinner_opts);
+        },
+        error: (request, status, error) => {
+            if (status === "timeout") {
+                $('#errorMSG').css("background-color", "orange");
+                $('#errorMSG').html("Timeout: Take too much time to render");
+            } else {
+                $('#errorMSG').css("background-color", "red");
+                $('#errorMSG').html("Error: " + request + status + error);
+            }
+        }
+    }).always(() => {
+        mymapBE.spin(false);
+    });
+}
+
+//////////
 
 function leafletQPEAggrMap(json) {
     var mymap = createLeafletTileLayer("mapRadarDisp", aws_tile = false);
@@ -120,8 +163,8 @@ function leafletQPEAggrMap(json) {
     if (json.status == "no-data") {
         var txt;
         switch (json.msg) {
-            case 'no-mdvfile':
-                txt = "No MDV file found";
+            case 'no-netcdf':
+                txt = "No NetCDF files found";
                 break;
             case 'no-ckey':
                 txt = 'Color scale ' + json.ckey_name + ' not found';
@@ -139,58 +182,58 @@ function leafletQPEAggrMap(json) {
 
     mymap.closePopup();
 
-    // 
-    var ckeys = {
-        'colors': [
-            "#fffafa",
-            "#d3d3d3",
-            "#ff1493",
-            "#ee2c2c",
-            "#fa8072",
-            "#e9967a",
-            "#ffff00",
-            "#daa520",
-            "#d2691e",
-            "#a0522d",
-            "#8b2252",
-            "#b03060",
-            "#8b3a62",
-            "#68228b",
-            "#00008b",
-            "#0000ff",
-            "#7b68ee",
-            "#66cdaa",
-            "#3cb371",
-            "#00cd66",
-            "#228b22",
-            "#556b2f",
-            "#006400"
-        ],
-        'labels': [
-            "600",
-            "500",
-            "400",
-            "300",
-            "250",
-            "200",
-            "175",
-            "150",
-            "125",
-            "100",
-            "80",
-            "60",
-            "50",
-            "40",
-            "30",
-            "25",
-            "20",
-            "15",
-            "10",
-            "5",
-            "2",
-            "1"
-        ]
+    ////////////
+    $(".title-ckey p").empty();
+    $('.table-ckey').empty();
+    $('.div-title').empty();
+
+    ////////////
+
+    var opacity = $('#slideOpacity').val();
+    var imagetype = $("#rasterImgType option:selected").val();
+    var png_overlay;
+    if (imagetype == "pixels") {
+        png_overlay = addRasterImage(json.data.png, json.data.bounds, opacity);
+    } else {
+        png_overlay = L.imageOverlay(json.data.png, json.data.bounds, { opacity: opacity });
     }
+    mymap.addLayer(png_overlay);
+    myimagesPNG[0] = png_overlay;
 
+    ////////////
 
+    var tstep = $("#timestepDispTS option:selected").val();
+    var vUnit = tstep == 'hourly' ? 'Hours' : 'Days';
+    var titre = json.accumul + '&nbsp;' + vUnit + '&nbsp;-&nbsp;' +
+        'Accumulated Precipitation' + '&nbsp;-&nbsp;' + json.qpe_time;
+    $('.div-title').html(titre);
+
+    ////////////
+
+    $(".title-ckey p").html("Rainfall Accumulation (mm)");
+    $('.table-ckey').append(createColorKeyV(json.ckeys));
+    $('.table-ckey .ckeyv').css({
+        'width': '55px',
+        'height': '75vh'
+    });
+}
+
+////////////
+
+function changeQPERasterImgType(json) {
+    var imagetype = $("#rasterImgType option:selected").val();
+    var opacity = $('#slideOpacity').val();
+
+    var mymap = mymapBE;
+    mymap.removeLayer(myimagesPNG[0]);
+
+    switch (imagetype) {
+        case "pixels":
+            png_overlay = addRasterImage(json.data.png, json.data.bounds, opacity);
+            break;
+        case "smooth":
+            png_overlay = L.imageOverlay(json.data.png, json.data.bounds, { opacity: opacity });
+    }
+    mymap.addLayer(png_overlay);
+    myimagesPNG[0] = png_overlay;
 }

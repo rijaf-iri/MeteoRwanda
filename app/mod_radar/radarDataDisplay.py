@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request, Response, session
 from flask import current_app as app
 
-# from rpy2.robjects.packages import importr
 import json
 import os
 
@@ -15,6 +14,10 @@ from .scripts.uploadfiles import *
 from .scripts.windCtrec import ctrec_wind
 from .scripts.util import numpyArrayEncoder
 from .scripts.wmsQuery import *
+from .scripts.plotqpeAccumul import qpeAccumulMap
+
+## remove
+from .scripts.test import fonct_test
 
 ###################
 
@@ -26,7 +29,6 @@ mod_radar = Blueprint(
     static_url_path="/static/mod_radar",
 )
 
-# mtrwdata = importr('mtorwdata')
 dirMDV = config.RADAR_MDV_DIR
 dirCKey = config.RADAR_CKEY_DIR
 dirUPLOAD = config.UPLOAD_DATA_DIR
@@ -141,9 +143,6 @@ def radarCAPPIQPE_page():
     return render_template("display-CAPPI-QPE.html", wmsURL=wmsURL, wmsData=wmsData)
 
 
-###################
-
-
 @mod_radar.route("/dispAggrQPEPage")
 def dispAggrQPE_page():
     # wmsURL = "http://localhost:8080/wms"
@@ -159,11 +158,22 @@ def dispAggrQPE_page():
 
     return render_template("display-AggrData-QPE.html", wmsURL=wmsURL, wmsData=wmsData)
 
+###################
 
 @mod_radar.route("/dispAccumulQPEPage")
 def dispAccumulQPE_page():
     return render_template("display-Accumul-QPE.html")
 
+
+@mod_radar.route("/dispAccumulQPE")
+def dispAccumulQPE():
+    time = request.args.get("time")
+    tstep = request.args.get("tstep")
+    accumul = request.args.get("accumul")
+
+    out_dict = qpeAccumulMap(tstep, time, accumul)
+
+    return json.dumps(out_dict)
 
 ###################
 
@@ -186,3 +196,15 @@ def uploadShapeFiles():
     user = session.get("username")
 
     return getUploadedShapeFiles(dirUPLOAD, files, user)
+
+@mod_radar.route("/extractQPEData", methods=["POST"])
+def extractQPEData():
+    pars = request.get_json()
+    # dirSource = os.path.join(dirMDV, "radarCart", "ops")
+
+    print(pars)
+
+    a = fonct_test(pars)
+    x = {'a':2, 'b':3}
+    return json.dumps(x)
+

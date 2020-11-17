@@ -19,7 +19,7 @@ def radarCartGridMap(dirMDV, dirCKey, pars):
     ckeyfile = os.path.join(dirCKey, params['ckey'])
     if not os.path.exists(ckeyfile):
         out = {'radar_time': temps, 'status': 'no-data',
-               'msg': 'no-ckey', 'ckey_name': ckey}
+               'msg': 'no-ckey', 'ckey_name': params['ckey']}
         return out
 
     breaks, colors, colors_ext = get_ColorScale(ckeyfile)

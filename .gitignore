@@ -141,7 +141,3 @@ wsgi.py
 clean_py.sh
 scripts/
 
-**/*.py[cod]
-**/__pycache__/
-
-

@@ -70,8 +70,7 @@ $(document).ready(function() {
             'extractsupport': extractsupport,
             'extractgeom': spatialGeomSelected,
             'timestep': timestep,
-            'start_time': vrange.start,
-            'end_time': vrange.end
+            'timerange': vrange
         };
 
         if (["mpoints", "umpoints"].includes(extractsupport)) {
@@ -94,27 +93,26 @@ $(document).ready(function() {
         }
 
         console.log(data)
-
-        // use ajax post
-
-        // $.ajax({
-        //     type: 'POST',
-        //     url: '/radarCart_CrossSec',
-        //     data: JSON.stringify(data),
-        //     contentType: "application/json",
-        //     success: function(data) {
-        //         $("#radarCartXsec").attr("src", data);
-        //     },
-        //     beforeSend: function() {
-        //         $("#dispCrossSec .glyphicon-refresh").show();
-        //     },
-        //     error: function() {
-        //         $('#errorMSG').css("background-color", "red")
-        //             .html("Unable to load image");
-        //     }
-        // }).always(function() {
-        //     $("#dispCrossSec .glyphicon-refresh").hide();
-        // });
+        ///// 
+        $.ajax({
+            type: 'POST',
+            url: '/extractQPEData',
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            success: (data) => {
+                console.log(data)
+                // $("#radarCartXsec").attr("src", data);
+            },
+            beforeSend: () => {
+                $("#extractExec .glyphicon-refresh").show();
+            },
+            error: () => {
+                $('#errorMSG').css("background-color", "red")
+                    .html("Unable to extract data");
+            }
+        }).always(() => {
+            $("#extractExec .glyphicon-refresh").hide();
+        });
 
 
     });
