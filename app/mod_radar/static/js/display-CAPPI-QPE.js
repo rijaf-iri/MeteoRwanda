@@ -14,7 +14,7 @@ $(document).ready(() => {
 
     L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
         _getDisplayDateFormat: (date) => {
-            return date.format("yyyy-mm-dd hh:MM:ss");
+            return date.format("yyyy-mm-dd HH:MM:ss");
         }
     });
     var timeDimensionControl = new L.Control.TimeDimensionCustom({
@@ -55,7 +55,7 @@ $(document).ready(() => {
             var timestamp = myimagesPNG[1]._currentTime;
         }
         var date = new Date(timestamp);
-        date = dateFormat(date, "yyyy-mm-dd_hh-MM-ss");
+        date = dateFormat(date, "yyyy-mm-dd_HH-MM-ss");
         var prefix = variable == "precip" ? "precip_accum" : "precip_rate";
         var filename = prefix + "_" + date;
 

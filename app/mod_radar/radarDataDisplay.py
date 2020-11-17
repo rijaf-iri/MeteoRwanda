@@ -77,7 +77,7 @@ def radarPolar_PrecipRate():
         dirSource = os.path.join(dirMDV, "radarPolar", "derived", "sur")
         out_dict = radarPolarDerivedRate(dirSource, dirCKey, pars)
     else:
-        dirSource = os.path.join(dirMDV, "radarPolar", "ops", "sur")
+        dirSource = os.path.join(dirMDV, "radarPolar", "ops1", "sur")
         out_dict = radarPolarPrecipRatePars(dirSource, dirCKey, pars)
 
     wind = ctrec_wind(dirMDV, pars)
@@ -97,7 +97,7 @@ def radarPolar_RateXSec():
         dirSource = os.path.join(dirMDV, "radarPolar", "derived", "sur")
         return radarPolarDerivedRateXsec(dirSource, dirCKey, pars)
     else:
-        dirSource = os.path.join(dirMDV, "radarPolar", "ops", "sur")
+        dirSource = os.path.join(dirMDV, "radarPolar", "ops1", "sur")
         return radarPolarPrecipRateParsXsec(dirSource, dirCKey, pars)
 
 

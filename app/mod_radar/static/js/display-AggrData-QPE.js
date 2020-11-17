@@ -36,7 +36,7 @@ $(document).ready(() => {
         var date = new Date(timestamp);
         switch (aggrtime) {
             case "hourly":
-                dtformat = "yyyy-mm-dd_hh";
+                dtformat = "yyyy-mm-dd_HH";
                 break;
             case "daily":
                 dtformat = "yyyy-mm-dd";
@@ -90,7 +90,7 @@ function disp_wmsqpe_aggregate(aggrtime) {
     var title;
     switch (aggrtime) {
         case "hourly":
-            dtformat = "yyyy-mm-dd hh:00";
+            dtformat = "yyyy-mm-dd HH:00";
             layers = 'qpehourly/precip';
             styles = 'precip-data-0_50';
             ckeyLab = 'Hourly precipitation accumulation (mm)';
