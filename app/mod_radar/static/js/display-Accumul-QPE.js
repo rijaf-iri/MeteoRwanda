@@ -11,6 +11,7 @@ $(document).ready(() => {
     $('#dekad1, #dekad2', '#dekad3').hide();
     //
     var daty = new Date();
+    daty = convertDate2UTC(daty);
     //
     $('#hour3').attr('enabled', 'true');
     for (var i = 0; i < 24; ++i) {
@@ -116,13 +117,12 @@ $(document).ready(() => {
 //////////
 
 function plotMapRainAccumulQPE(daty) {
+    $('#errorMSG').empty();
     var data = {
         "tstep": $("#timestepDispTS option:selected").val(),
         "accumul": $("#accumulTime").val(),
         "time": daty
     };
-
-    // console.log(data)
 
     $.ajax({
         url: '/dispAccumulQPE',
@@ -163,8 +163,8 @@ function leafletQPEAggrMap(json) {
     if (json.status == "no-data") {
         var txt;
         switch (json.msg) {
-            case 'no-netcdf':
-                txt = "No NetCDF files found";
+            case 'no-data':
+                txt = "Not enough data";
                 break;
             case 'no-ckey':
                 txt = 'Color scale ' + json.ckey_name + ' not found';
@@ -177,6 +177,11 @@ function leafletQPEAggrMap(json) {
             .setLatLng([mapCenterLAT, mapCenterLON])
             .setContent(txt)
             .openOn(mymap);
+
+        $('.div-title').empty();
+        var titre = 'Accumulated Precipitation' + '&nbsp;-&nbsp;' + json.qpe_time;
+        $('.div-title').html(titre);
+
         return false;
     }
 

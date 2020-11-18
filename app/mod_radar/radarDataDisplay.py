@@ -1,4 +1,12 @@
-from flask import Blueprint, render_template, request, Response, session
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    Response,
+    session,
+    send_file,
+    send_from_directory,
+)
 from flask import current_app as app
 
 import json
@@ -14,10 +22,7 @@ from .scripts.uploadfiles import *
 from .scripts.windCtrec import ctrec_wind
 from .scripts.util import numpyArrayEncoder
 from .scripts.wmsQuery import *
-from .scripts.plotqpeAccumul import qpeAccumulMap
-
-## remove
-from .scripts.test import fonct_test
+from .scripts.plotqpeAccumul import *
 
 ###################
 
@@ -158,7 +163,6 @@ def dispAggrQPE_page():
 
     return render_template("display-AggrData-QPE.html", wmsURL=wmsURL, wmsData=wmsData)
 
-###################
 
 @mod_radar.route("/dispAccumulQPEPage")
 def dispAccumulQPE_page():
@@ -175,8 +179,26 @@ def dispAccumulQPE():
 
     return json.dumps(out_dict)
 
-###################
 
+@mod_radar.route("/downAccumulQPE")
+@login_required
+def downAccumulQPE():
+    time = request.args.get("time")
+    tstep = request.args.get("tstep")
+    accumul = request.args.get("accumul")
+    user = session.get("username")
+
+    out_dict = downqpeAccumul_ncdf(tstep, time, accumul, user)
+
+    if out_dict["ncfile"] is not None:
+        return send_from_directory(
+            out_dict["dirUser"], filename=out_dict["ncfile"], as_attachment=True
+        )
+    else:
+        return "No data"
+
+
+###################
 
 @mod_radar.route("/extractQPEPage")
 def extractQPE_page():
@@ -197,14 +219,12 @@ def uploadShapeFiles():
 
     return getUploadedShapeFiles(dirUPLOAD, files, user)
 
+
 @mod_radar.route("/extractQPEData", methods=["POST"])
 def extractQPEData():
     pars = request.get_json()
-    # dirSource = os.path.join(dirMDV, "radarCart", "ops")
 
     print(pars)
 
-    a = fonct_test(pars)
-    x = {'a':2, 'b':3}
+    x = {"a": 2, "b": 3}
     return json.dumps(x)
-

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(() => {
     // var province_geojson;
     $.getJSON(Flask.url_for("static", {
         "filename": "geojson/province.geojson"
@@ -20,7 +20,7 @@ $(document).ready(function() {
 
     /////////////////
 
-    $("#extractsupport").change(function() {
+    $("#extractsupport").change(() => {
         $("#extractOpts").empty();
         var extract_geom = $("#extractsupport option:selected").val();
 
@@ -48,14 +48,14 @@ $(document).ready(function() {
 
     /////////////////
 
-    $('a[href="#extracttable"]').on("click", function() {
+    $('a[href="#extracttable"]').on("click", () => {
         var extract_geom = $("#extractsupport option:selected").val();
         dispTableSelectedExtract(extract_geom);
     });
 
     /////////////////
 
-    $("#extractExec").on("click", function() {
+    $("#extractExec").on("click", () => {
         // console.log(spatialGeomSelected);
         var extractsupport = $("#extractsupport option:selected").val();
         // 
