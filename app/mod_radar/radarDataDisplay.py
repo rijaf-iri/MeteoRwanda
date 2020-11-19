@@ -23,6 +23,7 @@ from .scripts.windCtrec import ctrec_wind
 from .scripts.util import numpyArrayEncoder
 from .scripts.wmsQuery import *
 from .scripts.plotqpeAccumul import *
+from .scripts.extractQPE import extractQPE
 
 ###################
 
@@ -200,6 +201,7 @@ def downAccumulQPE():
 
 ###################
 
+
 @mod_radar.route("/extractQPEPage")
 def extractQPE_page():
     return render_template("display-mapExtract-QPE.html")
@@ -224,7 +226,29 @@ def uploadShapeFiles():
 def extractQPEData():
     pars = request.get_json()
 
-    print(pars)
+    ########
+    # print(pars)
 
-    x = {"a": 2, "b": 3}
-    return json.dumps(x)
+    data = extractQPE(pars)
+    # print(data)
+
+    ########
+    # import time
+    # time.sleep(2)
+    out = "csv"
+    # out = "ncdf"
+    ########
+
+    if out == "csv":
+        robj = ["Gitega,2.0,3.14"]
+        filename = "return_extract.csv"
+        cd = "attachment; filename=" + filename
+        downcsv = Response(
+            robj[0], mimetype="text/csv", headers={"Content-disposition": cd}
+        )
+        return downcsv
+
+    if out == "ncdf":
+        dirUser = "/home/data/MeteoRwanda_Data/RADAR_DATA/QPE/daily"
+        filename = "precip_20200827.nc"
+        return send_from_directory(dirUser, filename=filename, as_attachment=True)

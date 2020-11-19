@@ -991,10 +991,12 @@ function dispMapPoints(map) {
     };
 
     map.on('click', (e) => {
-        var txttip = '<b>Longitude : </b>' + e.latlng.lng + '<br>' + '<b>Latitude : </b>' + e.latlng.lat;
+        var txttip = '<b>Longitude : </b>' + e.latlng.lng +
+            '<br>' + '<b>Latitude : </b>' + e.latlng.lat;
 
         // 
-        var marker = L.marker(e.latlng, { icon: blueIcon }).bindTooltip(txttip, text2Op).addTo(map);
+        var marker = L.marker(e.latlng, { icon: blueIcon })
+            .bindTooltip(txttip, text2Op).addTo(map);
         layersEXTRACT.push(marker);
         spatialGeomSelected.push({
             "Point_id": marker._leaflet_id,
@@ -1103,6 +1105,10 @@ function leafletMapExtractSpatial(extract_geom, json_data = null) {
         }
     }
 
+    $('a[href="#extractmap"]').on('shown.bs.tab', (e) => {
+        mymap.invalidateSize();
+    });
+
     ////////////
 
     if (layersEXTRACT.length > 0) {
@@ -1134,10 +1140,6 @@ function leafletMapExtractSpatial(extract_geom, json_data = null) {
         case "none":
             mymap.off('click');
     }
-
-    $('a[href="#extractmap"]').on('shown.bs.tab', (e) => {
-        mymap.invalidateSize();
-    });
 }
 
 ////////////////////////

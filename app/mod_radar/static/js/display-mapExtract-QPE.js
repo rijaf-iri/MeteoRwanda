@@ -56,6 +56,7 @@ $(document).ready(() => {
     /////////////////
 
     $("#extractExec").on("click", () => {
+        $('#errorMSG').empty();
         // console.log(spatialGeomSelected);
         var extractsupport = $("#extractsupport option:selected").val();
         // 
@@ -78,11 +79,13 @@ $(document).ready(() => {
                 'x': $("#padLon").val(),
                 'y': $("#padLat").val()
             };
+            var errormsg = "No points selected";
         }
 
         if (["province", "district", "sector", "ushapefile"].includes(extractsupport)) {
             // "average" or "gridded"
             data['spatialavg'] = $("#extractspatial option:selected").val();
+            var errormsg = "No polygons selected";
         }
 
         if (extractsupport == "ushapefile") {
@@ -92,16 +95,52 @@ $(document).ready(() => {
             data["field"] = $("#fieldpolySelect option:selected").val();
         }
 
+        if (data['extractgeom'].length == 0) {
+            $('#errorMSG').css("background-color", "red")
+                .html(errormsg);
+        }
+
         console.log(data)
+
         ///// 
+
         $.ajax({
             type: 'POST',
             url: '/extractQPEData',
             data: JSON.stringify(data),
             contentType: "application/json",
-            success: (data) => {
-                console.log(data)
-                // $("#radarCartXsec").attr("src", data);
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: (blob, status, xhr) => {
+                // default file name
+                var filename = "test";
+
+                var dispos = xhr.getResponseHeader('Content-Disposition');
+                if (dispos && dispos.indexOf('attachment') !== -1) {
+                    var pregex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = pregex.exec(dispos);
+                    if (matches != null && matches[1]) {
+                        filename = matches[1].replace(/['"]/g, '');
+                    }
+                }
+
+                // console.log(filename)
+
+                var URL = window.URL || window.webkitURL;
+                var downloadUrl = URL.createObjectURL(blob);
+
+                // create downloadable link
+                var downlink = document.createElement("a");
+                downlink.href = downloadUrl;
+                downlink.download = filename;
+                document.body.appendChild(downlink);
+                downlink.click();
+
+                // cleanup
+                setTimeout(() => {
+                    URL.revokeObjectURL(downloadUrl);
+                }, 100);
             },
             beforeSend: () => {
                 $("#extractExec .glyphicon-refresh").show();

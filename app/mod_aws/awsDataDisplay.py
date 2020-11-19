@@ -523,3 +523,43 @@ def displayLogFiles():
     robj = mtrwaws.displayLogFiles(logtype, dirAWS, awsnet, date)
     pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
+
+#####################
+
+@mod_aws.route("/awsDataAvailabilityAll")
+def awsDataAvailabilityAll():
+    start_time = request.args.get("start_time")
+    end_time = request.args.get("end_time")
+
+    robj = mtrwaws.aws_data_availability_all(start_time, end_time, dirAWS)
+    pyobj = json.loads(robj[0])
+    return json.dumps(pyobj)
+
+@mod_aws.route("/awsDataAvailabilityNet")
+def awsDataAvailabilityNet():
+    start_time = request.args.get("start_time")
+    end_time = request.args.get("end_time")
+    aws_net = request.args.get("aws_net")
+
+    robj = mtrwaws.aws_data_availability_net(start_time, end_time, aws_net, dirAWS)
+    pyobj = json.loads(robj[0])
+    return json.dumps(pyobj)
+
+@mod_aws.route("/awsDataAvailabilityIDs", methods=["POST"])
+def awsDataAvailabilityIDs():
+    pars = request.get_json()
+    robj = mtrwaws.aws_data_availability_ids(
+        pars["start_time"][0],
+        pars["end_time"][0],
+        rvect.StrVector(pars["aws_ids"]),
+        dirAWS,
+    )
+    pyobj = json.loads(robj[0])
+    return json.dumps(pyobj)
+
+@mod_aws.route("/aws24HourDataStatus")
+def aws24HourDataStatus():
+    robj = mtrwaws.aws_data_status_24hour(dirAWS)
+    pyobj = json.loads(robj[0])
+    return json.dumps(pyobj)
+
