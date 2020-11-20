@@ -526,6 +526,12 @@ def displayLogFiles():
 
 #####################
 
+@mod_aws.route("/awsGetMetadata")
+def awsGetMetadata():
+    robj = mtrwaws.aws_metadata(dirAWS)
+    pyobj = json.loads(robj[0])
+    return json.dumps(pyobj)
+
 @mod_aws.route("/awsDataAvailabilityAll")
 def awsDataAvailabilityAll():
     start_time = request.args.get("start_time")
@@ -563,3 +569,41 @@ def aws24HourDataStatus():
     pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
 
+@mod_aws.route("/awsCheckVariablesIDs", methods=["POST"])
+def awsCheckVariablesIDs():
+    pars = request.get_json()
+    robj = mtrwaws.aws_check_variables_ids(
+        pars["start_time"][0],
+        pars["end_time"][0],
+        rvect.StrVector(pars["aws_ids"]),
+        rvect.StrVector(pars["variables"]),
+        dirAWS,
+    )
+    pyobj = json.loads(robj[0])
+    return json.dumps(pyobj)
+
+@mod_aws.route("/awsGetDataAggregateIDs", methods=["POST"])
+def awsGetDataAggregateIDs():
+    pars = request.get_json()
+    robj = mtrwaws.aws_data_aggregate_ids(
+        pars["timestep"][0],
+        pars["start_time"][0],
+        pars["end_time"][0],
+        rvect.StrVector(pars["aws_ids"]),
+        dirAWS,
+    )
+    pyobj = json.loads(robj[0])
+    return json.dumps(pyobj)
+
+@mod_aws.route("/awsGetDataMinVarsIDs", methods=["POST"])
+def awsGetDataMinVarsIDs():
+    pars = request.get_json()
+    robj = mtrwaws.aws_data_variables_ids(
+        pars["start_time"][0],
+        pars["end_time"][0],
+        rvect.StrVector(pars["variables"]),
+        rvect.StrVector(pars["aws_ids"]),
+        dirAWS,
+    )
+    pyobj = json.loads(robj[0])
+    return json.dumps(pyobj)
