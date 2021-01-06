@@ -106,6 +106,7 @@ function setSpExtractSelectTime() {
         for (var c = 3; c < 8; c++) {
             $(".aws-select-time td:nth-child(" + c + ")").hide();
         }
+        $(".divminFrac").hide();
         var timestep = $(this).val();
         if (timestep == "minute") {
             $(".aws-select-time td:nth-child(7)").show();
@@ -118,8 +119,10 @@ function setSpExtractSelectTime() {
             $(".aws-select-time td:nth-child(5)").show();
         } else if (timestep == "pentad") {
             $(".aws-select-time td:nth-child(4)").show();
+            $(".divminFrac").show();
         } else if (timestep == "dekadal") {
             $(".aws-select-time td:nth-child(3)").show();
+            $(".divminFrac").show();
         } else {
             for (var c = 3; c < 8; c++) {
                 $(".aws-select-time td:nth-child(" + c + ")").hide();
@@ -942,6 +945,8 @@ function onEachFeature(feature, layer) {
 ////////////////////////
 
 function dispAdministratives(map, extract_geom) {
+    map.off('click');
+
     if (infoControl != undefined) {
         map.removeControl(infoControl);
     }

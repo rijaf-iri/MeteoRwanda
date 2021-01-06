@@ -15,6 +15,13 @@
     #idTable {
     max-height: 80vh;
     }
+    .divminFrac{
+    margin-top: 5px;
+    display:none;
+    }
+    #minFrac{
+    height: 1.4em;
+    }
     .upload-user-files{
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -84,10 +91,16 @@
                                 <table class="aws-select-time ts-end-time"></table>
                             </div>
                             <!--  -->
+                            <div class="divminFrac">
+                                <label for="minFrac">Minimum Fraction: </label>
+                                <input type="text" id="minFrac" value="1.0" size="5">
+                            </div>
+                            <!--  -->
                             <div>
-                                <!-- <a id="extractExec"> -->
-                                <button id="extractExec" type="button" class="btn btn-primary btn-block"><i class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="display:none;"></i> Start Extraction</button>
-                                <!-- </a> -->
+                                <button id="extractExec" type="button" class="btn btn-primary btn-block">
+                                    <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="display:none;"></i>
+                                    Start Extraction
+                                </button>
                             </div>
                             <!--  -->
                         </div>

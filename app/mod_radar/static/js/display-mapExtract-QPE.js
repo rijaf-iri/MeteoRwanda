@@ -57,7 +57,6 @@ $(document).ready(() => {
 
     $("#extractExec").on("click", () => {
         $('#errorMSG').empty();
-        // console.log(spatialGeomSelected);
         var extractsupport = $("#extractsupport option:selected").val();
         // 
         var obj = checkDateTimeRange();
@@ -71,7 +70,8 @@ $(document).ready(() => {
             'extractsupport': extractsupport,
             'extractgeom': spatialGeomSelected,
             'timestep': timestep,
-            'timerange': vrange
+            'timerange': vrange,
+            'minfrac': $("#minFrac").val()
         };
 
         if (["mpoints", "umpoints"].includes(extractsupport)) {
@@ -100,8 +100,6 @@ $(document).ready(() => {
                 .html(errormsg);
         }
 
-        console.log(data)
-
         ///// 
 
         $.ajax({
@@ -113,8 +111,8 @@ $(document).ready(() => {
                 responseType: 'blob'
             },
             success: (blob, status, xhr) => {
-                // default file name
-                var filename = "test";
+                // default file name for no-data
+                var filename = "no-data.txt";
 
                 var dispos = xhr.getResponseHeader('Content-Disposition');
                 if (dispos && dispos.indexOf('attachment') !== -1) {
@@ -125,7 +123,11 @@ $(document).ready(() => {
                     }
                 }
 
-                // console.log(filename)
+                if (filename == "no-data.txt") {
+                    $('#errorMSG').css("background-color", "orange")
+                        .html("No available data");
+                    return;
+                }
 
                 var URL = window.URL || window.webkitURL;
                 var downloadUrl = URL.createObjectURL(blob);
@@ -152,10 +154,6 @@ $(document).ready(() => {
         }).always(() => {
             $("#extractExec .glyphicon-refresh").hide();
         });
-
-
     });
     // 
 });
-
-////////////////////////

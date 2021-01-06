@@ -386,6 +386,33 @@ def dispWindContours():
     return imgpng
 
 
+@mod_aws.route("/dispMSLPHourlyPage")
+def dispMSLPHourly_page():
+    return render_template("display-Hourly-MSLP.html")
+
+
+@mod_aws.route("/dispMapMSLPHourly")
+def dispMapMSLPHourly():
+    time = request.args.get("time")
+    robj = mtrwaws.dispMapMSLPHourly(time, dirAWS)
+    pyobj = json.loads(robj[0])
+    return json.dumps(pyobj)
+
+
+@mod_aws.route("/downMSLPHourly")
+@login_required
+def downMSLPHourly():
+    time = request.args.get("time")
+    robj = mtrwaws.downMSLPHourly(time, dirAWS)
+
+    filename = "MSLP_" + time + ".csv"
+    cd = "attachment; filename=" + filename
+    downcsv = Response(
+        robj[0], mimetype="text/csv", headers={"Content-disposition": cd}
+    )
+    return downcsv
+
+
 @mod_aws.route("/dispAWSStatusPage")
 def dispAWSStatus_page():
     return render_template("display-AWS-Status.html")
@@ -493,26 +520,11 @@ def displayQCHourly():
     return json.dumps(pyobj)
 
 
-@mod_aws.route("/dispQCDailyPage")
-@login_required
-def dispQCDaily_page():
-    return render_template("display-AWS-QCDaily.html")
-
-
-@mod_aws.route("/displayQCDaily")
-@login_required
-def displayQCDaily():
-    date = request.args.get("date")
-    # robj = mtrwaws.displayQCDaily(date, dirAWS)
-    # pyobj = json.loads(robj[0])
-    pyobj = {"status": "no-data"}
-    return json.dumps(pyobj)
-
-
 @mod_aws.route("/dispLogFilesPage")
 @login_required
 def dispLogFiles_page():
     return render_template("display-AWS-LogFiles.html")
+
 
 @mod_aws.route("/displayLogFiles")
 @login_required
@@ -524,13 +536,16 @@ def displayLogFiles():
     pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
 
+
 #####################
+
 
 @mod_aws.route("/awsGetMetadata")
 def awsGetMetadata():
     robj = mtrwaws.aws_metadata(dirAWS)
     pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
+
 
 @mod_aws.route("/awsDataAvailabilityAll")
 def awsDataAvailabilityAll():
@@ -541,6 +556,7 @@ def awsDataAvailabilityAll():
     pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
 
+
 @mod_aws.route("/awsDataAvailabilityNet")
 def awsDataAvailabilityNet():
     start_time = request.args.get("start_time")
@@ -550,6 +566,7 @@ def awsDataAvailabilityNet():
     robj = mtrwaws.aws_data_availability_net(start_time, end_time, aws_net, dirAWS)
     pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
+
 
 @mod_aws.route("/awsDataAvailabilityIDs", methods=["POST"])
 def awsDataAvailabilityIDs():
@@ -563,11 +580,13 @@ def awsDataAvailabilityIDs():
     pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
 
+
 @mod_aws.route("/aws24HourDataStatus")
 def aws24HourDataStatus():
     robj = mtrwaws.aws_data_status_24hour(dirAWS)
     pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
+
 
 @mod_aws.route("/awsCheckVariablesIDs", methods=["POST"])
 def awsCheckVariablesIDs():
@@ -582,6 +601,7 @@ def awsCheckVariablesIDs():
     pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
 
+
 @mod_aws.route("/awsGetDataAggregateIDs", methods=["POST"])
 def awsGetDataAggregateIDs():
     pars = request.get_json()
@@ -594,6 +614,7 @@ def awsGetDataAggregateIDs():
     )
     pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
+
 
 @mod_aws.route("/awsGetDataMinVarsIDs", methods=["POST"])
 def awsGetDataMinVarsIDs():

@@ -23,7 +23,7 @@ from .scripts.windCtrec import ctrec_wind
 from .scripts.util import numpyArrayEncoder
 from .scripts.wmsQuery import *
 from .scripts.plotqpeAccumul import *
-# from .scripts.extractQPE import extractQPE
+from .scripts.extractQPE import extractQPE
 
 ###################
 
@@ -69,6 +69,18 @@ def radarPolar_CrossSec():
     return radarPolarXsec(dirSource, dirCKey, pars)
 
 
+@mod_radar.route("/exportRadarPolar", methods=["POST"])
+@login_required
+def exportRadarPolar():
+    pars = request.get_json()
+    user = session.get("username")
+
+    dirSource = os.path.join(dirMDV, "radarPolar", pars["source"], "sur")
+    ret = exportDataPPI(dirSource, dirUPLOAD, pars, user)
+
+    return send_from_directory(ret["dir"], filename=ret["file"], as_attachment=True)
+
+
 @mod_radar.route("/radarPolarRatePage")
 def radarPolarRate_page():
     return render_template("display-Radar-Polar-Rate.html")
@@ -105,6 +117,22 @@ def radarPolar_RateXSec():
     else:
         dirSource = os.path.join(dirMDV, "radarPolar", "ops1", "sur")
         return radarPolarPrecipRateParsXsec(dirSource, dirCKey, pars)
+
+
+@mod_radar.route("/exportPolarPrecipRate", methods=["POST"])
+@login_required
+def exportPolarPrecipRate():
+    pars = request.get_json()
+    user = session.get("username")
+
+    if pars["source"] == "titan":
+        dirSource = os.path.join(dirMDV, "radarPolar", "derived", "sur")
+    else:
+        dirSource = os.path.join(dirMDV, "radarPolar", "ops1", "sur")
+
+    ret = exportDataPrecipRate(dirSource, dirUPLOAD, pars, user)
+
+    return send_from_directory(ret["dir"], filename=ret["file"], as_attachment=True)
 
 
 @mod_radar.route("/dispRadarCartPage")
@@ -193,13 +221,12 @@ def downAccumulQPE():
 
     if out_dict["ncfile"] is not None:
         return send_from_directory(
-            out_dict["dirUser"], filename=out_dict["ncfile"], as_attachment=True
+            directory=out_dict["dirUser"],
+            filename=out_dict["ncfile"],
+            as_attachment=True,
         )
     else:
         return "No data"
-
-
-###################
 
 
 @mod_radar.route("/extractQPEPage")
@@ -223,43 +250,12 @@ def uploadShapeFiles():
 
 
 @mod_radar.route("/extractQPEData", methods=["POST"])
+@login_required
 def extractQPEData():
     pars = request.get_json()
-    ##### 
-    robj = ["Gitega,2.0,3.14"]
-    filename = "return_extract.csv"
-    cd = "attachment; filename=" + filename
-    downcsv = Response(
-        robj[0], mimetype="text/csv", headers={"Content-disposition": cd}
-    )
-    return downcsv
+    user = session.get("username")
 
+    ret = extractQPE(dirUPLOAD, pars, user)
 
-
-########
-# print(pars)
-
-# data = extractQPE(pars)
-# print(data)
-
-########
-# import time
-# time.sleep(2)
-# out = "csv"
-# out = "ncdf"
-########
-
-# if out == "csv":
-#     robj = ["Gitega,2.0,3.14"]
-#     filename = "return_extract.csv"
-#     cd = "attachment; filename=" + filename
-#     downcsv = Response(
-#         robj[0], mimetype="text/csv", headers={"Content-disposition": cd}
-#     )
-#     return downcsv
-
-# if out == "ncdf":
-#     dirUser = "/home/data/MeteoRwanda_Data/RADAR_DATA/QPE/daily"
-#     filename = "precip_20200827.nc"
-#     return send_from_directory(dirUser, filename=filename, as_attachment=True)
+    return send_from_directory(ret["dir"], filename=ret["file"], as_attachment=True)
 

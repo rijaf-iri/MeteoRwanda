@@ -221,17 +221,10 @@
                         </div>
                         <div class="input-container-content">
                             <div>
-                                <label class="control-label">Output Format</label>
-                                <select name="exportDataS" id="exportDataS" class="form-control">
-                                    <option value="text" selected> Text/ASCII File </option>
-                                    <option value="netcdf"> NetCDF Format </option>
-                                </select>
-                            </div>
-                            <!--  -->
-                            <div>
-                                <a id="exportDataB">
-                                    <button type="button" class="btn btn-primary btn-block"><i class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="display:none;"></i> Export </button>
-                                </a>
+                                <button id="exportDataB" type="button" class="btn btn-primary btn-block">
+                                    <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="display:none;"></i>
+                                    Get Data in NetCDF
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -290,4 +283,7 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/print-screen-map.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('radar.static', filename='js/ctrec-wind-barb.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('radar.static', filename='js/display-Radar-Polar.js') }}"></script>
+{% if session.logged_in %}
+<script type="text/javascript" src="{{ url_for('radar.static', filename='js/export-Radar-Polar.js') }}"></script>
+{% endif %}
 {% endblock %}

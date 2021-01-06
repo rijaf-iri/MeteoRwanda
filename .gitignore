@@ -139,5 +139,5 @@ config.py
 run.py
 wsgi.py
 clean_py.sh
-scripts/
+/scripts
 
