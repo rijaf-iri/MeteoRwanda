@@ -628,3 +628,15 @@ def awsGetDataMinVarsIDs():
     )
     pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
+
+
+@mod_aws.route("/awsGetHourlyPrecip", methods=["POST"])
+def awsGetHourlyPrecip():
+    pars = request.get_json()
+    robj = mtrwaws.aws_hourly_precip_data(
+        pars["start_time"][0],
+        pars["end_time"][0],
+        dirAWS,
+    )
+    pyobj = json.loads(robj[0])
+    return json.dumps(pyobj)

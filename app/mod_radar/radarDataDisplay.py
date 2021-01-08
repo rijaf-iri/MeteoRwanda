@@ -24,6 +24,7 @@ from .scripts.util import numpyArrayEncoder
 from .scripts.wmsQuery import *
 from .scripts.plotqpeAccumul import *
 from .scripts.extractQPE import extractQPE
+from .scripts.singleCAPPIQPE import getSingleCAPPIQPE
 
 ###################
 
@@ -259,3 +260,13 @@ def extractQPEData():
 
     return send_from_directory(ret["dir"], filename=ret["file"], as_attachment=True)
 
+#########################
+
+
+@mod_radar.route("/computeQPECAPPI", methods=["POST"])
+def computeQPECAPPI():
+    pars = request.get_json()
+
+    data = getSingleCAPPIQPE(dirMDV, pars)
+
+    return json.dumps(data)
