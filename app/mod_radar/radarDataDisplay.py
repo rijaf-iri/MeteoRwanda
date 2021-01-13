@@ -25,6 +25,7 @@ from .scripts.wmsQuery import *
 from .scripts.plotqpeAccumul import *
 from .scripts.extractQPE import extractQPE
 from .scripts.singleCAPPIQPE import getSingleCAPPIQPE
+from .scripts.radarPolarExtraction import extractPolarData
 
 ###################
 
@@ -269,5 +270,14 @@ def computeQPECAPPI():
     pars = request.get_json()
 
     data = getSingleCAPPIQPE(dirMDV, pars)
+
+    return json.dumps(data)
+
+
+@mod_radar.route("/extractRadarPolar", methods=["POST"])
+def extractRadarPolar():
+    pars = request.get_json()
+
+    data = extractPolarData(dirMDV, pars)
 
     return json.dumps(data)
