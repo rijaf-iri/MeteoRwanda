@@ -1,5 +1,5 @@
 from mtorwaradar.api.radarpolar_extract import extract_polar_data
-
+import numpy as np
 
 def extractPolarData(dirMDV, pars):
     fields = pars["fields"]
@@ -9,10 +9,10 @@ def extractPolarData(dirMDV, pars):
     data = extract_polar_data(
         dirMDV,
         pars["source"],
-        start_time,
-        end_time,
+        pars["start_time"],
+        pars["end_time"],
         fields,
-        points,
+        pars["points"],
         sweeps=pars["sweeps"],
         pia=pars["pia"],
         dbz_fields=dbz_fields,
@@ -21,5 +21,14 @@ def extractPolarData(dirMDV, pars):
         apply_cmd=pars["apply_cmd"],
         time_zone=pars["time_zone"],
     )
+
+    ex_data = data['data']
+    for field in list(ex_data.keys()):
+        don = ex_data[field]
+        don = np.array(don)
+        don = don.astype(np.float64)
+        ex_data[field] = don.tolist()
+
+    data['data'] = ex_data
 
     return data
