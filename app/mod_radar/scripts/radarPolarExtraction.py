@@ -3,8 +3,14 @@ import numpy as np
 
 def extractPolarData(dirMDV, pars):
     fields = pars["fields"]
+    if type(fields) is not list:
+        fields = [fields]
     dbz_fields = pars["dbz_fields"]
+    if type(dbz_fields) is not list:
+        dbz_fields = [dbz_fields]
     filter_fields = pars["filter_fields"]
+    if type(filter_fields) is not list:
+        filter_fields = [filter_fields]
 
     data = extract_polar_data(
         dirMDV,
