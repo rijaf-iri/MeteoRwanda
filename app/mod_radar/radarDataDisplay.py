@@ -25,7 +25,10 @@ from .scripts.wmsQuery import *
 from .scripts.plotqpeAccumul import *
 from .scripts.extractQPE import extractQPE
 from .scripts.singleCAPPIQPE import getSingleCAPPIQPE
+from .scripts.createCAPPIData import createCAPPIData
 from .scripts.radarPolarExtraction import extractPolarData
+from .scripts.radarGridExtraction import extractGridData
+
 
 ###################
 
@@ -164,6 +167,18 @@ def radarCart_CrossSec():
     return radarCartOpsXsec(dirSource, dirCKey, pars)
 
 
+@mod_radar.route("/exportRadarCart", methods=["POST"])
+@login_required
+def exportRadarCart():
+    pars = request.get_json()
+    user = session.get("username")
+
+    dirSource = os.path.join(dirMDV, "radarCart", "ops")
+    ret = exportDataCart(dirSource, dirUPLOAD, pars, user)
+
+    return send_from_directory(ret["dir"], filename=ret["file"], as_attachment=True)
+
+
 @mod_radar.route("/radarCAPPIQPEPage")
 def radarCAPPIQPE_page():
     wmsURL = (
@@ -274,10 +289,28 @@ def computeQPECAPPI():
     return json.dumps(data)
 
 
+@mod_radar.route("/createCAPPI", methods=["POST"])
+def createCAPPI():
+    pars = request.get_json()
+
+    data = createCAPPIData(dirMDV, pars)
+
+    return json.dumps(data)
+
+
 @mod_radar.route("/extractRadarPolar", methods=["POST"])
 def extractRadarPolar():
     pars = request.get_json()
 
     data = extractPolarData(dirMDV, pars)
+
+    return json.dumps(data)
+
+
+@mod_radar.route("/extractRadarGrid", methods=["POST"])
+def extractRadarGrid():
+    pars = request.get_json()
+
+    data = extractGridData(dirMDV, pars)
 
     return json.dumps(data)
