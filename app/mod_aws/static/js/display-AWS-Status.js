@@ -17,7 +17,7 @@ $(document).ready(() => {
 
 function updateStatusMap() {
     $.getJSON('/dispAWSStatusMap', {
-            hour: $("#lastAvail option:selected").val()
+            ltime: $("#lastAvail option:selected").val()
         },
         (json) => {
             $('#timeStatus').empty();

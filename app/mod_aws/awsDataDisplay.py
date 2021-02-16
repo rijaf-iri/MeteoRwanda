@@ -420,8 +420,8 @@ def dispAWSStatus_page():
 
 @mod_aws.route("/dispAWSStatusMap")
 def dispAWSStatus_map():
-    hour = request.args.get("hour")
-    robj = mtrwaws.readAWSStatus(hour, dirAWS)
+    ltime = request.args.get("ltime")
+    robj = mtrwaws.readAWSStatus(ltime, dirAWS)
     pyobj = json.loads(robj[0])
     return json.dumps(pyobj)
 
