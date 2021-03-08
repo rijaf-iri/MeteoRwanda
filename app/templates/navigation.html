@@ -83,44 +83,12 @@
                         {% endif %}
                     </ul>
                 </li>
-                <!-- Validation -->
-                {% if session.logged_in and session.userlevel > 1 %}
-                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> Validation <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="#"> QPE Comparison and Validation </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#"> Conventional Stations and AWS Comparison </a>
-                        </li>
-                    </ul>
-                </li>
-                {% endif %}
                 <!-- Tools -->
-                {% if session.logged_in and session.userlevel > 1 %}
+                {% if session.logged_in and session.userlevel == 3 %}
                 <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> Configurations <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        {% if session.userlevel == 3 %}
                         <li>
                             <a href="{{ url_for('auth.createUser_page') }}"> Users Management </a>
-                        </li>
-                        <li class="divider"></li>
-                        {% endif %}
-                        <li>
-                            <a href="#"> AWS Configurations </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#"> Radar Configurations (Operational) </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#"> Radar Configurations (Analysis) </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#"> Site Configurations </a>
                         </li>
                     </ul>
                 </li>

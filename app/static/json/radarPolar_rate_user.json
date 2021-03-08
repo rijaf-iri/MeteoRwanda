@@ -294,12 +294,5 @@
                 "window": "hanning"
             }
         }
-    },
-    {
-        "label": "RATE_HYBRID",
-        "unit": "mm/hr",
-        "ckey": "precip_rate.colors",
-        "name": "Precip rate from NCAR hybrid",
-        "formula": "combination based on  RATE_KDP_ZDR, RATE_KDP, RATE_Z_ZDR and RATE_Z"
     }]
-}
+ }
